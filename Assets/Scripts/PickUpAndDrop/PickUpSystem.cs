@@ -1,0 +1,167 @@
+using System;
+using System.Net;
+using Unity.Mathematics;
+using Unity.Netcode;
+using Unity.Netcode.Components;
+using Unity.VisualScripting;
+using UnityEngine;
+
+public class PickUpSystem : NetworkBehaviour
+{
+    [Header("--[Settings]--")] 
+    [SerializeField] private float ThrowForce;
+    
+    [SerializeField] private float MaxThrowForce;
+    [SerializeField] private float MinThrowForce;
+    [SerializeField] private float ThrowforceMultiplier = 1000;
+
+    [Header("--[References]--")] 
+    private PlayerUImanager uImanager;
+    [SerializeField] private Transform HoldPoint;
+    [SerializeField] private Transform Cam;
+    [SerializeField] private NetworkAnimator ArmAnimaton;
+    public NetworkVariable<bool> HasItem;
+
+    [SerializeField] private Transform ThrowPoint;
+    public Transform CurrentHoldObject;
+    [SerializeField] private GameObject[] PlayerObjects;
+    //1 TestCube
+    //2 SlimeBomb
+    
+    //Throw stuff
+
+    public override void OnNetworkSpawn()
+    {
+        uImanager =GetComponent<PlayerUImanager>();
+        uImanager.ThrowForceSlider.maxValue = MaxThrowForce;
+    }
+
+
+    [ServerRpc]
+    public void PickUpServerRpc(int ItemIndex)
+    {
+        if (HasItem.Value) return;
+        Debug.Log("Pick up server");
+        CurrentHoldObject = Instantiate(PlayerObjects[ItemIndex].transform);
+        
+        NetworkObject netObj = CurrentHoldObject.GetComponent<NetworkObject>();
+        netObj.Spawn();
+        SetParentTransformClientRpc(netObj);
+
+        SetHoldingBooleanServerRpc(true);
+    }
+
+    [ClientRpc]
+    private void SetParentTransformClientRpc(NetworkObjectReference networkObjectReference)
+    {
+        networkObjectReference.TryGet(out NetworkObject netObj);
+        netObj.GetComponent<FollowTransform>().SetTargetTransform(this.HoldPoint.transform , this.transform);
+        CurrentHoldObject = netObj.transform;
+    }
+    
+
+    [Rpc(SendTo.Everyone)]
+    private void SetHoldingBooleanServerRpc(bool value)
+    {
+        ArmAnimaton.Animator.SetBool("IsHolding", value);
+    }
+
+    private void Update()
+    {
+        if(!IsOwner) return;
+        if (CurrentHoldObject != null)
+        {
+            SetHasItemServerRpc(true);
+        }
+        else
+        {
+            SetHasItemServerRpc(false);
+        }
+        
+        if (Input.GetKey(KeyCode.Q))
+        {
+            CalculateThrowForce();
+            uImanager.EnableDisableThrowForceSlider(true);
+        }
+
+        if (Input.GetKeyUp(KeyCode.Q))
+        {
+            DropItem(ThrowForce);
+            ThrowForce = MinThrowForce;
+            uImanager.EnableDisableThrowForceSlider(false);
+        }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            NetworkObject notObj = Instantiate(PlayerObjects[0].transform , HoldPoint.position , HoldPoint.rotation).GetComponent<NetworkObject>();
+            notObj.Spawn();
+        }
+    }
+
+    [ServerRpc]
+    private void SetHasItemServerRpc(bool value)
+    {
+        HasItem.Value = value;
+    }
+
+    public void DePick()
+    {
+        SetHoldingBooleanServerRpc(false);
+        SetNullClientRpc();
+    }
+
+    private void CalculateThrowForce()
+    {
+        if (ThrowForce < MaxThrowForce)
+        {
+            Debug.Log("Charging =" + ThrowForce);
+            ThrowForce += ThrowforceMultiplier * Time.deltaTime;
+        }
+        uImanager.SetThrowForceSlider(ThrowForce);
+    }
+
+    [ServerRpc]
+    public void Destory_Item_Thats_CurrentlyHoldingServerRpc()
+    {
+        CurrentHoldObject.GetComponent<NetworkObject>().Despawn();
+    }
+    
+    
+
+    [ClientRpc]
+    private void SetNullClientRpc()
+    {
+        this.CurrentHoldObject = null;
+    }
+    
+    private void DropItem(float throwforce)
+    {
+        if(!HasItem.Value) return;
+        SetFollowTransformNullServerRpc(CurrentHoldObject.GetComponent<NetworkObject>() , throwforce);
+        SetHoldingBooleanServerRpc(false);
+    }
+    
+    [ServerRpc]
+    private void SetFollowTransformNullServerRpc(NetworkObjectReference networkObjectReference , float throwforce)
+    {
+        networkObjectReference.TryGet(out NetworkObject netObj);
+        SetFollowTransformNullClientRpc(netObj , throwforce);
+    }
+
+    [ClientRpc]
+    private void SetFollowTransformNullClientRpc(NetworkObjectReference networkObjectReference , float throwforce)
+    {
+        networkObjectReference.TryGet(out NetworkObject netObj);
+        netObj.GetComponent<FollowTransform>().SetTargetTransform(null , this.transform);
+        netObj.transform.position = ThrowPoint.position;
+        netObj.GetComponent<Rigidbody>().isKinematic = false;
+        netObj.GetComponent<Rigidbody>().useGravity = true;
+        if (netObj.GetComponent<Collider>())
+        {
+            netObj.GetComponent<Collider>().enabled = true; 
+        }
+        netObj.GetComponent<Rigidbody>().linearVelocity = Cam.forward * throwforce * Time.deltaTime;
+        this.CurrentHoldObject = null;
+    }
+    
+}
