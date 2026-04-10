@@ -32973,8 +32973,8 @@ MonoBehaviour:
   - prefab: {fileID: 5125897179230367140, guid: 65d6f18ee6066824c8d14d176ed9cf47, type: 3}
     probability: 0.359
     ableToSpawn: 1
-  - prefab: {fileID: 2486268768637353496, guid: e59d830035ded1044b8548bcc036ed3d, type: 3}
-    probability: 0.259
+  - prefab: {fileID: 2992412976907015911, guid: 481edf44724d82a458ef0a06056f2aff, type: 3}
+    probability: 0.679
     ableToSpawn: 0
   SpawnIndicator: {fileID: 3574269667675813573, guid: 0a1185a01718251468ea1836085889ae, type: 3}
   minSpawnTime: 2

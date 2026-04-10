@@ -156,10 +156,17 @@ public class ReadyUp : NetworkBehaviour
             Loader.LoadNetwork(loadScene);
         }
         //doesnt work \/ ;p
-        if (relayManager.amountOfPlayers == 1)
+        if (NetworkManager.Singleton.ConnectedClientsIds.Count == 1)
         {
-            Debug.Log("Loaded1");
-            Loader.LoadNetwork(Loader.Scene.GameScene);
+            Debug.Log("no firends ;(");
+            NetworkManager.Singleton.Shutdown();
+            var Readyups = FindFirstObjectByType<ReadyUp>();
+            if(Readyups != null) Destroy(Readyups.GameObject());
+            var modifierHolder = FindFirstObjectByType<ModifierHolder>();
+            if(modifierHolder != null) Destroy(modifierHolder.GameObject());
+            Destroy(NetworkManager.Singleton.GameObject());
+            SceneManager.LoadScene(Loader.Scene.Lobby.ToString());
+            ErrorMessageManager.instance.ShowError("you got no friends? ;-)");
         }
     }
 

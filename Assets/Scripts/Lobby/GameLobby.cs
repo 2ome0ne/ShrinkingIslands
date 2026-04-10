@@ -110,6 +110,7 @@ public class GameLobby : MonoBehaviour
             Lobby lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(_lobbyCode, new JoinLobbyByCodeOptions{ Player = playerData});
             lobbyPassword = lobby.Id;
             Debug.Log("Joined lobby: " + _lobbyCode);
+            CodeText.text = lobby.LobbyCode;
             StartDiscconectButton.SetActive(true);
             UpdateLobbyInfo();
             JoinedLobby();
@@ -153,6 +154,7 @@ public class GameLobby : MonoBehaviour
             HostAndJoinButton.SetActive(true);
             StartDiscconectButton.SetActive(false);
             current_lobby = null;
+            CodeText.text = "Salad";
             foreach (Transform t in Content)
             {
                 Destroy(t.gameObject);
@@ -193,7 +195,8 @@ public class GameLobby : MonoBehaviour
             
             foreach (Transform t in Content)
             {
-                Destroy(t.gameObject);
+                if(t != null)
+                    Destroy(t.gameObject);
             }
 
             if (AuthenticationService.Instance.PlayerId == lobby.HostId)
