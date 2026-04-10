@@ -16,6 +16,12 @@ public class GameManager : NetworkBehaviour
     public List<ActivePlayer> Players;
 
     [SerializeField] private GameObject SpectatorPlayer;
+    [SerializeField] private float OceanKnockBackForce = 40;
+    [SerializeField] private GameObject WinUI;
+    [SerializeField] private GameObject LoseUI;
+    public bool GameOver = false;
+    public EscapeMenu escapeMenu;
+    private bool disconnected = false;
 
     [System.Serializable]
     public class ActivePlayer
@@ -24,17 +30,114 @@ public class GameManager : NetworkBehaviour
         public ulong playerId;
         public bool isAlive = true;
         public bool isWinner = false;
+
+        public bool IsImmune = false;
+
+        //Current life max is 3
+        public PlayerHealth playerHealth;
     }
-    
-    public void AddPlayer(Transform player, bool isAlive)
+
+    [Rpc(SendTo.Everyone)]
+    public void AddPlayerRpc(NetworkObjectReference ObjRefrence, bool isAlive)
     {
+        ObjRefrence.TryGet(out NetworkObject NetObj);
+        Transform player;
+        player = NetObj.transform;
+        
         ActivePlayer activePlayer = new ActivePlayer();
         activePlayer.player = player;
         activePlayer.isAlive = isAlive;
+        activePlayer.playerHealth = player.gameObject.GetComponent<PlayerHealth>();
         activePlayer.playerId = player.GetComponent<ThePlayerData>().PlayerId.Value;
+        if (activePlayer.playerId == NetworkManager.LocalClientId)
+        {
+            escapeMenu.player = player.gameObject;
+            escapeMenu.GetAllRefrences();
+        }
+
         Players.Add(activePlayer);
     }
-    [ServerRpc]
+
+    public void SentEscapePlayer(GameObject player)
+    {
+        escapeMenu.player = player;
+        escapeMenu.GetAllRefrences();
+    }
+
+    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
+    public void AddEscapeToAllRpc()
+    {
+        foreach (var player in Players)
+        {
+            if (player.playerId == NetworkManager.LocalClientId)
+            {
+                escapeMenu.player = player.player.gameObject;
+                escapeMenu.GetAllRefrences();
+            }
+        }
+    }
+
+
+
+public void BackToLobby()
+    {
+        escapeMenu.Disconnect();
+        disconnected = true;
+    }
+
+    private void Update()
+    {
+        if (!IsOwner) return;
+
+        if (NetworkManager.Singleton.ShutdownInProgress && !disconnected)
+        {
+            disconnected = true;
+            escapeMenu.Disconnect();
+        }
+    }
+
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
+    public void PlayerDamageServerRpc(Vector3 playerDeathPosition , ulong playerId , NetworkObjectReference playerRef , bool IsOcean)
+    {
+        ActivePlayer damaged_player = Players.Find(player => player.playerId == playerId);
+        if (!damaged_player.IsImmune)
+        {
+            damaged_player.IsImmune = true;
+            StartCoroutine(WaitUnImmune(playerId));
+            if (IsOcean)
+            {
+                MakeSeaKnockackServerRpc(damaged_player.player.GetComponent<NetworkObject>());
+            }
+            damaged_player.playerHealth.TakeDamageServerRpc();
+            Debug.Log("Damage");
+            if (damaged_player.playerHealth.currentHealth.Value == 0)
+            {
+                PlayerDiesServerRpc(playerDeathPosition, playerId, playerRef);
+            }
+        }
+    }
+
+    IEnumerator WaitUnImmune(ulong playerId)
+    {
+        yield return new WaitForSeconds(1.5f);
+        UnImmuneRpc(playerId);
+    }
+    
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
+    private void UnImmuneRpc(ulong playerId)
+    {
+        ActivePlayer damaged_player = Players.Find(player => player.playerId == playerId);
+        damaged_player.IsImmune = false;
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void MakeSeaKnockackServerRpc(NetworkObjectReference playerO)
+    {
+        playerO.TryGet(out NetworkObject player);
+        player.GetComponent<PlayerKnockbackSystem>().SeaKnockback(OceanKnockBackForce);
+    }
+    
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
     public void PlayerDiesServerRpc(Vector3 playerDeathPosition , ulong playerId , NetworkObjectReference playerRef)
     {
         GameObject spectatorPlayer = Instantiate(SpectatorPlayer.gameObject, playerDeathPosition, Quaternion.identity);
@@ -42,8 +145,14 @@ public class GameManager : NetworkBehaviour
         playerRef.TryGet(out NetworkObject player);
         player.Despawn();
         ActivePlayer deadplayer = Players.Find(player => player.playerId == playerId);
+        deadplayer.player = spectatorPlayer.transform;
         deadplayer.isAlive = false;
         CheckForWinnerServerRpc();
+    }
+
+    public void KickPlayer()
+    {
+        //ForFutureUse
     }
 
     [ServerRpc]
@@ -66,7 +175,9 @@ public class GameManager : NetworkBehaviour
             Debug.Log("Game Over" + player.GetComponent<ThePlayerData>().PlayerId.Value + " Won");
             ulong winnerPlayerId = player.GetComponent<ThePlayerData>().PlayerId.Value;
             ActivePlayer winnerPlayer = Players.Find(player => player.playerId == winnerPlayerId);
+            SetWinnerCameraLockModeClientRpc(winnerPlayer.player.GetComponent<NetworkObject>());
             winnerPlayer.isWinner = true;
+            ShowWinnerServerRpc();
         }
         else
         {
@@ -74,10 +185,68 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
-    public void StartLoadCompleteServerRpc()
+    [ClientRpc]
+    private void SetWinnerCameraLockModeClientRpc(NetworkObjectReference winnerPlayerRef)
     {
-       // NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += SceneManager_OnLoadEventCompleted;
+        winnerPlayerRef.TryGet(out NetworkObject winnerPlayer);
+        winnerPlayer.GetComponent<CameraController>().CanMoveCamera = false;
+    }
+
+    [ClientRpc]
+    private void UpdateWinStateCanvasClientRpc(bool HasWon , ClientRpcParams RpcParams = default)
+    {
+        if (HasWon)
+        {
+            //turn on winner canvas ui
+            WinUI.SetActive(true);
+        }
+        else
+        {
+            //You Lose canvas ui
+            LoseUI.SetActive(true);
+        }
+    }
+
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
+    private void ShowWinnerServerRpc()
+    {
+        ActivePlayer Winner = Players.Find(Players => Players.isWinner);
+        Winner.player.GetComponent<CharecterController>().CanMove = false;
+        
+        List<ActivePlayer> allDeadPlayers = new List<ActivePlayer>();
+        foreach (ActivePlayer deadplayer in Players)
+        {
+            if (!deadplayer.isAlive)
+            {
+                allDeadPlayers.Add(deadplayer);
+            }
+        }
+
+        foreach (var player in allDeadPlayers)
+        {
+            player.player.transform.position = Winner.player.transform.position;
+        }
+        
+        foreach (var player in Players)
+        {
+            var clientRpcParams = new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams
+                {
+                    TargetClientIds = new ulong[] { player.playerId }
+                }
+            }; 
+            bool HasWon = player.isWinner;
+            UpdateWinStateCanvasClientRpc(HasWon , clientRpcParams);
+        }
+
+        GameOverRpc();
+    }
+
+    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
+    private void GameOverRpc()
+    {
+        GameOver = true;
     }
 
     public void PlayerHasDisconnected(ulong ClientId)
@@ -95,5 +264,8 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-
+    public void GoToModifierSelect()
+    {
+        FindFirstObjectByType<ReadyUp>().ChangeScenesRpc(Loader.Scene.ChooseModifier);
+    }
 }

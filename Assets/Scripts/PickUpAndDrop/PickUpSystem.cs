@@ -9,7 +9,7 @@ using UnityEngine;
 public class PickUpSystem : NetworkBehaviour
 {
     [Header("--[Settings]--")] 
-    [SerializeField] private float ThrowForce;
+    [SerializeField] private NetworkVariable<float> ThrowForce = new NetworkVariable<float>(0f);
     
     [SerializeField] private float MaxThrowForce;
     [SerializeField] private float MinThrowForce;
@@ -19,6 +19,7 @@ public class PickUpSystem : NetworkBehaviour
     private PlayerUImanager uImanager;
     [SerializeField] private Transform HoldPoint;
     [SerializeField] private Transform Cam;
+    [SerializeField] private PlayerAnimationManager animationManager;
     [SerializeField] private NetworkAnimator ArmAnimaton;
     public NetworkVariable<bool> HasItem;
 
@@ -56,6 +57,8 @@ public class PickUpSystem : NetworkBehaviour
     {
         networkObjectReference.TryGet(out NetworkObject netObj);
         netObj.GetComponent<FollowTransform>().SetTargetTransform(this.HoldPoint.transform , this.transform);
+        netObj.GetComponent<Collider>().enabled = false;
+        netObj.GetComponent<Rigidbody>().isKinematic = true;
         CurrentHoldObject = netObj.transform;
     }
     
@@ -86,22 +89,29 @@ public class PickUpSystem : NetworkBehaviour
 
         if (Input.GetKeyUp(KeyCode.Q))
         {
-            DropItem(ThrowForce);
-            ThrowForce = MinThrowForce;
+            DropItem(ThrowForce.Value);
+            EditThrowForceServerRpc(MinThrowForce);
+            animationManager.TriggerThrow();
             uImanager.EnableDisableThrowForceSlider(false);
         }
+    }
 
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            NetworkObject notObj = Instantiate(PlayerObjects[0].transform , HoldPoint.position , HoldPoint.rotation).GetComponent<NetworkObject>();
-            notObj.Spawn();
-        }
+    [ServerRpc]
+    private void EditThrowForceServerRpc(float value)
+    {
+        ThrowForce.Value = value;
     }
 
     [ServerRpc]
     private void SetHasItemServerRpc(bool value)
     {
         HasItem.Value = value;
+    }
+
+    [ServerRpc]
+    private void EditAddThrowForceServerRpc(float value)
+    {
+        ThrowForce.Value += value;
     }
 
     public void DePick()
@@ -112,12 +122,12 @@ public class PickUpSystem : NetworkBehaviour
 
     private void CalculateThrowForce()
     {
-        if (ThrowForce < MaxThrowForce)
+        if (ThrowForce.Value < MaxThrowForce)
         {
-            Debug.Log("Charging =" + ThrowForce);
-            ThrowForce += ThrowforceMultiplier * Time.deltaTime;
+            Debug.Log("Charging =" + ThrowForce.Value);
+            EditAddThrowForceServerRpc(ThrowforceMultiplier * Time.deltaTime);
         }
-        uImanager.SetThrowForceSlider(ThrowForce);
+        uImanager.SetThrowForceSlider(ThrowForce.Value);
     }
 
     [ServerRpc]

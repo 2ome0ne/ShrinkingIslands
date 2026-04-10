@@ -37,7 +37,13 @@ public class CharecterController : NetworkBehaviour
         if(!IsOwner) return;
         controller = transform.GetComponent<CharacterController>();
     }
-    
+
+    public override void OnNetworkSpawn()
+    {
+        if(!IsOwner) return;
+        GameManager.Instance.SentEscapePlayer(this.gameObject);
+    }
+
     void Update()
     {
         if(!IsOwner) return;

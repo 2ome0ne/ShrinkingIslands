@@ -6,7 +6,8 @@ using UnityEngine;
 public class SlimeBombExploder : NetworkBehaviour
 {
     [Header("--References--")] [SerializeField]
-    private bool ExplodeOnContact;
+    private bool ExplodeOnContact = false;
+    [SerializeField] private bool Exploded = false;
     private Rigidbody rb;
     [SerializeField] private string ItemIndex;
     [SerializeField] private float HitBoxRange;
@@ -33,12 +34,12 @@ public class SlimeBombExploder : NetworkBehaviour
     {
 
         Collider[] hits = Physics.OverlapSphere(transform.position, HitBoxRange, HittableLayer);
-        if (hits.Length > 0)
+        if (hits.Length > 0 && !Exploded && ExplodeOnContact)
         {
             Debug.Log(hits[0].gameObject.name);
             if(!IsServer) return;
-            if(!ExplodeOnContact) return;
             if(hits[0].transform == followTransform.player) return;
+            Exploded = true;
             SpawnPrefabsServerRpc();
         }
     }
@@ -48,8 +49,9 @@ public class SlimeBombExploder : NetworkBehaviour
     {
         NetworkObject BlobnetObj = Instantiate(SlimeBlobPrefab, transform.position, Quaternion.identity).GetComponent<NetworkObject>();
         BlobnetObj.Spawn();
+        Debug.Log("Send");
         ObjectPooler.instance.ReturnObjectToPool(ItemIndex , NetworkObject);
-        this.NetworkObject.Despawn(true);
+        this.NetworkObject.Despawn();
     }
 
     [ClientRpc]

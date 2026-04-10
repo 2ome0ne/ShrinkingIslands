@@ -7,6 +7,10 @@ using Unity.Services.Core;//
 using UnityEngine;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
 //using UnityEditor.VersionControl;
 
 public class GameLobby : MonoBehaviour
@@ -31,10 +35,19 @@ public class GameLobby : MonoBehaviour
     private bool HasStarted = false;
     private string lobbyPassword;
     private Player playerData;
+    private Lobby current_lobby;
 
     private void Update()
     {
         HadleLobbyHartbeat();
+    }
+
+    public void BackToMainMenu()
+    {
+        Destroy(NetworkManager.Singleton.GameObject());
+        var relay = FindAnyObjectByType<RelayManager>();
+        Destroy(relay.GameObject());
+        SceneManager.LoadScene(Loader.Scene.MainMenu.ToString());
     }
 
     private async void HadleLobbyHartbeat()
@@ -50,6 +63,11 @@ public class GameLobby : MonoBehaviour
                 await LobbyService.Instance.SendHeartbeatPingAsync(HostLobby.Id);
             }
         }
+    }
+
+    public void CopyCodeButton()
+    {
+        GUIUtility.systemCopyBuffer = CodeText.text;
     }
 
     public async void CreateLobby()
@@ -71,7 +89,7 @@ public class GameLobby : MonoBehaviour
             Lobby lobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers , createLobbyOptions);
             HostLobby = lobby;
             lobbyPassword = lobby.Id;
-            Debug.Log("Created lobby: " + lobbyName + " " + lobby.MaxPlayers + " " + lobby.LobbyCode);
+            Debug.Log(lobby.LobbyCode);
             CodeText.text = lobby.LobbyCode;
             StartDiscconectButton.SetActive(true);
             UpdateLobbyInfo();
@@ -125,19 +143,21 @@ public class GameLobby : MonoBehaviour
         HostAndJoinButton.SetActive(false);
         PlayerNameText.text = playerName;
     }
-
+    
     public async void Disconnect()
     {
         try
         {
-            string _lobbyCode = CodeInputField.text;
-            CreateProfile();
-            Lobby lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(_lobbyCode, new JoinLobbyByCodeOptions{ Player = playerData});
-            lobbyPassword = lobby.Id;
-            Debug.Log("Joined lobby: " + _lobbyCode);
-            StartDiscconectButton.SetActive(true);
-            UpdateLobbyInfo();
-            JoinedLobby();
+            lobbyPassword = null;
+            await LobbyService.Instance.RemovePlayerAsync(current_lobby.Id, AuthenticationService.Instance.PlayerId);
+            HostAndJoinButton.SetActive(true);
+            StartDiscconectButton.SetActive(false);
+            current_lobby = null;
+            foreach (Transform t in Content)
+            {
+                Destroy(t.gameObject);
+            }
+            Debug.Log("Left lobby successfully");
         }
         catch (LobbyServiceException e)
         {
@@ -187,12 +207,12 @@ public class GameLobby : MonoBehaviour
             relayManager.amountOfPlayers = lobby.Players.Count;
             relayManager.Players = lobby.Players;
             relayManager.player_Name = playerName;
+            current_lobby = lobby;
             foreach (Player player in lobby.Players)
             {
                 GameObject newPlayerItem = Instantiate(nameShow, Content);
                 //Debug.Log(player.Data["Name"].Value + "EEEEEEEE");
                 newPlayerItem.GetComponent<TextMeshProUGUI>().text = player.Data["Name"].Value;
-                player_Name = PlayerPrefs.GetString(PLAYER_PREFS_PLAYER_NAME_MULTIPLAYER, "PlayerName" + UnityEngine.Random.Range(100, 1000));
             }
             
             if (HasStarted)

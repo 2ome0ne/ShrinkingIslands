@@ -10,6 +10,7 @@ public class TimeBomb : NetworkBehaviour
     
     public NetworkVariable<float> CurrentCooldown;
     [SerializeField] private GameObject ExplosionEffect;
+    
     [SerializeField] private PickUpSystem PickUpSystem;
 
     public override void  OnNetworkSpawn()
@@ -35,7 +36,7 @@ public class TimeBomb : NetworkBehaviour
             }
         }
     }
-
+    
     [ServerRpc]
     void ExplodeServerRpc()
     {

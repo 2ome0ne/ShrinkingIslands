@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using Unity.Netcode;
 
 namespace EZCameraShake
 {
     [AddComponentMenu("EZ Camera Shake/Camera Shaker")]
-    public class CameraShaker : MonoBehaviour
+    public class CameraShaker : NetworkBehaviour
     {
         /// <summary>
         /// The single instance of the CameraShaker in the current scene. Do not use if you have multiple instances.
@@ -33,9 +34,11 @@ namespace EZCameraShake
 
         List<CameraShakeInstance> cameraShakeInstances = new List<CameraShakeInstance>();
 
-        void Awake()
+        public override void OnNetworkSpawn()
         {
-            Instance = this;
+            if (!IsOwner) return;
+            if(Instance == null)
+                Instance = this;
             instanceList.Add(gameObject.name, this);
         }
 
@@ -175,7 +178,7 @@ namespace EZCameraShake
         public List<CameraShakeInstance> ShakeInstances
         { get { return new List<CameraShakeInstance>(cameraShakeInstances); } }
 
-        void OnDestroy()
+        public override void OnNetworkDespawn()
         {
             instanceList.Remove(gameObject.name);
         }

@@ -279,6 +279,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickableObject
   ShowTopMostFoldoutHeaderGroup: 1
   ObjectIndex: 2
+  DespawnY: 40
+  rb: {fileID: 5327356555231564588}
 --- !u!54 &5327356555231564588
 Rigidbody:
   m_ObjectHideFlags: 0

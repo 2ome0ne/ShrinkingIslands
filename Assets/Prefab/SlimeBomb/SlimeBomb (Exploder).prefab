@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8907344466425504230}
   - component: {fileID: 5598677261928192647}
   - component: {fileID: 1383403062166473744}
+  - component: {fileID: -3179985857049910860}
   m_Layer: 7
   m_Name: SlimeBomb (Exploder)
   m_TagString: Untagged
@@ -168,6 +169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c70e840238e6f4b9219c575fe2d9fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FollowTransform
+  targetTransform: {fileID: 0}
   player: {fileID: 0}
 --- !u!114 &1383403062166473744
 MonoBehaviour:
@@ -183,12 +185,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SlimeBombExploder
   ShowTopMostFoldoutHeaderGroup: 1
   ExplodeOnContact: 0
+  Exploded: 0
   ItemIndex: 1
   HitBoxRange: 0.59
   SlimeBlobPrefab: {fileID: 1433256177927983638, guid: 8633832fac008db4aa6ebef89ed7784e, type: 3}
   HittableLayer:
     serializedVersion: 2
     m_Bits: 72
+--- !u!65 &-3179985857049910860
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1178683659581531640}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2605890704745248796
 GameObject:
   m_ObjectHideFlags: 0

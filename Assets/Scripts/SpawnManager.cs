@@ -11,7 +11,7 @@ public class SpawnManager : NetworkBehaviour
     //0 , 0 will be the spawn and will spawn two
 
     [SerializeField] private float RotaionPerPlayer;
-    
+
     [SerializeField] private GameObject SpawnPodiumPrefab;
 
     [SerializeField] private GameObject SpawnCheckPrefab;
@@ -19,7 +19,7 @@ public class SpawnManager : NetworkBehaviour
     [SerializeField] private int amount_off_players;
 
     [SerializeField] private float MoveAmount;
-    
+
     private GameObject spawnCheck;
 
     [SerializeField] private List<Vector3> SpawnPoints;
@@ -28,20 +28,28 @@ public class SpawnManager : NetworkBehaviour
     [SerializeField] private float CurrentRotaion;
 
     public Transform spawnpoint;
-    
+
     public static SpawnManager Instance;
-    
+
     [SerializeField] private GameManager gameManager;
     [SerializeField] private ReadyUp readyUp;
 
     public bool GenerateComplete;
-    
+
     public override void OnNetworkSpawn()
     {
         if (IsServer)
         {
             readyUp = FindFirstObjectByType<ReadyUp>();
             NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += SceneManager_OnLoadEventCompleted;
+        }
+    }
+
+    public override void OnNetworkDespawn()
+    {
+        if (IsServer)
+        {
+            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= SceneManager_OnLoadEventCompleted;
         }
     }
     
@@ -69,7 +77,6 @@ public class SpawnManager : NetworkBehaviour
         yield return new WaitUntil(() => GenerateComplete == true);
         Debug.Log("Sending SpawnPlayer");
         spawnPlayerServerRpc(clientId);
-
     }
 
     [ServerRpc]
@@ -81,7 +88,7 @@ public class SpawnManager : NetworkBehaviour
         playerTransform.GetComponent<ThePlayerData>().PlayerName = playerData.name.ToString();
         playerTransform.GetComponent<ThePlayerData>().PlayerId.Value = clientId;
         playerTransform.GetComponent<ThePlayerData>().SetPlayerNameServerRpc(playerData.name.ToString());
-        GetComponent<GameManager>().AddPlayer(playerTransform , true);
+        GetComponent<GameManager>().AddPlayerRpc(playerTransform.gameObject.GetComponent<NetworkObject>() , true);
         Vector3 spawnPos = CalulateSpawnPoint() + Vector3.up * 2f;
         SetPositionClientRpc(playerTransform.GetComponent<NetworkObject>() , spawnPos);
     }
@@ -127,7 +134,7 @@ public class SpawnManager : NetworkBehaviour
                 // Successfully found land!
                 GameObject podium = Instantiate(SpawnPodiumPrefab, hit.point, Quaternion.identity);
                 foundPos = podium.transform.position; // Set the reference
-                podium.GetComponent<NetworkObject>().Spawn();
+                podium.GetComponent<NetworkObject>().Spawn(true);
             }
         }
 

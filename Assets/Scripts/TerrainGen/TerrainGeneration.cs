@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.VisualScripting;
@@ -18,6 +19,7 @@ public class TerrainGeneration : NetworkBehaviour
     //public bool GenerateComplete = false;
     
     [SerializeField] private SpawnManager spawnManager;
+    [SerializeField] private PropSpawner propSpawner;
 
     public override void OnNetworkSpawn()
     {
@@ -129,8 +131,9 @@ public class TerrainGeneration : NetworkBehaviour
         {
             transform.position = Vector3.zero;
         }
-        if(IsServer)
-            spawnManagerGenerateCompleteServerRpc();
+
+        if (IsServer)
+            StartCoroutine(waitToSpawnProps());
     }
 
     [ServerRpc]
@@ -143,14 +146,26 @@ public class TerrainGeneration : NetworkBehaviour
         Debug.Log("Complete SetCenter");
         //centerpoint.GetComponent<NetworkObject>().Despawn();
     }
+
+    IEnumerator waitToSpawnProps()
+    {
+        yield return new WaitForSeconds(0.1f);
+        propSpawner.SpawnAllProps();
+    }
     
     [ServerRpc]
     void spawnManagerGenerateCompleteServerRpc()
     {
+        propSpawner.SpawnAllProps();
+    }
+
+    [ServerRpc]
+    public void AllowSpawnManagerToSpawnServerRpc()
+    {
         Debug.Log("AllowPlayerToSpawn");
         spawnManager.GenerateComplete = true;
     }
-
+    
     private List<TerrainTile> GetNeighbors(int x, int y)
     {
         List<TerrainTile> neighbors = new List<TerrainTile>();

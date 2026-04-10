@@ -1,6 +1,7 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
-public class StaminaSystem : MonoBehaviour
+public class StaminaSystem : NetworkBehaviour
 {
     [Header("Stamina")] 
     public float CurrentStamina;
@@ -8,6 +9,9 @@ public class StaminaSystem : MonoBehaviour
     public float StaminaRegen;
     
     public float SprintMultiplier;
+
+    [SerializeField] private float maxCanRegen = 1f;
+    [SerializeField] private float currentCanRegen;
     
     public bool Sprinting = false;
     [Header("References")]
@@ -23,6 +27,7 @@ public class StaminaSystem : MonoBehaviour
 
     void Update()
     {
+        if (!IsOwner) return;
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             if(CurrentStamina > 0)
@@ -33,6 +38,12 @@ public class StaminaSystem : MonoBehaviour
         {
             Sprinting = false;
             AddSprint();
+            currentCanRegen = maxCanRegen;
+        }
+        currentCanRegen -= Time.deltaTime;
+        if (CurrentStamina > MaxStamina)
+        {
+            CurrentStamina = MaxStamina;
         }
 
         if (Sprinting == true)
@@ -41,7 +52,8 @@ public class StaminaSystem : MonoBehaviour
         }
         StaminaSlider.value = CurrentStamina;
         StaminaSlider.maxValue = MaxStamina;
-        if (CurrentStamina < MaxStamina &&!_playerAbillites.Blocking)
+
+        if (CurrentStamina < MaxStamina &&!_playerAbillites.Blocking && currentCanRegen <= 0)
         {
             CurrentStamina += StaminaRegen * Time.deltaTime;
         }
@@ -54,6 +66,19 @@ public class StaminaSystem : MonoBehaviour
     public void EatStamina(float amount)
     {
         CurrentStamina -= amount;
+        UpdateStaminaForALlRpc(CurrentStamina);
+    }
+
+    public void AddStamina(float amount)
+    {
+        CurrentStamina += amount;
+        UpdateStaminaForALlRpc(CurrentStamina);
+    }
+
+    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
+    private void UpdateStaminaForALlRpc(float currentAmount)
+    {
+        CurrentStamina = currentAmount;
     }
     
     void AddSprint()
@@ -64,7 +89,8 @@ public class StaminaSystem : MonoBehaviour
         }
         else
         {
-            _controller.SpeedMultiplier -= SprintMultiplier;
+            if(CurrentStamina > 0)
+                _controller.SpeedMultiplier -= SprintMultiplier;
         }
     }
     

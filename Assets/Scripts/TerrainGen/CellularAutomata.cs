@@ -24,19 +24,22 @@ public class CellularAutomata : NetworkBehaviour
     {
         generator = GetComponent<TerrainGeneration>();
         grid = generator.grid;
-        foreach (var tile in grid)
+        for (int i = 0; i < Iterations; i++)
         {
-            if (tile != null)
+            foreach (var tile in grid)
             {
-                int GroundNeighbours = tile.GiveAmoutOfNeighboursGround();
-                int WaterNeighbours = 8 - GroundNeighbours;
-                if (WaterNeighbours > 4)
+                if (tile != null)
                 {
-                    tile.terrainType = TerrainTile.TerrainTypes.water;
-                }
-                else
-                {
-                    tile.terrainType = TerrainTile.TerrainTypes.ground;
+                    int GroundNeighbours = tile.GiveAmoutOfNeighboursGround();
+                    int WaterNeighbours = 8 - GroundNeighbours;
+                    if (WaterNeighbours > 4)
+                    {
+                        tile.terrainType = TerrainTile.TerrainTypes.water;
+                    }
+                    else
+                    {
+                        tile.terrainType = TerrainTile.TerrainTypes.ground;
+                    }
                 }
             }
         }

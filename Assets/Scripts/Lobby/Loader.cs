@@ -5,9 +5,12 @@ public static class Loader
 {
     public enum Scene
     {
-        SampleScene,
+        GameScene,
         ReadyScene,
-        Lobby
+        Lobby,
+        ChooseModifier,
+        LoadingScene,
+        MainMenu
     }
 
     private static Scene targetScene;
@@ -17,6 +20,12 @@ public static class Loader
         Loader.targetScene = targetScene;
         
         //SceneManager.LoadScene(Scene.LoadingScene.);
+    }
+
+    public static void DisconnectCallBack(Scene targetScene)
+    {
+        Loader.targetScene = targetScene;
+        SceneManager.LoadScene(targetScene.ToString());
     }
 
     public static void LoadNetwork(Scene targetScene)

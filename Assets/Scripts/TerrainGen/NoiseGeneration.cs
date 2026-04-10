@@ -1,6 +1,7 @@
 using System;
 using Unity.Netcode;
 using Unity.Netcode.Components;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class NoiseGeneration : NetworkBehaviour
@@ -14,6 +15,7 @@ public class NoiseGeneration : NetworkBehaviour
 
     [SerializeField] private float higherSize = 5;
     [SerializeField] private float highestSize = 10;
+    [SerializeField] private float falloffStrength = 3;
 
     public float offsetX;
     public float offsetY;
@@ -29,6 +31,23 @@ public class NoiseGeneration : NetworkBehaviour
         offsetY = UnityEngine.Random.Range(0 ,100);
         GenerateGridClientRpc(offsetX , offsetY);
     }
+
+    private float[,] fallOffMap(int size)
+    {
+        float[,] map = new float[size, size];
+
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                float x = i / (float)size * 2 - 1;
+                float y = i / (float)size * 2 - 1;
+                float Value =Mathf.Max(Mathf.Abs(x), Mathf.Abs(y));
+                map[i , j] = Value;
+            }
+        }
+        return map;
+    }
     
     [ClientRpc]
     public void GenerateGridClientRpc(float ofX , float ofY)
@@ -37,15 +56,15 @@ public class NoiseGeneration : NetworkBehaviour
         offsetY = ofY;
         Debug.Log(offsetX + " x : y " + offsetY);
         generator = GetComponent<TerrainGeneration>();
+        float[,] fallofMap = fallOffMap(generator.width);
         for (int x = 0; x < generator.width; x++)
         {
             for (int y = 0; y < generator.height; y++)
             {
                 float xCoord = (float)x * noiseScale + offsetX;
                 float yCoord = (float)y * noiseScale + offsetY;
-                
+                //float noiseValue = Mathf.Clamp01(Mathf.PerlinNoise(xCoord, yCoord) - fallofMap[(int)xCoord, (int)yCoord]);
                 float noiseValue = Mathf.PerlinNoise(xCoord, yCoord);
-
                 Vector3 spawnPos = new Vector3(x * generator.TileSize + transform.position.x, 0, y * generator.TileSize + transform.position.z);
                 if (noiseValue > threshold)
                 {

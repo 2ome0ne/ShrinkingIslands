@@ -45,7 +45,7 @@ public class SlimeBlobAddForce : NetworkBehaviour
         //if(!IsServer) return;
         if (other.GetComponent<PlayerKnockbackSystem>())
         {
-            other.GetComponent<PlayerKnockbackSystem>().KnockBack(this.transform , KbForce);
+            other.GetComponent<PlayerKnockbackSystem>().KnockBack(this.transform.position , KbForce);
         }
     }
 }

@@ -812,6 +812,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ReadyUp
   ShowTopMostFoldoutHeaderGroup: 1
   relayManager: {fileID: 0}
+  ChangeScene: 0
+  AllowChange: 0
 --- !u!4 &735767594
 Transform:
   m_ObjectHideFlags: 0
@@ -840,6 +842,82 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
   GlobalObjectIdHash: 3788107321
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!1 &1077255033
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1077255035}
+  - component: {fileID: 1077255036}
+  - component: {fileID: 1077255034}
+  m_Layer: 0
+  m_Name: ModifierHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1077255034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077255033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a392b818a4b5af44d896d646d09e8d0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ModifierHolder
+  ShowTopMostFoldoutHeaderGroup: 1
+  activeModifiers: []
+  allModifiers:
+  - {fileID: 11400000, guid: 5f28ac96bd90d8c438cbb81caf25efb9, type: 2}
+  - {fileID: 11400000, guid: 7f92ae41f81e78a4d9c66f3c2858bd33, type: 2}
+  - {fileID: 11400000, guid: c13c85f7f1d0b8548ac5f329661297cd, type: 2}
+--- !u!4 &1077255035
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077255033}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1077255036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077255033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 2022798536
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1086,3 +1164,4 @@ SceneRoots:
   - {fileID: 318874376}
   - {fileID: 412475032}
   - {fileID: 735767594}
+  - {fileID: 1077255035}

@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using EZCameraShake;
 public class PlayerKnockbackSystem : MonoBehaviour
 {
     [Header("Knockback Settings")] 
@@ -16,15 +16,16 @@ public class PlayerKnockbackSystem : MonoBehaviour
     [SerializeField]
     private PlayerAbillites playerAbillites;
     
-    public void KnockBack(Transform selfPos , float KbForce)
+    public void KnockBack(Vector3 attackpositon , float KbForce)
     {
         if (playerAbillites.Blocking)
         {
-            playerAbillites._staminaSystem.EatStamina(KbForce / 10f);
+            playerAbillites._staminaSystem.EatStamina(KbForce / 100f);
             return;
         }
-        Direction = (transform.position - selfPos.position).normalized;
-        Direction.y = 0.5f;
+        CameraShaker.Instance.ShakeOnce(KbForce / 80f, KbForce / 95f, 0.1f, 2f);
+        Direction = (transform.position - attackpositon).normalized;
+        Direction.y = 0.2f;
         impact += Direction * KbForce / mass;
         //knockback
     }
@@ -32,6 +33,13 @@ public class PlayerKnockbackSystem : MonoBehaviour
     void Update()
     {
         move();
+    }
+
+    public void SeaKnockback(float KbForce)
+    {
+        CameraShaker.Instance.ShakeOnce(8f, 6f, 0.1f, 2f);
+        Direction = (transform.up * KbForce);
+        impact += Direction * KbForce / mass; 
     }
 
     void move()

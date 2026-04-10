@@ -11,6 +11,7 @@ public class RandomlySpawnItems : NetworkBehaviour
         public GameObject prefab;
         [Range(0 , 1)]
         public float probability; 
+        public bool ableToSpawn = true;
         //the higher it is the more common it is
     }
 
@@ -22,7 +23,13 @@ public class RandomlySpawnItems : NetworkBehaviour
     [SerializeField] private float maxSpawnTime;
     [SerializeField] private float UpPushForce;
 
+    [SerializeField] private float StartSpawnDelayTime = 10f;
     private float currentSpawnTime;
+
+    private void Start()
+    {
+        currentSpawnTime = StartSpawnDelayTime;
+    }
 
     private void Update()
     {
@@ -42,6 +49,13 @@ public class RandomlySpawnItems : NetworkBehaviour
         Gizmos.DrawRay(ray.origin, ray.direction * 100f);
     }
 
+    [ServerRpc]
+    public void EnableItemToSpawnByIndexServerRpc(int index)
+    {
+        Debug.Log(index + " is enabled");
+        spawnableItems[index].ableToSpawn = true;
+    }
+
     private void TrySpawnItem()
     {
         int index = GetRandomItemIndex();
@@ -49,7 +63,7 @@ public class RandomlySpawnItems : NetworkBehaviour
         {
             //spawn item
             GameObject spawnedObj = Instantiate(spawnableItems[index].prefab, GetRandomPostion() , Quaternion.identity);
-            spawnedObj.GetComponent<NetworkObject>().Spawn();
+            spawnedObj.GetComponent<NetworkObject>().Spawn(true);
             SetNoGravityToItemServerRpc(spawnedObj);
             SpawnTheIndicatorServerRpc(spawnedObj.transform.position);
             //Spawn Push force
@@ -84,7 +98,9 @@ public class RandomlySpawnItems : NetworkBehaviour
     {
         Vector3 returnPos = new Vector3();
         bool HitTheWater = false;
-        while (!HitTheWater)
+        int maxcal = 100;
+        int currentcal = 0;
+        while (!HitTheWater ||currentcal < maxcal)
         {
             ray = new Ray(new Vector3(Random.Range(spt1.position.x, spt2.position.x), spt1.position.y, Random.Range(spt1.position.z, spt2.position.z)), Vector3.down);
             if(Physics.Raycast(ray, out RaycastHit hit) && hit.collider.gameObject.layer == LayerMask.NameToLayer("Water"))
@@ -94,10 +110,15 @@ public class RandomlySpawnItems : NetworkBehaviour
             else
             {
                 Debug.Log(hit.collider.gameObject.name +" this not water layer");
+                currentcal++;
                 HitTheWater = false;
             }
+
+            if (currentcal >= maxcal)
+            {
+                Debug.LogWarning("To Many Calculations");
+            }
             Debug.DrawRay(ray.origin, hit.point, Color.red);
-            Debug.Log(hit.collider.gameObject.name);
             returnPos = hit.point;
         }
         return returnPos;
@@ -105,7 +126,15 @@ public class RandomlySpawnItems : NetworkBehaviour
 
     public int GetRandomItemIndex()
     {
-        return Random.Range(0, spawnableItems.Length);
+        bool _abletospawn = false;
+        int random_spawn = 0;
+        while (!_abletospawn)
+        {
+            random_spawn = Random.Range(0, spawnableItems.Length); 
+            if(spawnableItems[random_spawn].ableToSpawn)
+                _abletospawn = true;
+        }
+        return random_spawn;
     }
     
     public bool CalculateIfItemSpawns(int itemIndex)

@@ -7,6 +7,8 @@ public class PlayerPose : NetworkBehaviour
     private Transform CameraRot;
 
     [SerializeField] private GameObject GTX;
+    [SerializeField] private GameObject GTX1;
+    [SerializeField] private GameObject GTX2;
 
     public Transform Head;
 
@@ -23,6 +25,8 @@ public class PlayerPose : NetworkBehaviour
         if (IsOwner)
         {
             GTX.SetActive(false);
+            GTX1.SetActive(false);
+            GTX2.SetActive(false);
         }
         else if(!IsOwner)
         {

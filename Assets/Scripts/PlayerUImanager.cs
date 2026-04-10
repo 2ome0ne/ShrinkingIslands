@@ -1,10 +1,20 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
-public class PlayerUImanager : MonoBehaviour
+public class PlayerUImanager : NetworkBehaviour
 {
     [Header("--Player PickUp system UI--")]
     
     public Slider ThrowForceSlider;
+    public Slider StaminaSlider;
+    public override void OnNetworkSpawn()
+    {
+        ThrowForceSlider.gameObject.SetActive(false);
+        if (!IsOwner)
+        {
+            StaminaSlider.gameObject.SetActive(false);
+        }
+    }
 
     public void EnableDisableThrowForceSlider(bool value)
     {
