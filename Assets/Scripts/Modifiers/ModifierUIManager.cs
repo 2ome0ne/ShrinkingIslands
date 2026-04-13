@@ -37,19 +37,6 @@ public class ModifierUIManager : NetworkBehaviour
         GetPlayerReadyRpc();
     }
 
-    private bool HasChangeScenes = false;
-    private void Update()
-    {
-        if (!IsHost) return;
-        if(!canCheck) return;
-        if (HasChangeScenes) return;
-        if (GetIfAllPlayersReady())
-        {
-            HasChangeScenes = true;
-            Back();
-        }
-    }
-
     private void UpdateReady()
     {
         foreach (GameObject t in readyPlayersObject)
@@ -110,10 +97,17 @@ public class ModifierUIManager : NetworkBehaviour
     private void ReadyThePlayerRpc(ulong playerId)
     {
         readiedPlayer readyThisPlayer = playerReadied.Find(p => p.playerId == playerId);
-        readyThisPlayer.isReady = true;
-        UpdateReady();
-        Debug.Log(playerReadied.Find(p => p.playerId == playerId).playerName
-                  + " is Ready");
+        if (readyThisPlayer != null)
+        {
+            readyThisPlayer.isReady = true;
+            UpdateReady();
+        }
+
+        if (IsHost && GetIfAllPlayersReady())
+        {
+            canCheck = false;
+            Back();
+        }
     }
 
     public void Back()

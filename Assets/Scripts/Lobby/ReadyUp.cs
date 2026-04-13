@@ -58,9 +58,7 @@ public class ReadyUp : NetworkBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (!AllowChange) return;
-        AlreadyStartCoroutine = false;
         Debug.Log("ReadyUp Initialized");
-        //DontDestroyOnLoad(this.gameObject);
         AllowChange = false;
         SetPlayerReady();
     }
