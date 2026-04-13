@@ -61,6 +61,13 @@ public class StaminaSystem : NetworkBehaviour
         {
             CurrentStamina -= StaminaRegen * Time.deltaTime;
         }
+
+        if (CurrentStamina <= 0)
+        {
+            Sprinting = false;
+            AddSprint();
+            currentCanRegen = maxCanRegen;
+        }
     }
 
     public void EatStamina(float amount)

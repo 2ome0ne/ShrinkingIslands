@@ -130,6 +130,12 @@ public class ModifierUIManager : NetworkBehaviour
         {
             int index = Random.Range(0 , allModifiers.Length);
             Debug.Log("Creating modifier" + spawnedModifiers + " " + index);
+            GameObject mod = Instantiate(modifier , Content);
+            mod.GetComponent<Modifier>().Setmodifier(allModifiers[index]);
+            CurrentModifiers.Add(index);
+            spawnedModifiers++;
+            //THIS IS FOR LATER
+            /*
             if (!CurrentModifiers.Contains(index))
             {
                 GameObject mod = Instantiate(modifier , Content);
@@ -137,6 +143,7 @@ public class ModifierUIManager : NetworkBehaviour
                 CurrentModifiers.Add(index);
                 spawnedModifiers++;
             }
+            */
         }
     }
 }

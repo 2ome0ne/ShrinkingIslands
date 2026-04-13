@@ -110,6 +110,11 @@ public class GameLobby : MonoBehaviour
     {
         try
         {
+            if (string.IsNullOrEmpty(PlayerInputField.text))
+            {
+                ErrorMessageManager.instance.ShowError("Enter A Name >:(");
+                return;
+            }
             string _lobbyCode = CodeInputField.text;
             CreateProfile();
             Lobby lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(_lobbyCode, new JoinLobbyByCodeOptions{ Player = playerData});
