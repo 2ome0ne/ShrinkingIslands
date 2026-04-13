@@ -33355,6 +33355,11 @@ MonoBehaviour:
   - name: Flint lock
     index: 2
     Enabled: 0
+  - name: Alot Of Fog
+    index: 3
+    Enabled: 0
+  defaultfog: 0.01
+  AlotOfFogAmount: 0.1
 --- !u!114 &5211539226909084
 MonoBehaviour:
   m_ObjectHideFlags: 0

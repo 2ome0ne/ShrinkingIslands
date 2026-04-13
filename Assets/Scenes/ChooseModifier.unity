@@ -912,7 +912,7 @@ GameObject:
   - component: {fileID: 2069604693}
   - component: {fileID: 2069604697}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: ModifierCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1069,6 +1069,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c13c85f7f1d0b8548ac5f329661297cd, type: 2}
   - {fileID: 11400000, guid: 5f28ac96bd90d8c438cbb81caf25efb9, type: 2}
   - {fileID: 11400000, guid: 7f92ae41f81e78a4d9c66f3c2858bd33, type: 2}
+  - {fileID: 11400000, guid: 16312fbb0e63c4c45b7dbd19afc533bd, type: 2}
   CurrentModifiers: 
   playerReadied: []
   readyPlayersObject: []
