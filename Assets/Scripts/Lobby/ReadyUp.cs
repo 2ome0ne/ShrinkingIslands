@@ -156,7 +156,7 @@ public class ReadyUp : NetworkBehaviour
             Loader.LoadNetwork(loadScene);
         }
         //doesnt work \/ ;p
-        if (NetworkManager.Singleton.ConnectedClientsIds.Count == 1)
+        if (relayManager.amountOfPlayers == 1)
         {
             Debug.Log("no firends ;(");
             NetworkManager.Singleton.Shutdown();
