@@ -35,7 +35,9 @@ public class ReadyUp : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     public void ChangeScenesRpc(Loader.Scene scene)
     {
+        if (AllowChange) return;
         ChangeScene = scene;
+        playerReadyDic.Clear();
         AllowChange = true;
         Loader.LoadNetwork(Loader.Scene.LoadingScene);
     }
@@ -60,7 +62,7 @@ public class ReadyUp : NetworkBehaviour
         Debug.Log("ReadyUp Initialized");
         //DontDestroyOnLoad(this.gameObject);
         AllowChange = false;
-        Invoke(nameof(SetPlayerReady) , 0.1f);
+        SetPlayerReady();
     }
     
     public PlayerData GetPlayerDataFromClientId(ulong clientId)
@@ -138,9 +140,20 @@ public class ReadyUp : NetworkBehaviour
     private void SetPlayer_ReadyServerRpc(Loader.Scene loadScene ,FixedString64Bytes playerName , RpcParams serverRpcPrams = default)
     {
         Debug.Log($"Client {serverRpcPrams.Receive.SenderClientId} readied up!" + " Name Is :" + playerName);
-        TestNetworkSetPlayerNameServerRpc(serverRpcPrams.Receive.SenderClientId , playerName.ToString());
+        //TestNetworkSetPlayerNameServerRpc(serverRpcPrams.Receive.SenderClientId , playerName.ToString());
         playerReadyDic[serverRpcPrams.Receive.SenderClientId] = true;
-        
+
+        if(!IsHost) return;
+        CheckAllPlayersReady(loadScene);
+    }
+
+    private void CheckAllPlayersReady(Loader.Scene loadScene)
+    {
+        if (NetworkManager.Singleton.ConnectedClientsIds.Count < relayManager.amountOfPlayers)
+        {
+            return;
+        }
+        Debug.Log("ReadiedUp");
         bool allClientsReady = true;
         foreach (ulong cliendId in NetworkManager.Singleton.ConnectedClientsIds)
         {
@@ -150,17 +163,10 @@ public class ReadyUp : NetworkBehaviour
                 break;
             }
         }
-
-        if (NetworkManager.Singleton.ConnectedClientsIds.Count != relayManager.amountOfPlayers && !AlreadyStartCoroutine)
-        {
-            AlreadyStartCoroutine = true;
-            allClientsReady = false;
-            Debug.Log("Not ENOUGH");
-            StartCoroutine(WaitForAllClientsToConnect(playerName.ToString() , loadScene));
-        }
-
+        
         if (allClientsReady)
         {
+            playerReadyDic.Clear();
             Loader.LoadNetwork(loadScene);
             //Set Player WIn
             if (!hasCreatedPlayers)
@@ -171,19 +177,26 @@ public class ReadyUp : NetworkBehaviour
         //doesnt work \/ ;p
         if (relayManager.amountOfPlayers == 1)
         {
-            Debug.Log("no firends ;(");
-            NetworkManager.Singleton.Shutdown();
-            var Readyups = FindFirstObjectByType<ReadyUp>();
-            if(Readyups != null) Destroy(Readyups.GameObject());
-            var modifierHolder = FindFirstObjectByType<ModifierHolder>();
-            if(modifierHolder != null) Destroy(modifierHolder.GameObject());
-            var Relay = FindFirstObjectByType<RelayManager>();
-            if(Relay != null) Destroy(Relay.GameObject());
-            Destroy(NetworkManager.Singleton.GameObject());
-            SceneManager.LoadScene(Loader.Scene.Lobby.ToString());
-            ErrorMessageManager.instance.ShowError("you got no friends? ;-)");
+            Disconnectfor1Player();
         }
     }
+
+    private void Disconnectfor1Player()
+    {
+        Debug.Log("no firends ;(");
+        NetworkManager.Singleton.Shutdown();
+        var Readyups = FindFirstObjectByType<ReadyUp>();
+        if(Readyups != null) Destroy(Readyups.GameObject());
+        var modifierHolder = FindFirstObjectByType<ModifierHolder>();
+        if(modifierHolder != null) Destroy(modifierHolder.GameObject());
+        var Relay = FindFirstObjectByType<RelayManager>();
+        if(Relay != null) Destroy(Relay.GameObject());
+        Destroy(NetworkManager.Singleton.GameObject());
+        SceneManager.LoadScene(Loader.Scene.Lobby.ToString());
+        ErrorMessageManager.instance.ShowError("you got no friends? ;-)");
+    }
+    
+    
 
     [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone)]
     private void CreatePlayerWinsRpc()
@@ -201,7 +214,6 @@ public class ReadyUp : NetworkBehaviour
 
     IEnumerator WaitForAllClientsToConnect(string playerName , Loader.Scene scene)
     {
-        Debug.Log("they allowed this some how");
         yield return new WaitUntil(()=> NetworkManager.Singleton.ConnectedClientsIds.Count == relayManager.amountOfPlayers);
         SetPlayer_ReadyServerRpc(scene , playerName);
     }

@@ -269,9 +269,15 @@ public void BackToLobby()
         GameOverRpc();
     }
 
+    private bool wentToWinner = false;
     private void GoToWinnerScene()
     {
-        FindFirstObjectByType<ReadyUp>().ChangeScenesRpc(Loader.Scene.WinScreen);
+        if (!wentToWinner)
+        {
+            wentToWinner = true;
+            Debug.Log("Went to Winner");
+            FindFirstObjectByType<ReadyUp>().ChangeScenesRpc(Loader.Scene.WinScreen);
+        }
     }
 
     [ServerRpc]
