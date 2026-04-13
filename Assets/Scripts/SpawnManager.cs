@@ -67,7 +67,7 @@ public class SpawnManager : NetworkBehaviour
     {
         foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
         {
-            Debug.Log("startCal complete");
+            Debug.Log("startCal complete And Connected Players = " + NetworkManager.Singleton.ConnectedClientsIds.Count);
             StartCoroutine(WaitUntilTerrainGenerates(clientId));
         }
     }
