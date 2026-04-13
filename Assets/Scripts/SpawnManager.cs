@@ -45,7 +45,7 @@ public class SpawnManager : NetworkBehaviour
         }
     }
 
-    public override void OnNetworkDespawn()
+    public override void OnDestroy()
     {
         if (IsServer)
         {
@@ -67,7 +67,7 @@ public class SpawnManager : NetworkBehaviour
     {
         foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
         {
-            Debug.Log("startCal complete");
+            Debug.Log("startCal complete And Connected Clients =" + NetworkManager.Singleton.ConnectedClientsIds.Count);
             StartCoroutine(WaitUntilTerrainGenerates(clientId));
         }
     }

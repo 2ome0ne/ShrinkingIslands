@@ -94,7 +94,6 @@ public class PropSpawner : NetworkBehaviour
             checkspawnPostion.position = new Vector3(UnityEngine.Random.Range(randomPoint1.x , randomPoint2.x), Ylevel, UnityEngine.Random.Range(randomPoint1.z , randomPoint2.z));
             if (Physics.Raycast(checkspawnPostion.position, Vector3.down, out RaycastHit hit , 100, groundLayer))
             {
-                Debug.Log(hit.collider.gameObject.name + "has hit");
                 returnPos = hit.point;
                 hasReturnPosition = true;
             }

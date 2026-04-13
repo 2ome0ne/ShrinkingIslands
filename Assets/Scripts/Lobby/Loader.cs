@@ -10,6 +10,7 @@ public static class Loader
         Lobby,
         ChooseModifier,
         LoadingScene,
+        WinScreen,
         MainMenu
     }
 

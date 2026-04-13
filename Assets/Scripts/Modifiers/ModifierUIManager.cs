@@ -36,12 +36,15 @@ public class ModifierUIManager : NetworkBehaviour
         GetPlayerReadyRpc();
     }
 
+    private bool HasChangeScenes = false;
     private void Update()
     {
         if (!IsHost) return;
         if(!canCheck) return;
+        if (HasChangeScenes) return;
         if (GetIfAllPlayersReady())
         {
+            HasChangeScenes = true;
             Back();
         }
     }

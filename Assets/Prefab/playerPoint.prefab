@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2933263071578455567}
   - component: {fileID: 1515225815726619174}
   - component: {fileID: 8398865073948266449}
+  - component: {fileID: 7393963983470907137}
   m_Layer: 0
   m_Name: playerPoint
   m_TagString: Untagged
@@ -76,6 +77,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &7393963983470907137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 386414057158641034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 893ef1c742453f44aa98e4b0da844c2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerPoints
+  pointsText: {fileID: 6848876562319302534}
 --- !u!1 &971268761634626441
 GameObject:
   m_ObjectHideFlags: 0
