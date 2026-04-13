@@ -33,6 +33,7 @@ public class ModifierUIManager : NetworkBehaviour
         SetCurrentModifiers(FindFirstObjectByType<ModifierHolder>().activeModifiers);
         Create3Modifier();
         if (!IsHost) return;
+        Debug.Log("ModifierMenuSpawn Conencted Players = " + NetworkManager.Singleton.ConnectedClientsIds.Count);
         GetPlayerReadyRpc();
     }
 
