@@ -49,6 +49,12 @@ public class GearManager : NetworkBehaviour
         leftArmAnimator.SetTrigger("PickUpGear");
     }
 
+    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
+    private void SetHoldingValueRpc(bool value)
+    {
+        leftArmAnimator.Animator.SetBool("Holding", value);
+    }
+
     [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
     private void UpdateHoldingGearServerRpc()
     {
@@ -71,6 +77,7 @@ public class GearManager : NetworkBehaviour
         currentHoldingGear.GetComponent<FollowTransform>().SetTargetTransform(holdPoint , transform);
         Debug.Log("PickedUpGear");
         Debug.Log(currentHoldingGear.name + currentHoldingGear.GetComponent<IGearBehavior>().Holder);
+        SetHoldingValueRpc(true);
         SetParentTransformClientRpc(currentHoldingGear , this.NetworkObject ,currentGear);
     }
     
@@ -114,6 +121,7 @@ public class GearManager : NetworkBehaviour
     private void UpdateHoldWhenDestoryedRpc()
     {
         HasGear = false;
+        SetHoldingValueRpc(false);
         currentGear = Gear.None;
         StopHoldingGearRpc(false);
     }

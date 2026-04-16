@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 238999416063067617}
   - component: {fileID: 6944828199596413118}
   - component: {fileID: 4780784513881272922}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: Mountain_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,7 +110,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 1
+  m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4493585093827132993, guid: 98bbe61af8664e74eaa7e0c68c8d90f8, type: 3}
 --- !u!1 &5971004666329287794
@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 8470069487056260718}
   - component: {fileID: 2584986364994860801}
   - component: {fileID: 2680313885308889675}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Mountain_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}

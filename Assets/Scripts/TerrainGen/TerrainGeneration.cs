@@ -73,7 +73,7 @@ public class TerrainGeneration : NetworkBehaviour
                 if (grid[x, y] != null)
                 {
                     grid[x, y].neighbors = GetNeighbors(x, y);
-
+                    grid[x, y].neighborsForCal = GetNeighborsForCal(x, y);
                 }
             }
         }
@@ -102,6 +102,10 @@ public class TerrainGeneration : NetworkBehaviour
     [ClientRpc]
     public void CombineIslandMeshClientRpc()
     {
+        foreach (var tile in grid)
+        {
+            tile.AllowCalculateTileMesh();
+        }
         MeshFilter[] meshFilters = GetComponentsInChildren<MeshFilter>();
         CombineInstance[] combine = new CombineInstance[meshFilters.Length];
 
@@ -118,6 +122,7 @@ public class TerrainGeneration : NetworkBehaviour
     
         // Add a single MeshFilter and MeshRenderer to the Parent object
         GetComponent<MeshFilter>().mesh = finalMesh;
+        GetComponent<MeshFilter>().mesh.RecalculateNormals();
     }
 
     [ClientRpc]
@@ -192,6 +197,42 @@ public class TerrainGeneration : NetworkBehaviour
             if (checkX >= 0 && checkX < width && checkY >= 0 && checkY < height)
             {
                 neighbors.Add(grid[checkX, checkY]);
+            }
+        }
+        
+        return neighbors;
+    }
+    
+    private List<TerrainTile> GetNeighborsForCal(int x, int y)
+    {
+        List<TerrainTile> neighbors = new List<TerrainTile>();
+
+        Vector2Int[] directions =
+        {
+            new Vector2Int(0, 1), //North
+            new Vector2Int(0, -1), //South
+            new Vector2Int(1, 0), //East
+            new Vector2Int(-1, 0) //West
+            
+            // Diagonals (Corners)
+            //new Vector2Int(1, 1),   // North-East
+            //new Vector2Int(-1, 1),  // North-West
+            //new Vector2Int(1, -1),  // South-East
+            //new Vector2Int(-1, -1)  // South-West
+        };
+
+        foreach (Vector2Int direction in directions)
+        {
+            int checkX = x + direction.x;
+            int checkY = y + direction.y;
+
+            if (checkX >= 0 && checkX < width && checkY >= 0 && checkY < height)
+            {
+                neighbors.Add(grid[checkX, checkY]);
+            }
+            else
+            {
+                neighbors.Add(null);
             }
         }
         

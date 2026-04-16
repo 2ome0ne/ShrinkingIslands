@@ -121,7 +121,7 @@ public class ReadyUp : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-    private void TestNetworkSetPlayerNameServerRpc(ulong clientId, string playerName)
+    private void NetworkSetPlayerNameServerRpc(ulong clientId, string playerName)
     {
         playerDataNetworkList.Add(new PlayerData {clientId = clientId, name = playerName});
     }
@@ -138,7 +138,7 @@ public class ReadyUp : NetworkBehaviour
     private void SetPlayer_ReadyServerRpc(Loader.Scene loadScene ,FixedString64Bytes playerName , RpcParams serverRpcPrams = default)
     {
         Debug.Log($"Client {serverRpcPrams.Receive.SenderClientId} readied up!" + " Name Is :" + playerName);
-        //TestNetworkSetPlayerNameServerRpc(serverRpcPrams.Receive.SenderClientId , playerName.ToString());
+        NetworkSetPlayerNameServerRpc(serverRpcPrams.Receive.SenderClientId , playerName.ToString());
         playerReadyDic[serverRpcPrams.Receive.SenderClientId] = true;
 
         if(!IsHost) return;

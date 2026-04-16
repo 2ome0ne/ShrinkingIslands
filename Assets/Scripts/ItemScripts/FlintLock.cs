@@ -42,8 +42,11 @@ public class FlintLock : NetworkBehaviour , IGearBehavior
         }
         else
         {
+            Debug.Log("No shot found");
             lineRenderer.SetPosition(0, shootPoint.position);
-            lineRenderer.SetPosition(1, shootPoint.forward * 50);
+            Vector3 shoot = shootPoint.position;
+            shoot += cameraPosition.forward * 50;
+            lineRenderer.SetPosition(1, shoot);
 
             Invoke(nameof(WaitToDestroy), AnimationTime);
         }

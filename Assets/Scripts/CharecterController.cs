@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ public class CharecterController : NetworkBehaviour
 
     [Header("Player Settings")] 
     public float DefaultSpeed = 5;
+    public float headCheckRange = 0.1f;
     public float SpeedMultiplier;
     public float Gravity = -10;
     public float JumpForce = 5;
@@ -22,6 +24,7 @@ public class CharecterController : NetworkBehaviour
     public bool IsGrounded;
     [Header("References")]
     //gravity stuff
+    [SerializeField] private Transform headCheck;
     [SerializeField] private Transform GroundCheck;
     [SerializeField] private float GroundCheckRadius;
     [SerializeField] private LayerMask GroundLayer;
@@ -103,9 +106,19 @@ public class CharecterController : NetworkBehaviour
         
         controller.Move(velocity * Time.deltaTime);
 
+        if (Physics.CheckSphere(headCheck.position, headCheckRange, GroundLayer))
+        {
+            velocity.y = 0;
+        }
+
         if (Input.GetButtonDown("Jump") && IsGrounded)
         {
             velocity.y += Mathf.Sqrt(JumpForce * -2f * Gravity);
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(headCheck.position, headCheckRange);
     }
 }

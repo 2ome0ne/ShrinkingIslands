@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 401941745791284225}
   - component: {fileID: 6559479413583698430}
   - component: {fileID: 7971241611117088081}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: Cube.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 6563023673523830729}
   - component: {fileID: 6453142622796134240}
   - component: {fileID: 2157191022123801793}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -235,7 +235,7 @@ GameObject:
   - component: {fileID: 2776736023214819913}
   - component: {fileID: 4904299138008078093}
   - component: {fileID: 2345409865633519697}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: Mountain_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -343,7 +343,7 @@ GameObject:
   - component: {fileID: 302087729881343828}
   - component: {fileID: 728888299969334599}
   - component: {fileID: 7778064141992483403}
-  m_Layer: 3
+  m_Layer: 9
   m_Name: Cube.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}

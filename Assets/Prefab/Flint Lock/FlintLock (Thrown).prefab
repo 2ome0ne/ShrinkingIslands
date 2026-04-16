@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 8912274807061611900}
   - component: {fileID: 5694704591914536483}
   - component: {fileID: 30643757090771649}
-  - component: {fileID: 6751496202698916997}
   - component: {fileID: -5404244495290419532}
+  - component: {fileID: -4070632963013770161}
   m_Layer: 8
   m_Name: FlintLock (Thrown)
   m_TagString: Untagged
@@ -153,19 +153,6 @@ MonoBehaviour:
   UseRigidBodyForMotion: 1
   AutoUpdateKinematicState: 0
   AutoSetKinematicOnDespawn: 1
---- !u!114 &6751496202698916997
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1998371643434807807}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 233adaf4c0f13a74dbccb27de1bfea68, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DestroyItself
-  DestroyTime: 3
 --- !u!65 &-5404244495290419532
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -187,6 +174,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.9372253, y: 0.7322042, z: 0.3337865}
   m_Center: {x: 0.805882, y: 0.1338979, z: 0.007982016}
+--- !u!114 &-4070632963013770161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1998371643434807807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b68baf2b8f6f8f42b8b9a8b40604f11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DestroyItSelfNetworkObject
+  ShowTopMostFoldoutHeaderGroup: 1
+  DespawnTime: 3
 --- !u!1 &4658187270566047539
 GameObject:
   m_ObjectHideFlags: 0
