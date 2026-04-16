@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,11 +18,17 @@ public class GameManager : NetworkBehaviour
 
     [SerializeField] private GameObject SpectatorPlayer;
     [SerializeField] private float OceanKnockBackForce = 40;
+    [SerializeField] private GameObject WinnersUI;
     [SerializeField] private GameObject WinUI;
     [SerializeField] private GameObject LoseUI;
     public bool GameOver = false;
     public EscapeMenu escapeMenu;
     private bool disconnected = false;
+
+    [SerializeField]
+    private GameObject PlayerPointPrefab;
+
+    [SerializeField] private Transform playerPointContent;
 
     [System.Serializable]
     public class ActivePlayer
@@ -30,6 +37,7 @@ public class GameManager : NetworkBehaviour
         public ulong playerId;
         public bool isAlive = true;
         public bool isWinner = false;
+        public int currentWinPoints = 0;
 
         public bool IsImmune = false;
 
@@ -174,15 +182,31 @@ public void BackToLobby()
             //WE HAVE A WINNER
             Debug.Log("Game Over" + player.GetComponent<ThePlayerData>().PlayerId.Value + " Won");
             ulong winnerPlayerId = player.GetComponent<ThePlayerData>().PlayerId.Value;
+            PlayerWinsManager winsManager = FindFirstObjectByType<PlayerWinsManager>();
+            winsManager.AddCurrentPlayerByPlayerIdRpc(winnerPlayerId);
+            SetCurrentWinnersServerRpc();
             ActivePlayer winnerPlayer = Players.Find(player => player.playerId == winnerPlayerId);
             SetWinnerCameraLockModeClientRpc(winnerPlayer.player.GetComponent<NetworkObject>());
             winnerPlayer.isWinner = true;
             ShowWinnerServerRpc();
+            //Go To Winner Screen
+            if (winsManager.CheckIfAnyoneWon())
+            {
+                PlayerData playerData = FindFirstObjectByType<ReadyUp>().GetPlayerDataFromClientId(winnerPlayerId);
+                SetWinnerNameRpc(playerData.name.ToString());
+                GoToWinnerScene();
+            }
         }
         else
         {
             Debug.Log("no one won yet");
         }
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void SetWinnerNameRpc(string name)
+    {
+        FindFirstObjectByType<PlayerWinsManager>().WinnerName = name;
     }
 
     [ClientRpc]
@@ -199,11 +223,13 @@ public void BackToLobby()
         {
             //turn on winner canvas ui
             WinUI.SetActive(true);
+            WinnersUI.SetActive(true);
         }
         else
         {
             //You Lose canvas ui
             LoseUI.SetActive(true);
+            WinnersUI.SetActive(true);
         }
     }
 
@@ -243,6 +269,34 @@ public void BackToLobby()
         GameOverRpc();
     }
 
+    private bool wentToWinner = false;
+    private void GoToWinnerScene()
+    {
+        if (!wentToWinner)
+        {
+            wentToWinner = true;
+            Debug.Log("Went to Winner");
+            FindFirstObjectByType<ReadyUp>().ChangeScenesRpc(Loader.Scene.WinScreen);
+        }
+    }
+
+    [ServerRpc]
+    private void SetCurrentWinnersServerRpc()
+    {
+        for (int i = 0; i < Players.Count; i++)
+        {
+            PlayerData playerData = FindFirstObjectByType<ReadyUp>().GetPlayerDataFromClientId(Players[i].playerId);
+            SetCurrentWinnersForEveryOneRpc(playerData.name.ToString() , FindFirstObjectByType<PlayerWinsManager>().GetCurrentWinsByPlayerId(Players[i].playerId));
+        }
+    }
+
+    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
+    private void SetCurrentWinnersForEveryOneRpc(string playerName , int currentWins)
+    {
+        GameObject prefab = Instantiate(PlayerPointPrefab, playerPointContent);
+        prefab.GetComponent<PlayerPoints>().pointsText.text = playerName + ": " + currentWins + "/3 Wins";
+    }
+    
     [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
     private void GameOverRpc()
     {
@@ -264,8 +318,19 @@ public void BackToLobby()
         }
     }
 
+    private bool PressedGoBackModifier;
     public void GoToModifierSelect()
     {
-        FindFirstObjectByType<ReadyUp>().ChangeScenesRpc(Loader.Scene.ChooseModifier);
+        Invoke(nameof(SimpleDelayModifierSelect) , 0.1f);
+    }
+
+    private void SimpleDelayModifierSelect()
+    {
+        Debug.Log("PressedGoToModifierSelect");
+        if (!PressedGoBackModifier)
+        {
+            FindFirstObjectByType<ReadyUp>().ChangeScenesRpc(Loader.Scene.ChooseModifier);
+            PressedGoBackModifier = true;
+        }
     }
 }

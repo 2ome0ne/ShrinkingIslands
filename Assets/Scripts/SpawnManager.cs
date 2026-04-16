@@ -26,6 +26,7 @@ public class SpawnManager : NetworkBehaviour
     [SerializeField] private LayerMask GroundLayer;
 
     [SerializeField] private float CurrentRotaion;
+    [SerializeField] private TheSea sea;
 
     public Transform spawnpoint;
 
@@ -45,7 +46,7 @@ public class SpawnManager : NetworkBehaviour
         }
     }
 
-    public override void OnNetworkDespawn()
+    public override void OnDestroy()
     {
         if (IsServer)
         {
@@ -67,7 +68,7 @@ public class SpawnManager : NetworkBehaviour
     {
         foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
         {
-            Debug.Log("startCal complete And Connected Players = " + NetworkManager.Singleton.ConnectedClientsIds.Count);
+            Debug.Log("startCal complete And Connected Clients =" + NetworkManager.Singleton.ConnectedClientsIds.Count);
             StartCoroutine(WaitUntilTerrainGenerates(clientId));
         }
     }
@@ -89,6 +90,7 @@ public class SpawnManager : NetworkBehaviour
         playerTransform.GetComponent<ThePlayerData>().PlayerId.Value = clientId;
         playerTransform.GetComponent<ThePlayerData>().SetPlayerNameServerRpc(playerData.name.ToString());
         GetComponent<GameManager>().AddPlayerRpc(playerTransform.gameObject.GetComponent<NetworkObject>() , true);
+        sea.players.Add(playerTransform.gameObject);
         Vector3 spawnPos = CalulateSpawnPoint() + Vector3.up * 2f;
         SetPositionClientRpc(playerTransform.GetComponent<NetworkObject>() , spawnPos);
     }

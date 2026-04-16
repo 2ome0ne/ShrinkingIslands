@@ -17,6 +17,7 @@ public class PickUpSystem : NetworkBehaviour
 
     [Header("--[References]--")] 
     private PlayerUImanager uImanager;
+    [SerializeField] private PlayerAbillites _abillites;
     [SerializeField] private Transform HoldPoint;
     [SerializeField] private Transform Cam;
     [SerializeField] private PlayerAnimationManager animationManager;
@@ -92,6 +93,7 @@ public class PickUpSystem : NetworkBehaviour
             DropItem(ThrowForce.Value);
             EditThrowForceServerRpc(MinThrowForce);
             animationManager.TriggerThrow();
+            _abillites.PunchCooldown = _abillites.MaxPunchCooldown;
             uImanager.EnableDisableThrowForceSlider(false);
         }
     }

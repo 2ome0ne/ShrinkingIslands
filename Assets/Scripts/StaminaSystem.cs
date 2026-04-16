@@ -12,6 +12,7 @@ public class StaminaSystem : NetworkBehaviour
 
     [SerializeField] private float maxCanRegen = 1f;
     [SerializeField] private float currentCanRegen;
+    [SerializeField] private ParticleSystem sprintParticles;
     
     public bool Sprinting = false;
     [Header("References")]
@@ -24,7 +25,8 @@ public class StaminaSystem : NetworkBehaviour
         CurrentStamina = MaxStamina;
     }
 
-
+    private bool PlayingParticles;
+    private bool Stopped;
     void Update()
     {
         if (!IsOwner) return;
@@ -32,13 +34,18 @@ public class StaminaSystem : NetworkBehaviour
         {
             if(CurrentStamina > 0)
                 Sprinting = true;
+            Stopped = false;
             AddSprint();
         }
         if(Input.GetKeyUp(KeyCode.LeftShift))
         {
-            Sprinting = false;
-            AddSprint();
-            currentCanRegen = maxCanRegen;
+            if (Sprinting && !Stopped)
+            {
+                Stopped = true;
+                Sprinting = false;
+                AddSprint();
+                currentCanRegen = maxCanRegen;
+            }
         }
         currentCanRegen -= Time.deltaTime;
         if (CurrentStamina > MaxStamina)
@@ -48,7 +55,20 @@ public class StaminaSystem : NetworkBehaviour
 
         if (Sprinting == true)
         {
+            if (!PlayingParticles)
+            {
+                PlayingParticles = true;
+                sprintParticles.Play();
+            }
             CurrentStamina -= Time.deltaTime;
+        }
+        else
+        {
+            if (PlayingParticles)
+            {
+                PlayingParticles = false;
+                sprintParticles.Stop();
+            }
         }
         StaminaSlider.value = CurrentStamina;
         StaminaSlider.maxValue = MaxStamina;
@@ -60,6 +80,14 @@ public class StaminaSystem : NetworkBehaviour
         else if(_playerAbillites.Blocking)
         {
             CurrentStamina -= StaminaRegen * Time.deltaTime;
+        }
+
+        if (CurrentStamina <= 0 && Sprinting)
+        {
+            if(Stopped) return;
+            Sprinting = false;
+            Stopped = true;
+            AddSprint();
         }
     }
 
@@ -89,8 +117,7 @@ public class StaminaSystem : NetworkBehaviour
         }
         else
         {
-            if(CurrentStamina > 0)
-                _controller.SpeedMultiplier -= SprintMultiplier;
+            _controller.SpeedMultiplier -= SprintMultiplier;
         }
     }
     

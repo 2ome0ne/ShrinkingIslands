@@ -17,6 +17,13 @@ public class ModifierManager : NetworkBehaviour
     public PropSpawner propSpawner;
     [SerializeField] private RandomlySpawnItems randomlySpawnItems;
     public Modifier[] AllModifiers;
+
+    [Header("Modifiers")]
+    //Fog
+    [SerializeField]
+    private float defaultfog = 0.01f;
+
+    [SerializeField] private float AlotOfFogAmount = 0.1f;
     
     // to make a modifier you have to set a if statement and check if the index is enabled to execute the modifier
 
@@ -38,6 +45,10 @@ public class ModifierManager : NetworkBehaviour
             MoutainsSpawn();
         if (CheckEnabledModifierByName("Flint lock"))
             FlintLockActivate();
+
+        RenderSettings.fogDensity = defaultfog;
+        if (CheckEnabledModifierByName("Alot Of Fog"))
+            AlotOfFogActivateRpc();
     }
 
     private void EnableModifierByName(string name)
@@ -83,5 +94,11 @@ public class ModifierManager : NetworkBehaviour
     {
         Debug.Log("Flint Lock Activate");
         randomlySpawnItems.EnableItemToSpawnByIndexServerRpc(3);
+    }
+
+    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
+    public void AlotOfFogActivateRpc()
+    {
+        RenderSettings.fogDensity = AlotOfFogAmount;
     }
 }

@@ -791,6 +791,7 @@ GameObject:
   - component: {fileID: 735767594}
   - component: {fileID: 735767595}
   - component: {fileID: 735767593}
+  - component: {fileID: 735767596}
   m_Layer: 0
   m_Name: ReadyUp
   m_TagString: Untagged
@@ -854,6 +855,21 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
+--- !u!114 &735767596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735767592}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b91b0f3a0056c2941a5dc4ad58c0873e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerWinsManager
+  ShowTopMostFoldoutHeaderGroup: 1
+  currentplayers: []
+  WinnerName: 
 --- !u!1 &1077255033
 GameObject:
   m_ObjectHideFlags: 0
@@ -890,6 +906,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5f28ac96bd90d8c438cbb81caf25efb9, type: 2}
   - {fileID: 11400000, guid: 7f92ae41f81e78a4d9c66f3c2858bd33, type: 2}
   - {fileID: 11400000, guid: c13c85f7f1d0b8548ac5f329661297cd, type: 2}
+  - {fileID: 11400000, guid: 16312fbb0e63c4c45b7dbd19afc533bd, type: 2}
 --- !u!4 &1077255035
 Transform:
   m_ObjectHideFlags: 0

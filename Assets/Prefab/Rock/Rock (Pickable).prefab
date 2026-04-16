@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 149354241121094609}
   m_Layer: 7
   m_Name: Rock (Pickable)
-  m_TagString: Untagged
+  m_TagString: DestroyCheck
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -159,7 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2193004674
+  GlobalObjectIdHash: 2534934138
   InScenePlacedSourceGlobalObjectIdHash: 2534934138
   DeferredDespawnTick: 0
   Ownership: 1
@@ -279,7 +279,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Rock
   ShowTopMostFoldoutHeaderGroup: 1
   Effect: {fileID: 2358013665110247557, guid: f8e29e1728a79144ea42cf715e32b9b8, type: 3}
-  KbForce: 340
+  KbForce: 190
   followTransform: {fileID: 892863781523116132}
   rb: {fileID: 195923603639781821}
   trial: {fileID: 149354241121094609}

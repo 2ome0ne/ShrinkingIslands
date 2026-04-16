@@ -1,12 +1,15 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Modifier : MonoBehaviour
+public class Modifier : MonoBehaviour , IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Button Select;
     [SerializeField] private Image Icon;
+    [SerializeField] private bool Selected;
+    [SerializeField] private GameObject selectedItem;
     public ModifierScriptableObject modifier;
-
+    
     public void SetIcon()
     {
         Icon.sprite = modifier.modifierIcon;
@@ -25,5 +28,20 @@ public class Modifier : MonoBehaviour
         Debug.Log(holder.name);
         int index = modifier.indexValue;
         holder.AddModfierWithIndexRpc(index);
+        FindFirstObjectByType<ModifierUIManager>().ReadyUp();
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        Selected = true;
+        FindFirstObjectByType<ModifierDescriptionManager>().SetDescriptionByModifier(modifier);
+        selectedItem.SetActive(true);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        Selected = false;
+        FindFirstObjectByType<ModifierDescriptionManager>().SetDescriptionNull();
+        selectedItem.SetActive(false);
     }
 }

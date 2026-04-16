@@ -74,6 +74,11 @@ public class GameLobby : MonoBehaviour
     {
         try
         {
+            if (string.IsNullOrEmpty(PlayerInputField.text))
+            {
+                ErrorMessageManager.instance.ShowError("Enter A Name >:(");
+                return;
+            }
             string lobbyName = "MyLobby";
             int maxPlayers = 4;
             CreateProfile();
@@ -105,6 +110,11 @@ public class GameLobby : MonoBehaviour
     {
         try
         {
+            if (string.IsNullOrEmpty(PlayerInputField.text))
+            {
+                ErrorMessageManager.instance.ShowError("Enter A Name >:(");
+                return;
+            }
             string _lobbyCode = CodeInputField.text;
             CreateProfile();
             Lobby lobby = await LobbyService.Instance.JoinLobbyByCodeAsync(_lobbyCode, new JoinLobbyByCodeOptions{ Player = playerData});
@@ -117,6 +127,7 @@ public class GameLobby : MonoBehaviour
         }
         catch (LobbyServiceException e)
         {
+            ErrorMessageManager.instance.SendMessage("Join Code Is Invalid");
             Debug.Log(e);
         }
     }
@@ -174,6 +185,7 @@ public class GameLobby : MonoBehaviour
 
     private bool isJoined = false;
     private string player_Name;
+    private bool hasStartEnter = false;
     public async void UpdateLobbyInfo()
     {
         while (Application.isPlaying)
@@ -218,8 +230,9 @@ public class GameLobby : MonoBehaviour
                 newPlayerItem.GetComponent<TextMeshProUGUI>().text = player.Data["Name"].Value;
             }
             
-            if (HasStarted)
+            if (HasStarted && !hasStartEnter)
             {
+                hasStartEnter = true;
                 string JoinCode = await relayManager.StartHostWithRelay(lobby.MaxPlayers);
                 isJoined = true;
                 await LobbyService.Instance.UpdateLobbyAsync(lobbyPassword, new UpdateLobbyOptions{Data = new Dictionary<string, DataObject>{ {"JoinCode", new DataObject(DataObject.VisibilityOptions.Public, JoinCode)}}});

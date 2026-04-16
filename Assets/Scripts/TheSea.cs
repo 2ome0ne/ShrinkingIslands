@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -17,14 +18,7 @@ public class TheSea : NetworkBehaviour
     [SerializeField] private float yAxis = 3;
     [SerializeField] private float forwardSpeed = 100;
 
-    private void OnTriggerStay(Collider other)
-    {
-        if ((playerLayer.value & (1 << other.gameObject.layer)) > 0)
-        {
-            ulong playerId = other.GetComponent<ThePlayerData>().PlayerId.Value;
-            gameManager.PlayerDamageServerRpc(other.transform.position , playerId , other.GetComponent<NetworkObject>() , true);
-        }
-    }
+    public List<GameObject> players;
 
     [SerializeField] private float MinSpawnTime;
     [SerializeField] private float MaxSpawnTime;
@@ -34,6 +28,25 @@ public class TheSea : NetworkBehaviour
         StartCoroutine(UpdateSpawnWater());
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("DestroyCheck"))
+        {
+            GetComponent<NetworkObject>().Despawn();
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        foreach (var player in players)
+        {
+            if (player.transform.position.y < transform.position.y)
+            {
+                ulong playerId = player.GetComponent<ThePlayerData>().PlayerId.Value;
+                gameManager.PlayerDamageServerRpc(player.transform.position , playerId , player.GetComponent<NetworkObject>() , true);
+            }
+        }
+    }
 
     IEnumerator UpdateSpawnWater()
     {

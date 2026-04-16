@@ -37,16 +37,6 @@ public class ModifierUIManager : NetworkBehaviour
         GetPlayerReadyRpc();
     }
 
-    private void Update()
-    {
-        if (!IsHost) return;
-        if(!canCheck) return;
-        if (GetIfAllPlayersReady())
-        {
-            Back();
-        }
-    }
-
     private void UpdateReady()
     {
         foreach (GameObject t in readyPlayersObject)
@@ -107,10 +97,17 @@ public class ModifierUIManager : NetworkBehaviour
     private void ReadyThePlayerRpc(ulong playerId)
     {
         readiedPlayer readyThisPlayer = playerReadied.Find(p => p.playerId == playerId);
-        readyThisPlayer.isReady = true;
-        UpdateReady();
-        Debug.Log(playerReadied.Find(p => p.playerId == playerId).playerName
-                  + " is Ready");
+        if (readyThisPlayer != null)
+        {
+            readyThisPlayer.isReady = true;
+            UpdateReady();
+        }
+
+        if (IsHost && GetIfAllPlayersReady())
+        {
+            canCheck = false;
+            Back();
+        }
     }
 
     public void Back()
@@ -133,6 +130,12 @@ public class ModifierUIManager : NetworkBehaviour
         {
             int index = Random.Range(0 , allModifiers.Length);
             Debug.Log("Creating modifier" + spawnedModifiers + " " + index);
+            GameObject mod = Instantiate(modifier , Content);
+            mod.GetComponent<Modifier>().Setmodifier(allModifiers[index]);
+            CurrentModifiers.Add(index);
+            spawnedModifiers++;
+            //THIS IS FOR LATER
+            /*
             if (!CurrentModifiers.Contains(index))
             {
                 GameObject mod = Instantiate(modifier , Content);
@@ -140,6 +143,7 @@ public class ModifierUIManager : NetworkBehaviour
                 CurrentModifiers.Add(index);
                 spawnedModifiers++;
             }
+            */
         }
     }
 }

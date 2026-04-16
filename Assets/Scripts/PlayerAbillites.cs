@@ -9,8 +9,9 @@ public class PlayerAbillites : NetworkBehaviour
     [Header("--[ Settings ]--")] 
     [Header("punching")]
     [SerializeField] float PunchPower;
-    [SerializeField] private float MaxPunchCooldown;
-    [SerializeField] private float PunchCooldown;
+    [SerializeField] private Sprite PunchCooldownSprite;
+    public float MaxPunchCooldown;
+    public float PunchCooldown;
     [SerializeField] private float AttackRange = 2f;
     [SerializeField] private GameObject BoostJumpEffect;
     [SerializeField] private Transform groundPoint;
@@ -23,15 +24,18 @@ public class PlayerAbillites : NetworkBehaviour
     [SerializeField] private GameObject DashEffect;
     [Header("blocking")]
     [SerializeField] private float BlockDelay;
+    [SerializeField] private Sprite BlockCooldownSprite;
     [SerializeField] private float BlockCooldown;
     [SerializeField] private float BlockStunTime;
     [Header("Boost Jumping")] 
     public float boostJumpEyeLevel = -50f;
     [Header("TEST")]
     [SerializeField] private bool Testing = false;
-    [Header("--[ Refrences ]--")] 
+
+    [Header("--[ Refrences ]--")]
     //[SerializeField] private GameObject HitEffect;
     //Punching
+    [SerializeField] private PlayerIconShower playerIconShower;
     [SerializeField] private LayerMask AttackableLayer;
     public LayerMask PickUpLayer;
     public LayerMask PickAbleGearLayer;
@@ -78,13 +82,6 @@ public class PlayerAbillites : NetworkBehaviour
             controller.SpeedMultiplier -= 0.7f;
         }
         //TEST
-        if (Input.GetKeyDown(KeyCode.T) && CanBlock && Testing)
-        {
-            Blocking = true;
-            Armanimator.SetTrigger("Block");
-            LeftHandAnimator.SetTrigger("Block");
-            controller.SpeedMultiplier -= 0.7f;
-        }
 
         if (Input.GetKeyUp(KeyCode.F) && Blocking)
         {
@@ -92,6 +89,15 @@ public class PlayerAbillites : NetworkBehaviour
             Armanimator.SetTrigger("StopBlock");
             LeftHandAnimator.SetTrigger("StopBlock");
             CanBlock = true;
+            BlockCooldown = BlockStunTime / 2;
+            if (playerIconShower.FindIconWithId("blockStun") == null)
+            {
+                playerIconShower.AddIcon(BlockCooldown ,BlockCooldownSprite,"blockStun" , true);
+            }
+            else
+            {
+                playerIconShower.EditIcon(playerIconShower.FindIconWithId("blockStun") , BlockCooldown);
+            }
             controller.SpeedMultiplier += 0.7f;
         }
 
@@ -101,6 +107,14 @@ public class PlayerAbillites : NetworkBehaviour
             {
                 //block cooldown
                 BlockCooldown = BlockStunTime;
+                if (playerIconShower.FindIconWithId("blockStun") == null)
+                {
+                    playerIconShower.AddIcon(BlockCooldown ,BlockCooldownSprite,"blockStun" , true);
+                }
+                else
+                {
+                    playerIconShower.EditIcon(playerIconShower.FindIconWithId("blockStun") , BlockCooldown);
+                }
                 Blocking = false;
                 Armanimator.SetTrigger("StopBlock");
                 LeftHandAnimator.SetTrigger("StopBlock");
@@ -117,6 +131,7 @@ public class PlayerAbillites : NetworkBehaviour
         if (BlockCooldown > 0)
         {
             BlockCooldown -= Time.deltaTime;
+            CanBlock = false;
         }
     }
 
@@ -167,6 +182,15 @@ public class PlayerAbillites : NetworkBehaviour
         if (Input.GetMouseButtonDown(0) && CanPunch == true)
         {
             PunchCooldown = MaxPunchCooldown;
+            if (playerIconShower.FindIconWithId("punchCooldown") == null)
+            {
+                playerIconShower.AddIcon(PunchCooldown ,PunchCooldownSprite,"punchCooldown" , true);
+            }
+            else
+            {
+                playerIconShower.EditIcon(playerIconShower.FindIconWithId("punchCooldown") , PunchCooldown);
+            }
+            
             //left
             RaycastHit hit;
             _animationManager.TriggerThrow();
