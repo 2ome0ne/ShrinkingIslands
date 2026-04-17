@@ -876,7 +876,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1065,11 +1065,7 @@ MonoBehaviour:
   playeready: {fileID: 4634068279636214141, guid: 633c54ce68248c14eaa97169abbd6930, type: 3}
   Content: {fileID: 242627549}
   playerReadyContent: {fileID: 45508430}
-  allModifiers:
-  - {fileID: 11400000, guid: c13c85f7f1d0b8548ac5f329661297cd, type: 2}
-  - {fileID: 11400000, guid: 5f28ac96bd90d8c438cbb81caf25efb9, type: 2}
-  - {fileID: 11400000, guid: 7f92ae41f81e78a4d9c66f3c2858bd33, type: 2}
-  - {fileID: 11400000, guid: 16312fbb0e63c4c45b7dbd19afc533bd, type: 2}
+  allModifiersHolder: {fileID: 11400000, guid: 70af773062f206c468a5c43485a2e758, type: 2}
   CurrentModifiers: 
   playerReadied: []
   readyPlayersObject: []

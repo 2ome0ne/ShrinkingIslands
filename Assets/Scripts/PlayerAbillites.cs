@@ -29,8 +29,6 @@ public class PlayerAbillites : NetworkBehaviour
     [SerializeField] private float BlockStunTime;
     [Header("Boost Jumping")] 
     public float boostJumpEyeLevel = -50f;
-    [Header("TEST")]
-    [SerializeField] private bool Testing = false;
 
     [Header("--[ Refrences ]--")]
     //[SerializeField] private GameObject HitEffect;

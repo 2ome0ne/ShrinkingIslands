@@ -32,7 +32,8 @@ public class TheSea : NetworkBehaviour
     {
         if (other.CompareTag("DestroyCheck"))
         {
-            GetComponent<NetworkObject>().Despawn();
+            Debug.Log("DestroyCheck " + other.name);
+            //other.GetComponent<NetworkObject>().Despawn();
         }
     }
 

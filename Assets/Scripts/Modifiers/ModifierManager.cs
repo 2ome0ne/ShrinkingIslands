@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -8,7 +9,6 @@ public class ModifierManager : NetworkBehaviour
     public class Modifier
     {
         public string name;
-        public int index;
         public bool Enabled;
     }
     
@@ -16,7 +16,8 @@ public class ModifierManager : NetworkBehaviour
     public List<ModifierScriptableObject> ActiveModifiers;
     public PropSpawner propSpawner;
     [SerializeField] private RandomlySpawnItems randomlySpawnItems;
-    public Modifier[] AllModifiers;
+    [SerializeField] private AllModifiersHolderScriptableObject allModifiersHolder;
+    [SerializeField] private List<Modifier> AllModifiersEnabled;
 
     [Header("Modifiers")]
     //Fog
@@ -26,6 +27,16 @@ public class ModifierManager : NetworkBehaviour
     [SerializeField] private float AlotOfFogAmount = 0.1f;
     
     // to make a modifier you have to set a if statement and check if the index is enabled to execute the modifier
+
+    private void Awake()
+    {
+        foreach (var all_modifier in allModifiersHolder.AllModifiers)
+        {
+            Modifier new_modifier = new Modifier();
+            new_modifier.name = all_modifier.modifierName;
+            AllModifiersEnabled.Add(new_modifier);
+        }
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -45,7 +56,8 @@ public class ModifierManager : NetworkBehaviour
             MoutainsSpawn();
         if (CheckEnabledModifierByName("Flint lock"))
             FlintLockActivate();
-
+        if (CheckEnabledModifierByName("Mine Field"))
+            LandMineActive();
         RenderSettings.fogDensity = defaultfog;
         if (CheckEnabledModifierByName("Alot Of Fog"))
             AlotOfFogActivateRpc();
@@ -53,7 +65,7 @@ public class ModifierManager : NetworkBehaviour
 
     private void EnableModifierByName(string name)
     {
-        foreach (var modifier in AllModifiers)
+        foreach (var modifier in AllModifiersEnabled)
         {
             if (modifier.name == name)
             {
@@ -65,7 +77,7 @@ public class ModifierManager : NetworkBehaviour
     private bool CheckEnabledModifierByName(string name)
     {
         bool result = false;
-        foreach (var modifier in AllModifiers)
+        foreach (var modifier in AllModifiersEnabled)
         {
             if (modifier.name == name && modifier.Enabled)
             {
@@ -100,5 +112,10 @@ public class ModifierManager : NetworkBehaviour
     public void AlotOfFogActivateRpc()
     {
         RenderSettings.fogDensity = AlotOfFogAmount;
+    }
+
+    public void LandMineActive()
+    {
+        propSpawner.EnablePropByIndex(7);
     }
 }

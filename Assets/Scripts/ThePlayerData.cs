@@ -17,6 +17,11 @@ public class ThePlayerData : NetworkBehaviour
         {
             NetworkManager.Singleton.OnClientConnectedCallback += NetworkManager_OnClientDisconnectCallback;
         }
+
+        if (IsOwner)
+        {
+            PlayerNameText.gameObject.SetActive(false);
+        }
     }
 
     [Rpc(SendTo.Everyone)]

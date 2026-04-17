@@ -20,13 +20,19 @@ public class ModifierUIManager : NetworkBehaviour
     [SerializeField] private Transform Content;
     [SerializeField] private Transform playerReadyContent;
     
-    [SerializeField] private ModifierScriptableObject[] allModifiers;
+    [SerializeField] private AllModifiersHolderScriptableObject allModifiersHolder;
+    private ModifierScriptableObject[] allModifiers;
     [SerializeField] private List<int> CurrentModifiers;
     [SerializeField] private List<readiedPlayer> playerReadied;
     [SerializeField] private List<GameObject> readyPlayersObject;
 
     private bool canCheck = false;
     private int currentSpawnedModifiers = 0;
+
+    private void Awake()
+    {
+        allModifiers = allModifiersHolder.AllModifiers;
+    }
 
     public override void OnNetworkSpawn()
     {

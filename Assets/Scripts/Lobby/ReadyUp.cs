@@ -131,8 +131,6 @@ public class ReadyUp : NetworkBehaviour
         //if(!IsOwner) return;
         SetPlayer_ReadyServerRpc( ChangeScene , relayManager.player_Name);
     }
-
-    private bool AlreadyStartCoroutine = false;
     
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
     private void SetPlayer_ReadyServerRpc(Loader.Scene loadScene ,FixedString64Bytes playerName , RpcParams serverRpcPrams = default)

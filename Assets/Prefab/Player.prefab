@@ -887,7 +887,7 @@ Transform:
   m_GameObject: {fileID: 1653516941126622037}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.11755, y: 7.467, z: 1.6}
+  m_LocalPosition: {x: 1.91, y: 7.467, z: 1.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -913,7 +913,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 609134541
+  GlobalObjectIdHash: 3820358935
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1169,7 +1169,6 @@ MonoBehaviour:
   BlockCooldown: 0
   BlockStunTime: 2
   boostJumpEyeLevel: 75
-  Testing: 1
   playerIconShower: {fileID: 9154319154610644523}
   AttackableLayer:
     serializedVersion: 2
@@ -1275,6 +1274,7 @@ MonoBehaviour:
   MaxThrowForce: 5000
   MinThrowForce: 10
   ThrowforceMultiplier: 5000
+  _abillites: {fileID: 0}
   HoldPoint: {fileID: 980288758054497445}
   Cam: {fileID: 2696105404623524780}
   animationManager: {fileID: 4463467629784548551}
@@ -9317,6 +9317,7 @@ GameObject:
   - component: {fileID: 1687426041574099162}
   - component: {fileID: 3021731631477646710}
   - component: {fileID: 8388860637235510338}
+  - component: {fileID: 3135584816893871101}
   m_Layer: 5
   m_Name: Player Name Canvas
   m_TagString: Untagged
@@ -9407,6 +9408,23 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &3135584816893871101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7313675551427613342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9f823b7ecc522047b27979771a0bf39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerNameLOD
+  ShowTopMostFoldoutHeaderGroup: 1
+  currenTargetDistance: 0
+  PlayerName: {fileID: 7194177866048467326}
+  target: {fileID: 0}
+  minDistance: 10
 --- !u!1 &7486452055734492021
 GameObject:
   m_ObjectHideFlags: 0

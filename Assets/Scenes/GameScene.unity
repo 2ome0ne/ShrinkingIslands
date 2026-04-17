@@ -1480,7 +1480,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 200, y: 100, z: 200}
-  m_Center: {x: 0, y: -540.28796, z: 2.5654175}
+  m_Center: {x: 0, y: -44.95, z: 2.5654175}
 --- !u!43 &81736750
 Mesh:
   m_ObjectHideFlags: 0
@@ -32785,7 +32785,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ae05d670826d0d54db36ccf1282e438d, type: 2}
+  - {fileID: 2100000, guid: 1557bee3fe99c034591b4ae6944fdfe9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -38159,6 +38159,10 @@ MonoBehaviour:
     MinSpawn: 5
     MaxSpawn: 20
     CanSpawn: 0
+  - prefab: {fileID: 6444394292002250702, guid: 35171de44c4e0824a99a7d528be887e6, type: 3}
+    MinSpawn: 5
+    MaxSpawn: 18
+    CanSpawn: 0
   Ylevel: 21
   checkspawnPostion: {fileID: 716282691}
   groundLayer:
@@ -38183,19 +38187,8 @@ MonoBehaviour:
   ActiveModifiers: []
   propSpawner: {fileID: 1961144412}
   randomlySpawnItems: {fileID: 1961144410}
-  AllModifiers:
-  - name: Gum Rock
-    index: 0
-    Enabled: 0
-  - name: Mountains
-    index: 1
-    Enabled: 0
-  - name: Flint lock
-    index: 2
-    Enabled: 0
-  - name: Alot Of Fog
-    index: 3
-    Enabled: 0
+  allModifiersHolder: {fileID: 11400000, guid: 70af773062f206c468a5c43485a2e758, type: 2}
+  AllModifiersEnabled: []
   defaultfog: 0.01
   AlotOfFogAmount: 0.1
 --- !u!114 &5211539226909084

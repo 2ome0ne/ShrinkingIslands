@@ -109,7 +109,6 @@ public class RandomlySpawnItems : NetworkBehaviour
             }
             else
             {
-                Debug.Log(hit.collider.gameObject.name +" this not water layer");
                 currentcal++;
                 HitTheWater = false;
             }

@@ -17,7 +17,7 @@ RenderSettings:
   m_Fog: 1
   m_FogColor: {r: 0.7372549, g: 0.82373065, b: 0.90588236, a: 1}
   m_FogMode: 3
-  m_FogDensity: 0.01
+  m_FogDensity: 0.055
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
@@ -27,7 +27,7 @@ RenderSettings:
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: 4e154bf235e41704bbd6bbc6fd6c63f6, type: 2}
-  m_HaloStrength: 0.5
+  m_HaloStrength: 0.344
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
   m_HaloTexture: {fileID: 0}
@@ -27881,6 +27881,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   CurrentRotaion: 0
+  sea: {fileID: 0}
   spawnpoint: {fileID: 0}
   gameManager: {fileID: 0}
   readyUp: {fileID: 0}
@@ -29485,6 +29486,71 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: faf29acdfbeaaf0429b43e30be837eb7, type: 3}
+--- !u!1001 &1817139272175222981
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5800025240110893659, guid: 35171de44c4e0824a99a7d528be887e6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -6.631269
+      objectReference: {fileID: 0}
+    - target: {fileID: 5800025240110893659, guid: 35171de44c4e0824a99a7d528be887e6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2.68
+      objectReference: {fileID: 0}
+    - target: {fileID: 5800025240110893659, guid: 35171de44c4e0824a99a7d528be887e6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5.053838
+      objectReference: {fileID: 0}
+    - target: {fileID: 5800025240110893659, guid: 35171de44c4e0824a99a7d528be887e6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5800025240110893659, guid: 35171de44c4e0824a99a7d528be887e6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5800025240110893659, guid: 35171de44c4e0824a99a7d528be887e6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5800025240110893659, guid: 35171de44c4e0824a99a7d528be887e6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5800025240110893659, guid: 35171de44c4e0824a99a7d528be887e6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5800025240110893659, guid: 35171de44c4e0824a99a7d528be887e6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5800025240110893659, guid: 35171de44c4e0824a99a7d528be887e6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6444394292002250702, guid: 35171de44c4e0824a99a7d528be887e6, type: 3}
+      propertyPath: m_Name
+      value: Land_Mine
+      objectReference: {fileID: 0}
+    - target: {fileID: 8962562554093890629, guid: 35171de44c4e0824a99a7d528be887e6, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2682907590
+      objectReference: {fileID: 0}
+    - target: {fileID: 8962562554093890629, guid: 35171de44c4e0824a99a7d528be887e6, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 3227942015
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 35171de44c4e0824a99a7d528be887e6, type: 3}
 --- !u!1001 &4036484659240147111
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29717,3 +29783,4 @@ SceneRoots:
   - {fileID: 1533824645}
   - {fileID: 1074777903}
   - {fileID: 1902381981}
+  - {fileID: 1817139272175222981}
