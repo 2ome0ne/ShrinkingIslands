@@ -191,7 +191,7 @@ MonoBehaviour:
   SlimeBlobPrefab: {fileID: 1433256177927983638, guid: 8633832fac008db4aa6ebef89ed7784e, type: 3}
   HittableLayer:
     serializedVersion: 2
-    m_Bits: 72
+    m_Bits: 584
 --- !u!65 &-3179985857049910860
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -153,7 +153,10 @@ public void BackToLobby()
         playerRef.TryGet(out NetworkObject player);
         player.Despawn();
         ActivePlayer deadplayer = Players.Find(player => player.playerId == playerId);
+        Vector3 deathTeleport = spectatorPlayer.transform.position -spectatorPlayer.transform.forward;
+        deathTeleport -= -spectatorPlayer.transform.forward * 5;
         deadplayer.player = spectatorPlayer.transform;
+        deadplayer.player.position = deathTeleport;
         deadplayer.isAlive = false;
         CheckForWinnerServerRpc();
     }

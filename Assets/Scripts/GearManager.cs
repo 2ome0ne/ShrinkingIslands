@@ -19,6 +19,7 @@ public class GearManager : NetworkBehaviour
         None,
         GumRock,
         FlintLock,
+        Harpoon,
         ShockwaveDevice
     }
 
@@ -37,6 +38,8 @@ public class GearManager : NetworkBehaviour
 
     private int currentGearIndex;
     public bool HasGear;
+
+    public Transform Harpoonpoint;
 
     [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
     public void ChangeGearServerRpc(Gear newGear)
@@ -67,9 +70,13 @@ public class GearManager : NetworkBehaviour
         {
             currentGearIndex = 1;
         }
-        else if (currentGear == Gear.ShockwaveDevice)
+        else if (currentGear == Gear.Harpoon)
         {
             currentGearIndex = 2;
+        }
+        else if (currentGear == Gear.ShockwaveDevice)
+        {
+            currentGearIndex = 3;
         }
         
         currentHoldingGear = Instantiate(Gears[currentGearIndex]).GetComponent<NetworkObject>();

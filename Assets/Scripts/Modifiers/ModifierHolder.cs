@@ -8,7 +8,7 @@ public class ModifierHolder : NetworkBehaviour
     public List<ModifierScriptableObject> activeModifiers;
 
     [SerializeField]
-    private ModifierScriptableObject[] allModifiers;
+    private AllModifiersHolderScriptableObject allModifiers;
 
     private void Start()
     {
@@ -18,6 +18,6 @@ public class ModifierHolder : NetworkBehaviour
     [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
     public void AddModfierWithIndexRpc(int index)
     {
-        activeModifiers.Add(allModifiers[index]);
+        activeModifiers.Add(allModifiers.AllModifiers[index]);
     }
 }

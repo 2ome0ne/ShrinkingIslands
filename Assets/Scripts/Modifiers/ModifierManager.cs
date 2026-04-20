@@ -14,6 +14,7 @@ public class ModifierManager : NetworkBehaviour
     
     [Header("References")] 
     public List<ModifierScriptableObject> ActiveModifiers;
+    [SerializeField] private GameManager _gameManager;
     public PropSpawner propSpawner;
     [SerializeField] private RandomlySpawnItems randomlySpawnItems;
     [SerializeField] private AllModifiersHolderScriptableObject allModifiersHolder;
@@ -26,6 +27,20 @@ public class ModifierManager : NetworkBehaviour
 
     [SerializeField] private float AlotOfFogAmount = 0.1f;
     
+    //Lighting Strike
+    [SerializeField] private bool ThunderStormEnabled = false;
+    private bool WaitForWarning = false;
+    [SerializeField] private float MinLightingStrike;
+    [SerializeField] private float MaxLightingStrike;
+
+    [SerializeField] private GameObject WarningEffect;
+    [SerializeField] private GameObject LightingPrefab;
+    [SerializeField] private Transform TargetTransform;
+    private float currentLightingStrikeCooldown;
+    private float currentWarningEffectCooldown;
+    private GameObject currentWarningEffect;
+    
+    
     // to make a modifier you have to set a if statement and check if the index is enabled to execute the modifier
 
     private void Awake()
@@ -36,6 +51,58 @@ public class ModifierManager : NetworkBehaviour
             new_modifier.name = all_modifier.modifierName;
             AllModifiersEnabled.Add(new_modifier);
         }
+    }
+
+    private void Update()
+    {
+        if (ThunderStormEnabled && IsServer)
+        {
+            if (!WaitForWarning)
+            {
+                currentLightingStrikeCooldown -= Time.deltaTime;
+                if (currentLightingStrikeCooldown <= 0)
+                {
+                    TargetTransform = _gameManager.Players[GetRandomPlayer()].player;
+                    GameObject warningEffect = Instantiate(WarningEffect, TargetTransform.position, Quaternion.identity);
+                    Debug.Log("WORKING");
+                    warningEffect.GetComponent<NetworkObject>().Spawn();
+                    warningEffect.GetComponent<NetworkObject>().TrySetParent(TargetTransform);
+                    currentWarningEffect = warningEffect;
+                    currentWarningEffectCooldown = 4;
+                    WaitForWarning = true;
+                }
+            }
+            else
+            {
+                currentWarningEffectCooldown -= Time.deltaTime;
+                if (currentWarningEffectCooldown <= 0.7f)
+                {
+                    currentWarningEffect.GetComponent<NetworkObject>().TryRemoveParent(true);
+                }
+                if (currentWarningEffectCooldown <= 0)
+                {
+                    WaitForWarning = false;
+                    currentLightingStrikeCooldown = UnityEngine.Random.Range(MinLightingStrike, MaxLightingStrike);
+                    GameObject lighting = Instantiate(LightingPrefab, currentWarningEffect.transform.position, Quaternion.identity);
+                    currentWarningEffect.GetComponent<NetworkObject>().Despawn();
+                    lighting.GetComponent<NetworkObject>().Spawn();
+                }
+            }
+        }
+    }
+
+    private int GetRandomPlayer()
+    {
+        List<GameManager.ActivePlayer> players = new List<GameManager.ActivePlayer>();
+        foreach (var player in _gameManager.Players)
+        {
+            if (player.isAlive)
+            {
+                players.Add(player);
+            }
+        }
+        
+        return UnityEngine.Random.Range(0, players.Count);
     }
 
     public override void OnNetworkSpawn()
@@ -58,6 +125,10 @@ public class ModifierManager : NetworkBehaviour
             FlintLockActivate();
         if (CheckEnabledModifierByName("Mine Field"))
             LandMineActive();
+        if (CheckEnabledModifierByName("Thunder Storm"))
+            ThunderStormActivate();
+        if (CheckEnabledModifierByName("Harpoon Time"))
+            HarpoonTimeActivate();
         RenderSettings.fogDensity = defaultfog;
         if (CheckEnabledModifierByName("Alot Of Fog"))
             AlotOfFogActivateRpc();
@@ -117,5 +188,15 @@ public class ModifierManager : NetworkBehaviour
     public void LandMineActive()
     {
         propSpawner.EnablePropByIndex(7);
+    }
+
+    public void ThunderStormActivate()
+    {
+        ThunderStormEnabled = true;
+    }
+
+    public void HarpoonTimeActivate()
+    {
+        randomlySpawnItems.EnableItemToSpawnByIndexServerRpc(4);
     }
 }

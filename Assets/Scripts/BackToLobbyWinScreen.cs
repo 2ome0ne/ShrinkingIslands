@@ -40,11 +40,11 @@ public class BackToLobbyWinScreen : NetworkBehaviour
     {
         if (IsHost) return;
         Debug.Log("Didnt Return >:(");
+        var modifierHolder = FindFirstObjectByType<ModifierHolder>();
+        if(modifierHolder != null) modifierHolder.gameObject.GetComponent<NetworkObject>().Despawn(true);
         NetworkManager.Singleton.Shutdown();
         var Readyups = FindFirstObjectByType<ReadyUp>();
         if(Readyups != null) Destroy(Readyups.GameObject());
-        var modifierHolder = FindFirstObjectByType<ModifierHolder>();
-        if(modifierHolder != null) Destroy(modifierHolder.GameObject());
         Destroy(NetworkManager.Singleton.GameObject());
         SceneManager.LoadScene(Loader.Scene.Lobby.ToString());
     }

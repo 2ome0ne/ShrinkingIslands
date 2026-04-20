@@ -12,15 +12,22 @@ public class PlayerIconShower : MonoBehaviour
 
     public void AddIcon(float DestoryTime, Sprite IconTexture , string Id , bool cooldown)
     {
-        GameObject newIcon = Instantiate(iconPrefab, content);
-        IconCooldownHolder icon = newIcon.GetComponent<IconCooldownHolder>();
-        icon.cooldownActive = cooldown;
-        icon.icon = IconTexture;
-        icon.SetIconSprite();
-        icon.id = Id;
-        icon.SetMaxCooldown(DestoryTime);
-        icon.currentCooldown = DestoryTime;
-        icon.Shower = this;
+        if (FindIconWithId(Id))
+        {
+            EditIcon(FindIconWithId(Id) , DestoryTime);
+        }
+        else
+        {
+            GameObject newIcon = Instantiate(iconPrefab, content);
+            IconCooldownHolder icon = newIcon.GetComponent<IconCooldownHolder>();
+            icon.cooldownActive = cooldown;
+            icon.icon = IconTexture;
+            icon.SetIconSprite();
+            icon.id = Id;
+            icon.SetMaxCooldown(DestoryTime);
+            icon.currentCooldown = DestoryTime;
+            icon.Shower = this;
+        }
     }
 
     public IconCooldownHolder FindIconWithId(string Id)

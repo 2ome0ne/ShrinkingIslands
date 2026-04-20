@@ -39,14 +39,17 @@ public class TheSea : NetworkBehaviour
 
     private void FixedUpdate()
     {
-        foreach (var player in players)
+        /*
+        foreach (var player in gameManager.Players)
         {
-            if (player.transform.position.y < transform.position.y)
+            if(!player.isAlive) return;
+            if (player.player.position.y < transform.position.y)
             {
-                ulong playerId = player.GetComponent<ThePlayerData>().PlayerId.Value;
-                gameManager.PlayerDamageServerRpc(player.transform.position , playerId , player.GetComponent<NetworkObject>() , true);
+                ulong playerId = player.playerId;
+                gameManager.PlayerDamageServerRpc(player.player.position , playerId , player.player.GetComponent<NetworkObject>() , true);
             }
         }
+        */
     }
 
     IEnumerator UpdateSpawnWater()

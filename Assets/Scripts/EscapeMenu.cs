@@ -12,10 +12,11 @@ public class EscapeMenu : NetworkBehaviour
 {
     [SerializeField] private GameObject escapeMenu;
     public GameObject player;
-    [SerializeField] private Slider SensitivitySlider;
-    [SerializeField] private CameraController CameraController;
+    public Slider SensitivitySlider;
+    public CameraController CameraController;
     [SerializeField] private TextMeshProUGUI SensitivityText;
     public bool Pausing = false;
+    private bool Saved = false;
 
     
     private void OnEnable()
@@ -42,6 +43,15 @@ public class EscapeMenu : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         GameManager.Instance.AddEscapeToAllRpc();
+        SaveData data = PlayerSaveSystem.LoadPlayer();
+        if (data == null)
+        {
+            SensitivitySlider.value = 350;
+            PlayerSaveSystem.SavePlayer(this);
+            return;
+        }
+        Debug.Log("Loaded Sens = " + data.cameraSensitivity);
+        SensitivitySlider.value = data.cameraSensitivity;
     }
 
     public void GetAllRefrences()
@@ -58,10 +68,17 @@ public class EscapeMenu : NetworkBehaviour
         {
             if (!Pausing)
             {
+                Saved = false;
                 SetGui(true);
             }
             else
             {
+                Saved = false;
+                if (!Saved)
+                {
+                    PlayerSaveSystem.SavePlayer(this);
+                    Saved = true;
+                }
                 SetGui(false);
             }
         }
@@ -78,6 +95,7 @@ public class EscapeMenu : NetworkBehaviour
             }
             else
             {
+                CameraController.CameraSensitivity = SensitivitySlider.value;
                 if(CameraController != null)
                     CameraController.CanMoveCamera = true;
                 Cursor.visible = false;
@@ -94,6 +112,11 @@ public class EscapeMenu : NetworkBehaviour
     public void BackButton()
     {
         SetGui(false);
+        if (!Saved)
+        {
+            PlayerSaveSystem.SavePlayer(this);
+            Saved = true;
+        }
     }
 
     public void Disconnect()
@@ -108,11 +131,11 @@ public class EscapeMenu : NetworkBehaviour
         else
         {
             Debug.Log("Didnt Return >:(");
+            var modifierHolder = FindFirstObjectByType<ModifierHolder>();
+            if(modifierHolder != null) modifierHolder.gameObject.GetComponent<NetworkObject>().Despawn(true);
             NetworkManager.Singleton.Shutdown();
             var Readyups = FindFirstObjectByType<ReadyUp>();
             if(Readyups != null) Destroy(Readyups.GameObject());
-            var modifierHolder = FindFirstObjectByType<ModifierHolder>();
-            if(modifierHolder != null) Destroy(modifierHolder.GameObject());
             Destroy(NetworkManager.Singleton.GameObject());
             SceneManager.LoadScene(Loader.Scene.Lobby.ToString());
         }
@@ -129,11 +152,11 @@ public class EscapeMenu : NetworkBehaviour
     {
         if (IsHost) return;
         Debug.Log("Didnt Return >:(");
+        var modifierHolder = FindFirstObjectByType<ModifierHolder>();
+        if(modifierHolder != null) modifierHolder.gameObject.GetComponent<NetworkObject>().Despawn(true);
         NetworkManager.Singleton.Shutdown();
         var Readyups = FindFirstObjectByType<ReadyUp>();
         if(Readyups != null) Destroy(Readyups.GameObject());
-        var modifierHolder = FindFirstObjectByType<ModifierHolder>();
-        if(modifierHolder != null) Destroy(modifierHolder.GameObject());
         Destroy(NetworkManager.Singleton.GameObject());
         SceneManager.LoadScene(Loader.Scene.Lobby.ToString());
     }
@@ -144,6 +167,8 @@ public class EscapeMenu : NetworkBehaviour
         Destroy(NetworkManager.Singleton.GameObject());
         var Readyups = FindFirstObjectByType<ReadyUp>();
         if(Readyups != null) Destroy(Readyups.GameObject());
+        var modifierHolder = FindFirstObjectByType<ModifierHolder>();
+        if(modifierHolder != null) modifierHolder.gameObject.GetComponent<NetworkObject>().Despawn(true);
         SceneManager.LoadScene(Loader.Scene.Lobby.ToString());
     }
 

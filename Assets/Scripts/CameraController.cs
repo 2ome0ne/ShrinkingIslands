@@ -15,6 +15,9 @@ public class CameraController : NetworkBehaviour
     [SerializeField] private bool SpectatorCamera;
 
     [SerializeField] private CharecterController controller;
+    //FOR SPECTATOR
+    [SerializeField] private CharacterController _movementController;
+    [SerializeField] private float spectatorSpeed;
     private StaminaSystem stamina_system;
     private PlayerAbillites player_abillites;
 
@@ -58,15 +61,38 @@ public class CameraController : NetworkBehaviour
         mouseY = Input.GetAxis("Mouse Y") * CameraSensitivity * Time.deltaTime;
         if(!SpectatorCamera)
             UpdateState();
+        if (SpectatorCamera)
+            Camera_Movement();
         PersonalxRotation -= mouseY;
         currentShakeTime -= Time.deltaTime;
         //PoseRotateRpc(PersonalxRotation);
         HeadRotateRpc(PersonalxRotation);
         PersonalxRotation = Mathf.Clamp(PersonalxRotation, -90f, 90f);
         //Can boost jump logic
-        if(CamHolder != null) canBoostJump = CamHolder.localEulerAngles.x > player_abillites.boostJumpEyeLevel;
+        if(CamHolder != null && !SpectatorCamera) canBoostJump = CamHolder.localEulerAngles.x > player_abillites.boostJumpEyeLevel;
         CamHolder.localRotation = Quaternion.Euler(PersonalxRotation, 0f, 0f);
         transform.Rotate(Vector3.up * mouseX);
+    }
+
+    private float VerticalRotation;
+    void Camera_Movement()
+    {
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+        
+        Vector3 input = new Vector3(horizontal, 0, vertical);
+
+        if (Input.GetKey(KeyCode.Space))
+        {
+            input.y = 1;
+        }
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            input.y = -1;
+        }
+
+        transform.Translate(input * Time.deltaTime * spectatorSpeed);
+        //_movementController.Move(move * spectatorSpeed * Time.deltaTime);
     }
 
     private void UpdateState()
@@ -119,8 +145,8 @@ public class CameraController : NetworkBehaviour
     {
         xRotation = -xRotation;
         xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-        if(!SpectatorCamera)
-            Ppos.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+
+        Ppos.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         CamHolder.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
     }
 

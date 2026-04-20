@@ -19,14 +19,23 @@ public class PlayerNameLOD : NetworkBehaviour
     private void FixedUpdate()
     {
         if(IsOwner) return;
-        currenTargetDistance = Vector3.Distance(transform.position, target.position);
-        if (currenTargetDistance < minDistance)
+        Camera camera = Camera.main;
+        if (camera.transform != null)
         {
-            PlayerName.SetActive(true);
+            target = camera.transform;
+            currenTargetDistance = Vector3.Distance(transform.position, target.position);
+            if (currenTargetDistance < minDistance)
+            {
+                PlayerName.SetActive(true);
+            }
+            else
+            {
+                PlayerName.SetActive(false);
+            }
         }
         else
         {
-            PlayerName.SetActive(false);
+            PlayerName.SetActive(true);
         }
     }
 }

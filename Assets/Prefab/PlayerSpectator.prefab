@@ -60,7 +60,7 @@ Transform:
   m_GameObject: {fileID: 4589209488073814430}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -4.6500006}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -179,8 +179,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5476716656916521569}
   - component: {fileID: 4242881397867602183}
-  - component: {fileID: 1540275858467957276}
   - component: {fileID: 421294198739951555}
+  - component: {fileID: 7597795135806321383}
+  - component: {fileID: 2869760463236798533}
   m_Layer: 0
   m_Name: PlayerSpectator
   m_TagString: Untagged
@@ -229,24 +230,6 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &1540275858467957276
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7161271764440588732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb255531ab19f464cb600e936b3760e0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CameraController
-  ShowTopMostFoldoutHeaderGroup: 1
-  CameraSensitivity: 350
-  Camera: {fileID: 7803678065459866373}
-  CamHolder: {fileID: 2419334210147050837}
-  Ppos: {fileID: 5476716656916521569}
-  SpectatorCamera: 1
 --- !u!114 &421294198739951555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -271,15 +254,15 @@ MonoBehaviour:
   RotationMaxInterpolationTime: 0.1
   ScaleLerpSmoothing: 1
   ScaleMaxInterpolationTime: 0.1
-  AuthorityMode: 0
+  AuthorityMode: 1
   TickSyncChildren: 0
   UseUnreliableDeltas: 0
   SyncPositionX: 1
   SyncPositionY: 1
   SyncPositionZ: 1
-  SyncRotAngleX: 0
-  SyncRotAngleY: 0
-  SyncRotAngleZ: 0
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
   SyncScaleX: 0
   SyncScaleY: 0
   SyncScaleZ: 0
@@ -293,3 +276,59 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!143 &7597795135806321383
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7161271764440588732}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 1
+  m_Radius: 0.5
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2869760463236798533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7161271764440588732}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb255531ab19f464cb600e936b3760e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraController
+  ShowTopMostFoldoutHeaderGroup: 1
+  CameraSensitivity: 350
+  CanMoveCamera: 1
+  Camera: {fileID: 5476716656916521569}
+  CamHolder: {fileID: 2419334210147050837}
+  Ppos: {fileID: 0}
+  SpectatorCamera: 1
+  controller: {fileID: 0}
+  _movementController: {fileID: 7597795135806321383}
+  spectatorSpeed: 10
+  currentFOV: 60
+  canBoostJump: 0
+  lerpMultiplier: 10
+  TargetFOV: 60
+  NormalFov: 65
+  RunningFov: 75
+  DashFov: 90
+  walktime: 1.5
+  sprinttime: 1.3

@@ -172,8 +172,17 @@ public class PickUpSystem : NetworkBehaviour
         {
             netObj.GetComponent<Collider>().enabled = true; 
         }
-        netObj.GetComponent<Rigidbody>().linearVelocity = Cam.forward * throwforce * Time.deltaTime;
+
+        ThrowForceServerRpc(throwforce, netObj);
+        //netObj.GetComponent<Rigidbody>().linearVelocity = Cam.forward * throwforce * Time.deltaTime;
         this.CurrentHoldObject = null;
+    }
+
+    [ServerRpc]
+    private void ThrowForceServerRpc(float throwforce , NetworkObjectReference objRef)
+    {
+        objRef.TryGet(out NetworkObject netObj);
+        netObj.GetComponent<Rigidbody>().AddForce(Cam.forward * throwforce , ForceMode.Impulse);
     }
     
 }

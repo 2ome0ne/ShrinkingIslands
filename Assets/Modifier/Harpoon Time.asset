@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa85f20ead865504a8fe11ca8190a38d, type: 3}
+  m_Name: Harpoon Time
+  m_EditorClassIdentifier: Assembly-CSharp::ModifierScriptableObject
+  modifierName: Harpoon Time
+  modifierDescription: Harpoon's Start to spawn.
+  modifierIcon: {fileID: 21300000, guid: c702c2b09ba28e348ab5036979c8b443, type: 3}
+  indexValue: 6

@@ -1479,8 +1479,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 200, y: 100, z: 200}
-  m_Center: {x: 0, y: -44.95, z: 2.5654175}
+  m_Size: {x: 200, y: 95.864525, z: 200}
+  m_Center: {x: 0, y: -47.017735, z: 2.5654175}
 --- !u!43 &81736750
 Mesh:
   m_ObjectHideFlags: 0
@@ -6597,7 +6597,7 @@ ParticleSystemRenderer:
   m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
-  m_MaxParticleSize: 0.5
+  m_MaxParticleSize: 20
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
@@ -27552,7 +27552,7 @@ ParticleSystemRenderer:
   m_MeshDistribution: 0
   m_SortMode: 0
   m_MinParticleSize: 0
-  m_MaxParticleSize: 0.5
+  m_MaxParticleSize: 20
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
@@ -38088,6 +38088,9 @@ MonoBehaviour:
   - prefab: {fileID: 2992412976907015911, guid: 481edf44724d82a458ef0a06056f2aff, type: 3}
     probability: 0.679
     ableToSpawn: 0
+  - prefab: {fileID: 1704087385980603390, guid: 0e5024d17c2ff1140afc4a1d51dd4874, type: 3}
+    probability: 0.603
+    ableToSpawn: 0
   SpawnIndicator: {fileID: 3574269667675813573, guid: 0a1185a01718251468ea1836085889ae, type: 3}
   minSpawnTime: 2
   maxSpawnTime: 8
@@ -38160,8 +38163,8 @@ MonoBehaviour:
     MaxSpawn: 20
     CanSpawn: 0
   - prefab: {fileID: 6444394292002250702, guid: 35171de44c4e0824a99a7d528be887e6, type: 3}
-    MinSpawn: 5
-    MaxSpawn: 18
+    MinSpawn: 16
+    MaxSpawn: 30
     CanSpawn: 0
   Ylevel: 21
   checkspawnPostion: {fileID: 716282691}
@@ -38185,12 +38188,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ModifierManager
   ShowTopMostFoldoutHeaderGroup: 1
   ActiveModifiers: []
+  _gameManager: {fileID: 1961144407}
   propSpawner: {fileID: 1961144412}
   randomlySpawnItems: {fileID: 1961144410}
   allModifiersHolder: {fileID: 11400000, guid: 70af773062f206c468a5c43485a2e758, type: 2}
   AllModifiersEnabled: []
   defaultfog: 0.01
   AlotOfFogAmount: 0.1
+  ThunderStormEnabled: 0
+  MinLightingStrike: 6
+  MaxLightingStrike: 14
+  WarningEffect: {fileID: 7004055304653429653, guid: 700ab2614a17a82418451a347c4340b3, type: 3}
+  LightingPrefab: {fileID: 6376181269441086924, guid: 7a62e0e0e41553b47883102d1b03dcba, type: 3}
+  TargetTransform: {fileID: 0}
 --- !u!114 &5211539226909084
 MonoBehaviour:
   m_ObjectHideFlags: 0

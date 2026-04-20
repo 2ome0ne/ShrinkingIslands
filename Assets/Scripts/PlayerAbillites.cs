@@ -88,14 +88,7 @@ public class PlayerAbillites : NetworkBehaviour
             LeftHandAnimator.SetTrigger("StopBlock");
             CanBlock = true;
             BlockCooldown = BlockStunTime / 2;
-            if (playerIconShower.FindIconWithId("blockStun") == null)
-            {
-                playerIconShower.AddIcon(BlockCooldown ,BlockCooldownSprite,"blockStun" , true);
-            }
-            else
-            {
-                playerIconShower.EditIcon(playerIconShower.FindIconWithId("blockStun") , BlockCooldown);
-            }
+            playerIconShower.AddIcon(BlockCooldown ,BlockCooldownSprite,"blockStun" , true);
             controller.SpeedMultiplier += 0.7f;
         }
 
@@ -105,14 +98,7 @@ public class PlayerAbillites : NetworkBehaviour
             {
                 //block cooldown
                 BlockCooldown = BlockStunTime;
-                if (playerIconShower.FindIconWithId("blockStun") == null)
-                {
-                    playerIconShower.AddIcon(BlockCooldown ,BlockCooldownSprite,"blockStun" , true);
-                }
-                else
-                {
-                    playerIconShower.EditIcon(playerIconShower.FindIconWithId("blockStun") , BlockCooldown);
-                }
+                playerIconShower.AddIcon(BlockCooldown ,BlockCooldownSprite,"blockStun" , true);
                 Blocking = false;
                 Armanimator.SetTrigger("StopBlock");
                 LeftHandAnimator.SetTrigger("StopBlock");
