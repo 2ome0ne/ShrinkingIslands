@@ -27,15 +27,16 @@ public class FlintLock : NetworkBehaviour , IGearBehavior
     private void ShootRpc()
     {
         RaycastHit hit;
-        cameraPosition = Holder.GetComponent<PlayerAbillites>().AttackPoint;
+        cameraPosition = Holder.GetComponent<CameraController>().Camera.transform;
         Holder.leftArmAnimator.SetTrigger("FlintLockShoot");
+        GameManager.Instance.soundManager.SpawnSoundRpc(transform.position, 2 , 1 , 1 , 8);
         if (Physics.Raycast(cameraPosition.position, cameraPosition.forward, out hit, 100))
         {
             lineRenderer.SetPosition(0, shootPoint.position);
             lineRenderer.SetPosition(1, hit.point);
             if (hit.collider.GetComponent<PlayerKnockbackSystem>())
             {
-                hit.collider.GetComponent<PlayerKnockbackSystem>().KnockBack(hit.point, knockBackForce);
+                hit.collider.GetComponent<PlayerKnockbackSystem>().KnockBack(hit.point, knockBackForce , null);
             }
 
             Invoke(nameof(WaitToDestroy), AnimationTime);

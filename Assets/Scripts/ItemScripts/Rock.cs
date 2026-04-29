@@ -62,7 +62,7 @@ public class Rock : NetworkBehaviour
                 if (hit.GetComponent<PlayerKnockbackSystem>() && hit.gameObject != followTransform.player.gameObject)
                 {
                     Debug.Log("HIT" + hit.name);
-                    hit.GetComponent<PlayerKnockbackSystem>().KnockBack(transform.position, KbForce);
+                    hit.GetComponent<PlayerKnockbackSystem>().KnockBack(transform.position, KbForce , gameObject);
                     Canhit = false;
                 }
             }

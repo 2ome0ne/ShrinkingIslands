@@ -12,6 +12,7 @@ public class GameManager : NetworkBehaviour
     public Transform playerPrefab;
     [SerializeField] private SpawnManager spawnManager;
     public TerrainGeneration terrainGenerator;
+    public SoundManager soundManager;
     public static GameManager Instance { get; private set; }
     public int AmountOfHold;
     public List<ActivePlayer> Players;
@@ -153,8 +154,7 @@ public void BackToLobby()
         playerRef.TryGet(out NetworkObject player);
         player.Despawn();
         ActivePlayer deadplayer = Players.Find(player => player.playerId == playerId);
-        Vector3 deathTeleport = spectatorPlayer.transform.position -spectatorPlayer.transform.forward;
-        deathTeleport -= -spectatorPlayer.transform.forward * 5;
+        Vector3 deathTeleport = spectatorPlayer.transform.position;
         deadplayer.player = spectatorPlayer.transform;
         deadplayer.player.position = deathTeleport;
         deadplayer.isAlive = false;
@@ -190,6 +190,15 @@ public void BackToLobby()
             SetCurrentWinnersServerRpc();
             ActivePlayer winnerPlayer = Players.Find(player => player.playerId == winnerPlayerId);
             SetWinnerCameraLockModeClientRpc(winnerPlayer.player.GetComponent<NetworkObject>());
+            foreach (ActivePlayer current in Players)
+            {
+                if (!current.isAlive)
+                {
+                    MakeSpectatorCameraNotMoveRpc(current.player.GetComponent<NetworkObject>() , winnerPlayer.player.GetComponent<NetworkObject>());
+                    current.player.position = winnerPlayer.player.transform.position;
+                    current.player.position -= winnerPlayer.player.transform.forward * 5;
+                }
+            }
             winnerPlayer.isWinner = true;
             ShowWinnerServerRpc();
             //Go To Winner Screen
@@ -204,6 +213,16 @@ public void BackToLobby()
         {
             Debug.Log("no one won yet");
         }
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void MakeSpectatorCameraNotMoveRpc(NetworkObjectReference playerRef , NetworkObjectReference winnerPlayerNetObj)
+    {
+        winnerPlayerNetObj.TryGet(out NetworkObject winnerplayer);
+        playerRef.TryGet(out NetworkObject player);
+        player.GetComponent<CameraController>().CanMoveSpectatorCamera = false;
+        player.transform.position = winnerplayer.transform.position;
+        player.transform.position -= winnerplayer.transform.forward * 5;
     }
 
     [Rpc(SendTo.Everyone)]
@@ -249,11 +268,6 @@ public void BackToLobby()
             {
                 allDeadPlayers.Add(deadplayer);
             }
-        }
-
-        foreach (var player in allDeadPlayers)
-        {
-            player.player.transform.position = Winner.player.transform.position;
         }
         
         foreach (var player in Players)

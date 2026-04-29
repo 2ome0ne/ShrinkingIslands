@@ -15,6 +15,12 @@ public class EscapeMenu : NetworkBehaviour
     public Slider SensitivitySlider;
     public CameraController CameraController;
     [SerializeField] private TextMeshProUGUI SensitivityText;
+    [SerializeField] private SoundManager soundManager;
+
+    public Slider EnviromentSoundSlider;
+    [SerializeField] private TextMeshProUGUI EnviromentSoundText;
+    public Slider SoundSlider;
+    [SerializeField] private TextMeshProUGUI SoundText;
     public bool Pausing = false;
     private bool Saved = false;
 
@@ -52,6 +58,9 @@ public class EscapeMenu : NetworkBehaviour
         }
         Debug.Log("Loaded Sens = " + data.cameraSensitivity);
         SensitivitySlider.value = data.cameraSensitivity;
+        SoundSlider.value = data.soundVolume;
+        EnviromentSoundSlider.value = data.Enviroment_Volume;
+        Saved = false;
     }
 
     public void GetAllRefrences()
@@ -59,7 +68,10 @@ public class EscapeMenu : NetworkBehaviour
         CameraController = player.GetComponent<CameraController>();
     }
 
-    
+    public void SetCameraController(CameraController cameraController)
+    {
+        CameraController = cameraController;
+    }
     
     public void Update()
     {
@@ -89,6 +101,12 @@ public class EscapeMenu : NetworkBehaviour
             {
                 CameraController.CameraSensitivity = SensitivitySlider.value;
                 SensitivityText.text = $"Sensitivity: {CameraController.CameraSensitivity}";
+                
+                soundManager.EnviromentSoundVolume = EnviromentSoundSlider.value;
+                EnviromentSoundText.text = $"Enviorment Sound Volume: {EnviromentSoundSlider.value}";
+                
+                soundManager.soundVolume = SoundSlider.value;
+                SoundText.text = $"Sound Volume: {SoundSlider.value}";
                 CameraController.CanMoveCamera = false;
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
@@ -106,6 +124,7 @@ public class EscapeMenu : NetworkBehaviour
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
+            CameraController.CanMoveCamera = false;
         }
     }
 

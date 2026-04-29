@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using EZCameraShake;
 using Unity.Netcode;
@@ -29,6 +30,27 @@ public class PlayerKnockbackSystem : NetworkBehaviour
         sea = FindFirstObjectByType<TheSea>();
         AddShield(3);
     }
+    
+    [Rpc(SendTo.Owner)]
+    public void GetPulledToPositionRpc(Vector3 targetPosition)
+    {
+        StartCoroutine(PullRoutine(targetPosition));
+    }
+    
+    private IEnumerator PullRoutine(Vector3 target)
+    {
+        CharacterController cc = GetComponent<CharacterController>();
+        // We loop for a short duration or until close enough
+        while (Vector3.Distance(transform.position, target) > 0.5f)
+        {
+            Vector3 direction = (target - transform.position).normalized;
+            float pullSpeed = 20f;
+            
+            cc.Move(direction * pullSpeed * Time.deltaTime);
+        
+            yield return null;
+        }
+    }
 
     public void AddShield(float ShieldTime)
     {
@@ -50,12 +72,18 @@ public class PlayerKnockbackSystem : NetworkBehaviour
         Shield.SetActive(value);
     }
 
-    public void KnockBack(Vector3 attackpositon , float KbForce)
+    public void KnockBack(Vector3 attackpositon , float KbForce , GameObject player)
     {
         if(HasShield) return;
-        if (playerAbillites.Blocking)
+        if (playerAbillites.Parrying)
         {
-            playerAbillites._staminaSystem.EatStamina(KbForce / 100f);
+            //playerAbillites._staminaSystem.EatStamina(KbForce / 100f);
+            if (player != null)
+            {
+                playerAbillites.ParriedObject = player;
+                playerAbillites.ParryKnockback = KbForce;
+            }
+            playerAbillites.succesfulParry = true;
             return;
         }
         CameraShaker.Instance.ShakeOnce(KbForce / 80f, KbForce / 95f, 0.1f, 2f);
@@ -78,6 +106,7 @@ public class PlayerKnockbackSystem : NetworkBehaviour
 
     public void SeaKnockback(float KbForce)
     {
+        GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 15 , 1 , 1 , 9);
         CameraShaker.Instance.ShakeOnce(8f, 6f, 0.1f, 2f);
         Direction = (transform.up * KbForce);
         impact += Direction * KbForce / mass; 

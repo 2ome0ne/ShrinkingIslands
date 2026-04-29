@@ -13,7 +13,7 @@ public class Explosion : NetworkBehaviour
         CameraShaker.Instance.ShakeOnce(10f, 6f, 0.1f, 2f);
         foreach (var hit in hits)
         {
-            hit.GetComponent<PlayerKnockbackSystem>().KnockBack(transform.position , Force);
+            hit.GetComponent<PlayerKnockbackSystem>().KnockBack(transform.position , Force , null);
         }
     }
 

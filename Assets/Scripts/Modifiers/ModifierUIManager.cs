@@ -12,6 +12,7 @@ public class ModifierUIManager : NetworkBehaviour
     {
         public ulong playerId;
         public bool isReady;
+        public int selectedIndex;
         public string playerName;
     }
     
@@ -29,6 +30,9 @@ public class ModifierUIManager : NetworkBehaviour
     private bool canCheck = false;
     private int currentSpawnedModifiers = 0;
 
+    [SerializeField] private int firstIndex;
+    [SerializeField] private int secondIndex;
+
     private void Awake()
     {
         allModifiers = allModifiersHolder.AllModifiers;
@@ -37,32 +41,78 @@ public class ModifierUIManager : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         SetCurrentModifiers(FindFirstObjectByType<ModifierHolder>().activeModifiers);
-        Create3Modifier();
+        if (IsHost)
+            Create2Modifier();
         if (!IsHost) return;
         Debug.Log("ModifierMenuSpawn Conencted Players = " + NetworkManager.Singleton.ConnectedClientsIds.Count);
         GetPlayerReadyRpc();
     }
 
+
+    [SerializeField] private List<GameObject> current_modifiers;
+
+    [Rpc(SendTo.Everyone)]
+    public void SetTwoCurrentModifiersWithIdexesRpc(int firstIndex, int secondIndex)
+    {
+        if (IsHost) return;
+        GameObject mod = Instantiate(modifier , Content);
+        mod.GetComponent<Modifier>().Setmodifier(allModifiers[firstIndex]);
+        current_modifiers.Add(mod);
+        CurrentModifiers.Add(firstIndex);
+        
+        GameObject mod2 = Instantiate(modifier , Content);
+        mod2.GetComponent<Modifier>().Setmodifier(allModifiers[secondIndex]);
+        current_modifiers.Add(mod2);
+        CurrentModifiers.Add(secondIndex);
+    }
+
+    private bool HasUpdated = false;
     private void UpdateReady()
     {
-        foreach (GameObject t in readyPlayersObject)
+        /*
+        foreach (GameObject t in Content1)
         {
             Destroy(t);
         }
+        foreach (GameObject t in Content2)
+        {
+            Destroy(t);
+        }
+        */
+        Debug.Log("HasUpdated");
         foreach (var player in playerReadied)
         {
-            GameObject _playerReadyHolder = Instantiate(playeready, playerReadyContent);
-            readyPlayersObject.Add(_playerReadyHolder);
-            string isready = new string("");
-            if (player.isReady)
+            if (player.isReady) return;
+            if(!HasUpdated) return;
+            if (player.selectedIndex == firstIndex)
             {
-                isready = "Ready";
+                SetPlayerReadyRpc(true, player.playerName);
             }
             else
             {
-                isready = "Not Ready";
+                SetPlayerReadyRpc(false, player.playerName);
             }
-            _playerReadyHolder.GetComponent<ModifierPlayerReadyHolder>().text.text = player.playerName + isready;
+        }
+        HasUpdated = true;
+    }
+
+    [SerializeField] private Transform Content1;
+    [SerializeField] private Transform Content2;
+    
+    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone)]
+    public void SetPlayerReadyRpc(bool selectedFirstModifier, string playerName)
+    {
+        if (selectedFirstModifier)
+        {
+            GameObject _playerReadyHolder = Instantiate(playeready, Content1);
+            readyPlayersObject.Add(_playerReadyHolder);
+            _playerReadyHolder.GetComponent<ModifierPlayerReadyHolder>().text.text = playerName;
+        }
+        else
+        {
+            GameObject _playerReadyHolder = Instantiate(playeready, Content2);
+            readyPlayersObject.Add(_playerReadyHolder);
+            _playerReadyHolder.GetComponent<ModifierPlayerReadyHolder>().text.text = playerName;
         }
     }
 
@@ -93,25 +143,77 @@ public class ModifierUIManager : NetworkBehaviour
             canCheck = true;
         }
     }
+
+    private int winnerIndex;
     
-    public void ReadyUp()
+    public void ReadyUp(int selectedIndex)
     {
-        ReadyThePlayerRpc(NetworkManager.Singleton.LocalClientId);
+        ReadyThePlayerRpc(NetworkManager.Singleton.LocalClientId , selectedIndex);
+        foreach (var modifer in current_modifiers)
+        {
+            modifer.GetComponent<Modifier>().setCantPlace();
+        }
     }
 
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-    private void ReadyThePlayerRpc(ulong playerId)
+    private void ReadyThePlayerRpc(ulong playerId , int selectedIndex)
     {
         readiedPlayer readyThisPlayer = playerReadied.Find(p => p.playerId == playerId);
         if (readyThisPlayer != null)
         {
             readyThisPlayer.isReady = true;
+            readyThisPlayer.selectedIndex = selectedIndex;
+            Debug.Log(readyThisPlayer.playerName + " is ready");
+            if (readyThisPlayer.selectedIndex == firstIndex)
+            {
+                SetPlayerReadyRpc(true, readyThisPlayer.playerName);
+            }
+            else
+            {
+                SetPlayerReadyRpc(false, readyThisPlayer.playerName);
+            }
             UpdateReady();
         }
 
         if (IsHost && GetIfAllPlayersReady())
         {
             canCheck = false;
+            ModifierHolder holder = FindFirstObjectByType<ModifierHolder>();
+
+            int firstIndexPlayerSelected = 0;
+
+            foreach (var player in playerReadied)
+            {
+                if (player.selectedIndex == firstIndex)
+                {
+                    firstIndexPlayerSelected++;
+                }
+            }
+            int secondIndexPlayerSelected = 0;
+            secondIndexPlayerSelected = playerReadied.Count - firstIndexPlayerSelected;
+            if (firstIndexPlayerSelected > secondIndexPlayerSelected)
+            {
+                winnerIndex = firstIndex;
+            }
+            else if (secondIndexPlayerSelected == firstIndexPlayerSelected)
+            {
+                int random = Random.Range(0 , 1);
+                if (random == 0)
+                {
+                    winnerIndex = secondIndex;
+                }
+                else
+                {
+                    winnerIndex = firstIndex;
+                }
+                Debug.Log("RANDOM");
+            }
+            else
+            {
+                winnerIndex = secondIndex;
+            }
+            
+            holder.AddModfierWithIndexRpc(winnerIndex);
             Back();
         }
     }
@@ -129,27 +231,31 @@ public class ModifierUIManager : NetworkBehaviour
         }
     }
 
-    public void Create3Modifier()
+    public void Create2Modifier()
     {
-        int spawnedModifiers = 0;
-        while (spawnedModifiers < 2)
+        firstIndex = Random.Range(0 , allModifiers.Length);
+        GameObject mod = Instantiate(modifier , Content);
+        mod.GetComponent<Modifier>().Setmodifier(allModifiers[firstIndex]);
+        CurrentModifiers.Add(firstIndex);
+
+        CreateSecondModifier();
+    }
+
+    private void CreateSecondModifier()
+    {
+        int waitSecondIndex = Random.Range(0 , allModifiers.Length);
+        if (waitSecondIndex == firstIndex)
         {
-            int index = Random.Range(0 , allModifiers.Length);
-            Debug.Log("Creating modifier" + spawnedModifiers + " " + index);
-            GameObject mod = Instantiate(modifier , Content);
-            mod.GetComponent<Modifier>().Setmodifier(allModifiers[index]);
-            CurrentModifiers.Add(index);
-            spawnedModifiers++;
-            //THIS IS FOR LATER
-            /*
-            if (!CurrentModifiers.Contains(index))
-            {
-                GameObject mod = Instantiate(modifier , Content);
-                mod.GetComponent<Modifier>().Setmodifier(allModifiers[index]);
-                CurrentModifiers.Add(index);
-                spawnedModifiers++;
-            }
-            */
+            CreateSecondModifier();
         }
+        else
+        {
+            secondIndex = waitSecondIndex;
+            GameObject mod1 = Instantiate(modifier , Content);
+            mod1.GetComponent<Modifier>().Setmodifier(allModifiers[secondIndex]);
+            CurrentModifiers.Add(secondIndex);
+            SetTwoCurrentModifiersWithIdexesRpc(firstIndex , secondIndex);
+        }
+        
     }
 }

@@ -78,6 +78,7 @@ public class Harpoon : NetworkBehaviour , IGearBehavior
         cameraPosition = Holder.GetComponent<CameraController>().Camera.transform;
         animator.SetTrigger("HarpoonShoot");
         Holder.leftArmAnimator.SetTrigger("HookLockShoot");
+        GameManager.Instance.soundManager.SpawnSoundRpc(transform.position, 2 , 1 , 1 , 8);
         SetHookActiveRpc(false);
         if (Physics.Raycast(cameraPosition.position, cameraPosition.forward, out hit, 100))
         {
@@ -89,7 +90,6 @@ public class Harpoon : NetworkBehaviour , IGearBehavior
                 Hook.position = hit.point;
                 HitPlayer = hit.collider.transform;
                 SpawnHookVisualServerRpc(hit.collider.transform.position, hit.collider.transform.rotation);
-                hit.collider.GetComponent<CharecterController>().CanMove = false;
             }
             else
             {
@@ -108,25 +108,24 @@ public class Harpoon : NetworkBehaviour , IGearBehavior
         }
     }
     
+    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone)]
+    public void PullRpc(Vector3 position, NetworkObjectReference hitRef)
+    {
+        if (hitRef.TryGet(out NetworkObject hitObj))
+        {
+            if (hitObj.TryGetComponent<PlayerKnockbackSystem>(out var knockback))
+            {
+                knockback.GetPulledToPositionRpc(position);
+            }
+        }
+    }
+    
     public void Pull()
     {
         PullRpc(Holder.Harpoonpoint.position , HitPlayer.GetComponent<NetworkObject>());
     }
-
-    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
-    private void PullRpc(Vector3 position , NetworkObjectReference hitRef)
-    {
-        hitRef.TryGet(out NetworkObject hitObj);
-        hitObj.transform.position = position;
-        AllowMove = hitObj.GetComponent<CharecterController>();
-    }
-
-    private CharecterController AllowMove;
-
     private void WaitToDestroy()
     {
-        if(AllowMove != null)
-            AllowMove.CanMove = true;
         WaitToThrowRpc();
         Holder.DestoryHoldingGear();
     }

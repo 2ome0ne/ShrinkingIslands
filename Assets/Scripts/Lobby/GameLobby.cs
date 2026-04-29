@@ -74,7 +74,7 @@ public class GameLobby : MonoBehaviour
     {
         try
         {
-            if (string.IsNullOrEmpty(PlayerInputField.text))
+            if (string.IsNullOrWhiteSpace(PlayerInputField.text))
             {
                 ErrorMessageManager.instance.ShowError("Enter A Name >:(");
                 return;
@@ -110,7 +110,7 @@ public class GameLobby : MonoBehaviour
     {
         try
         {
-            if (string.IsNullOrEmpty(PlayerInputField.text))
+            if (string.IsNullOrWhiteSpace(PlayerInputField.text))
             {
                 ErrorMessageManager.instance.ShowError("Enter A Name >:(");
                 return;

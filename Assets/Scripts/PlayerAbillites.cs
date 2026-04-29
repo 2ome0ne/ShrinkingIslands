@@ -22,14 +22,20 @@ public class PlayerAbillites : NetworkBehaviour
     [SerializeField] private float DashTime = 0.6f;
     [SerializeField] private float DashPower;
     [SerializeField] private GameObject DashEffect;
-    [Header("blocking")]
-    [SerializeField] private float BlockDelay;
-    [SerializeField] private Sprite BlockCooldownSprite;
-    [SerializeField] private float BlockCooldown;
-    [SerializeField] private float BlockStunTime;
     [Header("Boost Jumping")] 
     public float boostJumpEyeLevel = -50f;
 
+
+    [Header("Parrying")]
+    public bool Parrying;
+    [SerializeField] private GameObject ParryEffect;
+    [SerializeField] private float ParryTime;
+    [SerializeField] private float currentParry;
+    [SerializeField] private float MaxParryStunTime;
+    [SerializeField] private float ParryStunTime;
+    [SerializeField] private Sprite ParryCooldownSprite;
+    public bool succesfulParry;
+    [SerializeField] private bool CanParry;
     [Header("--[ Refrences ]--")]
     //[SerializeField] private GameObject HitEffect;
     //Punching
@@ -53,6 +59,10 @@ public class PlayerAbillites : NetworkBehaviour
     private bool CanBlock = true;
     public bool Blocking;
     public bool currentlyDashing = false;
+
+    public GameObject ParriedObject;
+    public float ParryKnockback;
+    
     private void Awake()
     {
         pickUpSystem = GetComponent<PickUpSystem>();
@@ -72,57 +82,84 @@ public class PlayerAbillites : NetworkBehaviour
 
     void BlockUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.F) && CanBlock)
+        if (Input.GetKeyDown(KeyCode.F) && CanParry)
         {
-            Blocking = true;
+            CanParry = false;
+            playerIconShower.AddIcon(MaxParryStunTime ,ParryCooldownSprite,"ParryStun" , true);
+            succesfulParry = false;
+            ParriedObject = null;
+            currentParry = ParryTime;
+            ParryStunTime = MaxParryStunTime;
+            Parrying = true;
             Armanimator.SetTrigger("Block");
             LeftHandAnimator.SetTrigger("Block");
-            controller.SpeedMultiplier -= 0.7f;
         }
         //TEST
 
-        if (Input.GetKeyUp(KeyCode.F) && Blocking)
+        if (Parrying)
         {
-            Blocking = false;
-            Armanimator.SetTrigger("StopBlock");
-            LeftHandAnimator.SetTrigger("StopBlock");
-            CanBlock = true;
-            BlockCooldown = BlockStunTime / 2;
-            playerIconShower.AddIcon(BlockCooldown ,BlockCooldownSprite,"blockStun" , true);
-            controller.SpeedMultiplier += 0.7f;
-        }
-
-        if (Blocking == true)
-        {
-            if (_staminaSystem.CurrentStamina <= 0)
+            currentParry -= Time.deltaTime;
+            if (succesfulParry)
             {
-                //block cooldown
-                BlockCooldown = BlockStunTime;
-                playerIconShower.AddIcon(BlockCooldown ,BlockCooldownSprite,"blockStun" , true);
-                Blocking = false;
                 Armanimator.SetTrigger("StopBlock");
-                LeftHandAnimator.SetTrigger("StopBlock");
-                controller.SpeedMultiplier += 0.7f;
+                LeftHandAnimator.SetTrigger("SuccesfulParry");
+                ParryRpc();
+                if (ParriedObject != null)
+                {
+                    if (ParriedObject.GetComponent<PlayerKnockbackSystem>())
+                    {
+                        ParriedObject.GetComponent<PlayerKnockbackSystem>().KnockBack(transform.position , ParryKnockback , gameObject);
+                        _staminaSystem.AddStamina(100);
+                    }
+                    else
+                    {
+                        _staminaSystem.AddStamina(50);
+                        ParriedObject.GetComponent<Rigidbody>().AddForce(_cameraController.Camera.forward * ParryKnockback , ForceMode.Impulse);
+                    }
+                    
+                }
+                Parrying = false;
+                return;
             }
+            
+            if (currentParry <= 0)
+            {
+                Parrying = false;
+                Armanimator.SetTrigger("StopBlock");
+                if (succesfulParry)
+                {
+                    if (ParriedObject != null)
+                    {
+                        ParriedObject.GetComponent<PlayerKnockbackSystem>().KnockBack(transform.position , ParryKnockback , gameObject);
+                        _staminaSystem.AddStamina(100);
+                    }
+                    LeftHandAnimator.SetTrigger("SuccesfulParry");
+                    ParryRpc();
+                }
+                else
+                {
+                    LeftHandAnimator.SetTrigger("StopBlock");
+                }
+            }
+        }
+        
+        currentParry -= Time.deltaTime;
+        ParryStunTime -= Time.deltaTime;
+        if (ParryStunTime <= 0 && !Parrying) CanParry = true;
+        
+    }
 
-            CanBlock = false;
-        }
-        else if(BlockCooldown < 0)
-        {
-            CanBlock = true;
-        }
-
-        if (BlockCooldown > 0)
-        {
-            BlockCooldown -= Time.deltaTime;
-            CanBlock = false;
-        }
+    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
+    void ParryRpc()
+    {
+        Instantiate(ParryEffect , transform.position , Quaternion.identity);
     }
 
     void DashUpdate()
     {
         if (Input.GetKeyDown(KeyCode.LeftControl) && CanDash)
         {
+            GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 3f , 0.53f , 0.91f , 3);
             DashCooldown = MaxDashCooldown;
             _animationManager.TriggerDash();
             _staminaSystem.EatStamina(DashStaminaNeeded);
@@ -166,6 +203,7 @@ public class PlayerAbillites : NetworkBehaviour
         if (Input.GetMouseButtonDown(0) && CanPunch == true)
         {
             PunchCooldown = MaxPunchCooldown;
+            GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 3f , 0.58f , 0.78f , 4);
             if (playerIconShower.FindIconWithId("punchCooldown") == null)
             {
                 playerIconShower.AddIcon(PunchCooldown ,PunchCooldownSprite,"punchCooldown" , true);
@@ -294,7 +332,8 @@ public class PlayerAbillites : NetworkBehaviour
             if (Physics.Raycast(AttackPoint.position, AttackPoint.forward, out hit, AttackRange, AttackableLayer))
             {
                 Debug.Log(hit.collider.gameObject.name);
-                hit.collider.GetComponent<PlayerKnockbackSystem>().KnockBack(transform.position, PunchPower);
+                hit.collider.GetComponent<PlayerKnockbackSystem>().KnockBack(transform.position, PunchPower , gameObject);
+                GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 3f , 0.55f , 0.88f , 7);
                 if (hit.collider.gameObject == this.gameObject)
                 {
                     BoostJumpEffectRpc();
@@ -310,8 +349,9 @@ public class PlayerAbillites : NetworkBehaviour
                 {
                     return;
                 }
+                GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 3f , 0.55f , 0.88f , 7);
                 Debug.Log(hit.collider.gameObject.name);
-                hit.collider.GetComponent<PlayerKnockbackSystem>().KnockBack(transform.position, PunchPower);
+                hit.collider.GetComponent<PlayerKnockbackSystem>().KnockBack(transform.position, PunchPower , gameObject);
                 return;
             }
         }

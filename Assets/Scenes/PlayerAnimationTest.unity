@@ -306,6 +306,7 @@ MonoBehaviour:
   AddStaminaValue: 80
   currentEatTime: 0
   Eating: 0
+  EatingSound: {fileID: 0}
 --- !u!4 &846699145
 Transform:
   m_ObjectHideFlags: 0

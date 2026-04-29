@@ -20,7 +20,7 @@ public class PlayerNameLOD : NetworkBehaviour
     {
         if(IsOwner) return;
         Camera camera = Camera.main;
-        if (camera.transform != null)
+        if (camera != null)
         {
             target = camera.transform;
             currenTargetDistance = Vector3.Distance(transform.position, target.position);

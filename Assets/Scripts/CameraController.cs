@@ -53,6 +53,13 @@ public class CameraController : NetworkBehaviour
         }
     }
 
+    public bool CanMoveSpectatorCamera = true;
+    public override void OnNetworkSpawn()
+    {
+        if(SpectatorCamera)
+            FindFirstObjectByType<EscapeMenu>().SetCameraController(this);
+    }
+
     void Update()
     {
         if (!IsOwner) return;
@@ -61,7 +68,7 @@ public class CameraController : NetworkBehaviour
         mouseY = Input.GetAxis("Mouse Y") * CameraSensitivity * Time.deltaTime;
         if(!SpectatorCamera)
             UpdateState();
-        if (SpectatorCamera)
+        if (SpectatorCamera && CanMoveSpectatorCamera)
             Camera_Movement();
         PersonalxRotation -= mouseY;
         currentShakeTime -= Time.deltaTime;

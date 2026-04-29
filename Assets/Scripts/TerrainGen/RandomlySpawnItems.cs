@@ -19,8 +19,8 @@ public class RandomlySpawnItems : NetworkBehaviour
     [SerializeField] private spawnItem[] spawnableItems;
     [SerializeField] private GameObject SpawnIndicator;
     [Header("--[Settings]--")] 
-    [SerializeField] private float minSpawnTime;
-    [SerializeField] private float maxSpawnTime;
+    public float minSpawnTime;
+    public float maxSpawnTime;
     [SerializeField] private float UpPushForce;
 
     [SerializeField] private float StartSpawnDelayTime = 10f;

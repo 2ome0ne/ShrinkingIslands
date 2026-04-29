@@ -11,7 +11,7 @@ public class GumRock : NetworkBehaviour , IGearBehavior
     [SerializeField] private float AddStaminaValue;
     [SerializeField] private float currentEatTime;
     [SerializeField] private bool Eating = false;
-
+    [SerializeField] private AudioSource EatingSound;
     public override void OnNetworkSpawn()
     {
         currentEatTime = EatTime;
@@ -25,6 +25,19 @@ public class GumRock : NetworkBehaviour , IGearBehavior
             StopEveryoneServerRpc(false);
             Eating = true;
         }
+        EatSoundRpc();
+    }
+
+    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
+    private void EatSoundRpc()
+    {
+        Debug.Log("PLAY Using");
+        EatingSound.Play();
+    }
+    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
+    private void StopEatSoundRpc()
+    {
+        EatingSound.Stop();
     }
 
     public void OnStopUsing()
@@ -76,6 +89,7 @@ public class GumRock : NetworkBehaviour , IGearBehavior
     [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
     private void StopEveryoneServerRpc(bool value)
     {
+        StopEatSoundRpc();
         Debug.Log("Stop Using");
         Holder.leftArmAnimator.Animator.SetBool("StopEating" , value);
     }

@@ -83,5 +83,6 @@ public class TheSea : NetworkBehaviour
     private void SpawnRpc(Vector3 pos)
     {
         Instantiate(WaterPrefab, pos, Quaternion.identity);
+        GameManager.Instance.soundManager.SpawnSoundRpc(pos , 0.646f , 15 , 1 , 10);
     }
 }

@@ -32,6 +32,10 @@ public class ModifierManager : NetworkBehaviour
     private bool WaitForWarning = false;
     [SerializeField] private float MinLightingStrike;
     [SerializeField] private float MaxLightingStrike;
+    
+    //More From The Sea
+    [SerializeField] private float minSpawnTime = 1.5f;
+    [SerializeField] private float maxSpawnTime = 4;
 
     [SerializeField] private GameObject WarningEffect;
     [SerializeField] private GameObject LightingPrefab;
@@ -129,6 +133,8 @@ public class ModifierManager : NetworkBehaviour
             ThunderStormActivate();
         if (CheckEnabledModifierByName("Harpoon Time"))
             HarpoonTimeActivate();
+        if (CheckEnabledModifierByName("More From The Sea"))
+            MoreFromTheSeaActive();
         RenderSettings.fogDensity = defaultfog;
         if (CheckEnabledModifierByName("Alot Of Fog"))
             AlotOfFogActivateRpc();
@@ -198,5 +204,11 @@ public class ModifierManager : NetworkBehaviour
     public void HarpoonTimeActivate()
     {
         randomlySpawnItems.EnableItemToSpawnByIndexServerRpc(4);
+    }
+
+    public void MoreFromTheSeaActive()
+    {
+        randomlySpawnItems.minSpawnTime = minSpawnTime;
+        randomlySpawnItems.maxSpawnTime = maxSpawnTime;
     }
 }

@@ -17,7 +17,7 @@ public class CharecterController : NetworkBehaviour
     public float SpeedMultiplier;
     public float Gravity = -10;
     public float JumpForce = 5;
-    public float AirMultiplier = 0.4f;
+    public float AirMultiplier = 0f;
     public PlayerState PlayerStates;
     
     public bool CanMove;
@@ -29,11 +29,17 @@ public class CharecterController : NetworkBehaviour
     [SerializeField] private float GroundCheckRadius;
     [SerializeField] private LayerMask GroundLayer;
     
+    [SerializeField] private float currentStep;
+    [SerializeField] private float maxStep;
+    [SerializeField] private StaminaSystem staminaSystem;
+    
     private CharacterController controller;
     private Vector3 velocity;
     private Vector3 move;
 
     private bool AirMultiply;
+    
+    
 
     void Start()
     {
@@ -55,7 +61,19 @@ public class CharecterController : NetworkBehaviour
             Movement();
         }
         //ground Check
-        IsGrounded = Physics.CheckSphere(GroundCheck.position, GroundCheckRadius, GroundLayer);
+        if (Physics.CheckSphere(GroundCheck.position, GroundCheckRadius, GroundLayer))
+        {
+            if (!IsGrounded)
+            {
+                GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 3f , 1f , 0.78f , 6);
+            }
+            IsGrounded = true;
+        }
+        else
+        {
+            IsGrounded = false;
+        }
+        //IsGrounded = Physics.CheckSphere(GroundCheck.position, GroundCheckRadius, GroundLayer);
         if (IsGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
@@ -98,6 +116,51 @@ public class CharecterController : NetworkBehaviour
         
         move = transform.right * horizontal + transform.forward * vertical;
         controller.Move(move * DefaultSpeed * SpeedMultiplier * Time.deltaTime);
+
+        if (PlayerStates == PlayerState.Moving)
+        {
+            currentStep -= Time.deltaTime;
+            if (!staminaSystem.Sprinting)
+            {
+                if (currentStep <= 0)
+                {
+                    currentStep = maxStep;
+                    int randomNum = UnityEngine.Random.Range(0, 2);
+                    if (randomNum == 0)
+                    {
+                        GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 3f , 0.5f , 0.88f , 1);
+                    }
+                    else if (randomNum == 1)
+                    {
+                        GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 3f , 0.5f , 0.88f , 2);
+                    }
+                    else
+                    {
+                        GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 3f , 0.5f , 0.88f , 3);
+                    }
+                }
+            }
+            else
+            {
+                if (currentStep <= 0)
+                {
+                    currentStep = maxStep / 2;
+                    int randomNum = UnityEngine.Random.Range(0, 2);
+                    if (randomNum == 0)
+                    {
+                        GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 3f , 0.5f , 0.88f , 1);
+                    }
+                    else if (randomNum == 1)
+                    {
+                        GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 3f , 0.5f , 0.88f , 2);
+                    }
+                    else
+                    {
+                        GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 3f , 0.5f , 0.88f , 3);
+                    }
+                }
+            }
+        }
     }
 
     void GravityUpdate()
@@ -114,6 +177,7 @@ public class CharecterController : NetworkBehaviour
         if (Input.GetButtonDown("Jump") && IsGrounded)
         {
             velocity.y += Mathf.Sqrt(JumpForce * -2f * Gravity);
+            GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 3f , 0.7f , 0.88f , 5);
         }
     }
 
