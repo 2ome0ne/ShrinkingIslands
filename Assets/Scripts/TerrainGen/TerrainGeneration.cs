@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class TerrainGeneration : NetworkBehaviour
 {
+    [SerializeField] private bool IsTestWorld;
     [Header("--Terrain Settings--")]
     public int width = 16;
     public int height = 16;
@@ -24,6 +26,7 @@ public class TerrainGeneration : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         if(!IsServer) return;
+        if(IsTestWorld) return;
         sendGenerateGridRpc();
         //spawnManager.CalulateSpawnPointServerRpc();
     }
@@ -156,6 +159,7 @@ public class TerrainGeneration : NetworkBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         propSpawner.SpawnAllProps();
+        propSpawner.SpawnIslandServerRpc(Random.Range(10 , 15));
     }
     
     [ServerRpc]

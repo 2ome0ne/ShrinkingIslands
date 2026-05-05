@@ -51,6 +51,8 @@ public class CharecterController : NetworkBehaviour
     {
         if(!IsOwner) return;
         GameManager.Instance.SentEscapePlayer(this.gameObject);
+
+        GameManager.Instance.escapeMenu.LoadSaveDataEscapeMenu();
     }
 
     void Update()

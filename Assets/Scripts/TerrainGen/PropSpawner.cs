@@ -22,6 +22,11 @@ public class PropSpawner : NetworkBehaviour
 
     [SerializeField] private Vector3 randomPoint1;
     [SerializeField] private Vector3 randomPoint2;
+    
+    //Get Small Island
+    [SerializeField] private GameObject Small_Island;
+    [SerializeField] private float MinIslandDistance;
+    [SerializeField] private float MaxIslandDistance;
 
     private void Awake()
     {
@@ -50,6 +55,19 @@ public class PropSpawner : NetworkBehaviour
         float movePosition = tileSize * moveSpaces;
         randomPoint1 = new Vector3(movePosition, 0, movePosition);
         randomPoint2 = new Vector3(-movePosition, 0, -movePosition);
+    }
+
+    [ServerRpc]
+    public void SpawnIslandServerRpc(int spawn_Amount)
+    {
+        for (int i = 0; i < spawn_Amount; i++)
+        {
+            GameObject Small_Island_prefab = Instantiate(Small_Island , transform.position, Quaternion.identity);
+            Small_Island_prefab.GetComponent<NetworkObject>().Spawn();
+            Small_Island_prefab.transform.rotation = Quaternion.Euler(0, Random.Range(0 , 360), 0);
+            Small_Island_prefab.transform.position = Small_Island_prefab.transform.forward * Random.Range(MinIslandDistance, MaxIslandDistance);
+            Small_Island_prefab.GetComponent<SmallIslandTile>().Set_a_GTXRpc();
+        }
     }
 
     public void SpawnAllProps()

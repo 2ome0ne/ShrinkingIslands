@@ -106,7 +106,14 @@ public class PlayerKnockbackSystem : NetworkBehaviour
 
     public void SeaKnockback(float KbForce)
     {
-        GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 15 , 1 , 1 , 9);
+        GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 30 , 1 , 1 , 9);
+        CameraShaker.Instance.ShakeOnce(8f, 6f, 0.1f, 2f);
+        Direction = (transform.up * KbForce);
+        impact += Direction * KbForce / mass; 
+    }
+
+    public void MushroomKnockback(float KbForce)
+    {
         CameraShaker.Instance.ShakeOnce(8f, 6f, 0.1f, 2f);
         Direction = (transform.up * KbForce);
         impact += Direction * KbForce / mass; 

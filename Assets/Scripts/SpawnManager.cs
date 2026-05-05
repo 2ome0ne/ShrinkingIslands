@@ -9,6 +9,7 @@ using UnityEngine;
 public class SpawnManager : NetworkBehaviour
 {
     //0 , 0 will be the spawn and will spawn two
+    [SerializeField] private bool IsTestMode = false;
 
     [SerializeField] private float RotaionPerPlayer;
 
@@ -39,6 +40,7 @@ public class SpawnManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        if (IsTestMode) return;
         if (IsServer)
         {
             readyUp = FindFirstObjectByType<ReadyUp>();

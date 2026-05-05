@@ -5660,7 +5660,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TerrainGeneration
   ShowTopMostFoldoutHeaderGroup: 1
-  IsTestWorld: 0
   width: 16
   height: 16
   tilePrefab: {fileID: 4623443372835671682, guid: 815d886e46e0fa4459d358b7ee1f1a58, type: 3}
@@ -5698,7 +5697,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1926869876
+  GlobalObjectIdHash: 3961396552
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -5743,7 +5742,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1366733683
+  GlobalObjectIdHash: 1982749304
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -8825,7 +8824,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   playerPrefab: {fileID: 4158232433353681693, guid: 68a075743e9a93640bffaad20797a24f, type: 3}
   spawnManager: {fileID: 879218768}
-  terrainGenerator: {fileID: 0}
+  terrainGenerator: {fileID: 1864397452}
   soundManager: {fileID: 2102137994}
   AmountOfHold: 0
   Players: []
@@ -8851,7 +8850,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnManager
   ShowTopMostFoldoutHeaderGroup: 1
-  IsTestMode: 1
   RotaionPerPlayer: 90
   SpawnPodiumPrefab: {fileID: 6356516164951873503, guid: 49537fe7a17069741889267ae786a53c, type: 3}
   SpawnCheckPrefab: {fileID: 5424852568803372485, guid: faf29acdfbeaaf0429b43e30be837eb7, type: 3}
@@ -8889,7 +8887,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 879218764}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9869e2467f80d2418942707a21436ff, type: 3}
   m_Name: 
@@ -8915,7 +8913,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 879218764}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7900bf1d1d03df74c9b56bf5ba0690b5, type: 3}
   m_Name: 
@@ -8944,7 +8942,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 879218764}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a105938677f9f44c9b24511a4f23c21, type: 3}
   m_Name: 
@@ -9001,7 +8999,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 879218764}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 22f92d81d31399e44b914f65540cf5ac, type: 3}
   m_Name: 
@@ -9045,7 +9043,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2660595702
+  GlobalObjectIdHash: 1093001436
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -15149,7 +15147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3159855928
+  GlobalObjectIdHash: 2764834393
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -15752,7 +15750,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2763834009
+  GlobalObjectIdHash: 2626711523
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -16112,7 +16110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 9211243
+  GlobalObjectIdHash: 1574166783
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -22825,7 +22823,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3238738205
+  GlobalObjectIdHash: 500568480
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -22851,7 +22849,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TerrainGeneration
   ShowTopMostFoldoutHeaderGroup: 1
-  IsTestWorld: 1
   width: 16
   height: 16
   tilePrefab: {fileID: 0}
@@ -32727,7 +32724,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1864279930
+  GlobalObjectIdHash: 2708514014
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -33052,7 +33049,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 977420234
+  GlobalObjectIdHash: 855977684
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -33078,7 +33075,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnManager
   ShowTopMostFoldoutHeaderGroup: 1
-  IsTestMode: 0
   RotaionPerPlayer: 90
   SpawnPodiumPrefab: {fileID: 6356516164951873503, guid: 49537fe7a17069741889267ae786a53c, type: 3}
   SpawnCheckPrefab: {fileID: 5424852568803372485, guid: faf29acdfbeaaf0429b43e30be837eb7, type: 3}
@@ -33260,7 +33256,7 @@ GameObject:
   - component: {fileID: 2064327717}
   - component: {fileID: 2064327716}
   - component: {fileID: 2064327715}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Sea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33284,7 +33280,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -34653,7 +34649,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3265567489
+  GlobalObjectIdHash: 2337834784
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1

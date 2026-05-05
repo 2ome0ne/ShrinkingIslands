@@ -63,6 +63,34 @@ public class EscapeMenu : NetworkBehaviour
         Saved = false;
     }
 
+    public void LoadSaveDataEscapeMenu()
+    {
+        SaveData data = PlayerSaveSystem.LoadPlayer();
+        if (data == null)
+        {
+            SensitivitySlider.value = 350;
+            PlayerSaveSystem.SavePlayer(this);
+            return;
+        }
+        Debug.Log("Loaded Sens = " + data.cameraSensitivity);
+        SensitivitySlider.value = data.cameraSensitivity;
+        SoundSlider.value = data.soundVolume;
+        EnviromentSoundSlider.value = data.Enviroment_Volume;
+        Saved = false;
+
+        CameraController.CameraSensitivity = SensitivitySlider.value;
+        SensitivityText.text = $"Sensitivity: {CameraController.CameraSensitivity}";
+                
+        soundManager.EnviromentSoundVolume = EnviromentSoundSlider.value;
+        EnviromentSoundText.text = $"Enviorment Sound Volume: {EnviromentSoundSlider.value}";
+                
+        soundManager.soundVolume = SoundSlider.value;
+        SoundText.text = $"Sound Volume: {SoundSlider.value}";
+        CameraController.CanMoveCamera = false;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
     public void GetAllRefrences()
     {
         CameraController = player.GetComponent<CameraController>();
@@ -80,6 +108,7 @@ public class EscapeMenu : NetworkBehaviour
         {
             if (!Pausing)
             {
+                Debug.Log("Pausing!!!!");
                 Saved = false;
                 SetGui(true);
             }
