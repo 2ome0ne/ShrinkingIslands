@@ -82,13 +82,13 @@ public class PickUpSystem : NetworkBehaviour
             SetHasItemServerRpc(false);
         }
         
-        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetKey(KeyCode.Q) && !Input.GetMouseButton(1))
         {
             CalculateThrowForce();
             uImanager.EnableDisableThrowForceSlider(true);
         }
 
-        if (Input.GetKeyUp(KeyCode.Q))
+        if (Input.GetKeyUp(KeyCode.Q) && !Input.GetMouseButton(1))
         {
             DropItem(ThrowForce.Value);
             EditThrowForceServerRpc(MinThrowForce);

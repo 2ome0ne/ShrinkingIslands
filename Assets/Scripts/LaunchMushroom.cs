@@ -1,10 +1,11 @@
 using System;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 public class LaunchMushroom : NetworkBehaviour
 {
-    [SerializeField] private ownerNetworkAnimator animator;
+    [SerializeField] private NetworkAnimator animator;
     [SerializeField] private float PushPower = 100;
     private void OnTriggerEnter(Collider other)
     {
@@ -13,8 +14,14 @@ public class LaunchMushroom : NetworkBehaviour
             Debug.Log("LAUNCH MUSHROOM");
             GameManager.Instance.soundManager.SpawnSoundRpc(transform.position, 20 , 1 , 1 , 12);
              PlayerKnockbackSystem player = other.GetComponent<PlayerKnockbackSystem>();
-             animator.SetTrigger("Push");
+             MushroomBounceRpc();
              player.MushroomKnockback(PushPower);
         }
+    }
+
+    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
+    private void MushroomBounceRpc()
+    {
+        animator.SetTrigger("Push");
     }
 }

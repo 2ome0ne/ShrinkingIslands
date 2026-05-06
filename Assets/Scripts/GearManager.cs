@@ -1,7 +1,9 @@
+using System.Collections;
 using Unity.Netcode.Components;
 using UnityEngine;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine.AdaptivePerformance;
 
 public interface IGearBehavior
@@ -38,7 +40,7 @@ public class GearManager : NetworkBehaviour
 
     private int currentGearIndex;
     public bool HasGear;
-
+    
     public Transform Harpoonpoint;
 
     [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
@@ -105,6 +107,13 @@ public class GearManager : NetworkBehaviour
     void ItemUpdate()
     {
         if (currentHoldingGear == null) return;
+        
+        //Drop Gear
+        if (Input.GetKeyDown(KeyCode.Q) && Input.GetMouseButton(1))
+        {
+            StartCoroutine(DropGearItem());
+        }
+        
         //Use item
         if (Input.GetKeyDown(UseItemKey))
         {
@@ -115,6 +124,13 @@ public class GearManager : NetworkBehaviour
         {
             currentHoldingGear.GetComponent<IGearBehavior>().OnStopUsing();
         }
+    }
+
+    IEnumerator DropGearItem()
+    {
+        leftArmAnimator.SetTrigger("Drop");
+        yield return new WaitForSeconds(1f);
+        DestoryHoldingGear();
     }
 
     public void DestoryHoldingGear()
