@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class FollowTransform : MonoBehaviour
 {
+    public string ItemName;
     [SerializeField] private Transform targetTransform;
     public Transform player;
 
