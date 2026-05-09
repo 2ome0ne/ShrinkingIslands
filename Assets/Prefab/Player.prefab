@@ -1075,6 +1075,7 @@ GameObject:
   - component: {fileID: 9163669660050180604}
   - component: {fileID: 4308358583218073483}
   - component: {fileID: 9154319154610644523}
+  - component: {fileID: 7209141915920398568}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -1412,6 +1413,8 @@ MonoBehaviour:
   _staminaSystem: {fileID: 2804895273022537818}
   Blocking: 0
   currentlyDashing: 0
+  ParriedObject: {fileID: 0}
+  ParryKnockback: 0
 --- !u!114 &5646506305326062706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1497,6 +1500,7 @@ MonoBehaviour:
   MaxThrowForce: 25
   MinThrowForce: 2
   ThrowforceMultiplier: 20
+  forgeInteractor: {fileID: 7209141915920398568}
   _abillites: {fileID: 0}
   HoldPoint: {fileID: 980288758054497445}
   Cam: {fileID: 2696105404623524780}
@@ -1713,6 +1717,13 @@ MonoBehaviour:
     TransitionDuration: 0
     TriggerNameHash: -961501946
     TransitionIndex: 3
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -2108311701
+    DestinationState: 583649457
+    TransitionDuration: 0
+    TriggerNameHash: -802706916
+    TransitionIndex: 4
   AnimatorParameterEntries:
     ParameterEntries:
     - name: GearIsHolding
@@ -1755,6 +1766,10 @@ MonoBehaviour:
       NameHash: 1256099357
       Synchronize: 1
       ParameterType: 9
+    - name: Drop
+      NameHash: -802706916
+      Synchronize: 1
+      ParameterType: 9
   AnimatorParametersExpanded: 0
 --- !u!114 &9154319154610644523
 MonoBehaviour:
@@ -1771,6 +1786,24 @@ MonoBehaviour:
   content: {fileID: 2711116148548155106}
   iconPrefab: {fileID: 2494788557014473309, guid: 85ff208470844744dabb3273b5107869, type: 3}
   currentIcons: []
+--- !u!114 &7209141915920398568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1653516941126622037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a541bb4ff664a64eba9a593da8e5d49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ForgeInteractor
+  forgeLayer:
+    serializedVersion: 2
+    m_Bits: 1024
+  cameraController: {fileID: 4822017904827214303}
+  LookingAtForge: 0
+  lookingForge: {fileID: 0}
 --- !u!1 &1986240529860230291
 GameObject:
   m_ObjectHideFlags: 0

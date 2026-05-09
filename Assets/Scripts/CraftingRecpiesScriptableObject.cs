@@ -9,6 +9,7 @@ public class Recipie
     public GameObject ItemOutPut;
 }
 
+[CreateAssetMenu(fileName = "Recipie", menuName = "New Recipie", order = 1)]
 public class CraftingRecpiesScriptableObject : ScriptableObject
 {
     public Recipie[] recipies;

@@ -17,6 +17,7 @@ public class PickUpSystem : NetworkBehaviour
 
     [Header("--[References]--")] 
     private PlayerUImanager uImanager;
+    [SerializeField] private ForgeInteractor forgeInteractor;
     [SerializeField] private PlayerAbillites _abillites;
     [SerializeField] private Transform HoldPoint;
     [SerializeField] private Transform Cam;
@@ -81,11 +82,21 @@ public class PickUpSystem : NetworkBehaviour
         {
             SetHasItemServerRpc(false);
         }
-        
+
+
         if (Input.GetKey(KeyCode.Q) && !Input.GetMouseButton(1))
         {
-            CalculateThrowForce();
-            uImanager.EnableDisableThrowForceSlider(true);
+            if (!forgeInteractor.LookingAtForge)
+            {
+                CalculateThrowForce();
+                uImanager.EnableDisableThrowForceSlider(true);
+            }
+            else
+            {
+                if (CurrentHoldObject == null) return;
+                forgeInteractor.lookingForge.GetComponent<Forge>().PutInForgeRpc(CurrentHoldObject.GetComponent<NetworkObject>());
+                DePick();
+            }
         }
 
         if (Input.GetKeyUp(KeyCode.Q) && !Input.GetMouseButton(1))
