@@ -1164,6 +1164,7 @@ MonoBehaviour:
   currentStep: 0
   maxStep: 0.7
   staminaSystem: {fileID: 2804895273022537818}
+  move: {x: 0, y: 0, z: 0}
 --- !u!114 &4822017904827214303
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1180,6 +1181,7 @@ MonoBehaviour:
   CameraSensitivity: 100
   CanMoveCamera: 1
   Camera: {fileID: 2696105404623524780}
+  tiltTransform: {fileID: 4641324598090946596}
   CamHolder: {fileID: 1580579352849969695}
   Ppos: {fileID: 0}
   SpectatorCamera: 0
@@ -1195,6 +1197,9 @@ MonoBehaviour:
   DashFov: 90
   walktime: 0.5
   sprinttime: 0.3
+  targetTilt: 0
+  maxTilt: 3
+  tiltMultiplier: 14
   CanMoveSpectatorCamera: 1
 --- !u!143 &7045425996008499557
 CharacterController:
@@ -1377,6 +1382,7 @@ MonoBehaviour:
   AttackRange: 6.8
   BoostJumpEffect: {fileID: 3533332998805611921, guid: e427cc051d931fe4293014b9665d8130, type: 3}
   groundPoint: {fileID: 129646938154533566}
+  hitEffect: {fileID: 1236215217701430233, guid: e0b4a5bb78ddcdb4fbbf0a49fddb85f4, type: 3}
   MaxDashCooldown: 2
   DashStaminaNeeded: 4
   DashCooldown: 0
@@ -1649,6 +1655,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   UseItemKey: 114
   leftArmAnimator: {fileID: 4308358583218073483}
+  forgeInteractor: {fileID: 7209141915920398568}
   holdPoint: {fileID: 761456388688535171}
   currentHoldingGear: {fileID: 0}
   Gears:
@@ -1802,6 +1809,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   cameraController: {fileID: 4822017904827214303}
+  DetectionRange: 3.4
   LookingAtForge: 0
   lookingForge: {fileID: 0}
 --- !u!1 &1986240529860230291
@@ -2485,6 +2493,38 @@ RectTransform:
   m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &2946121483927655427
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4641324598090946596}
+  m_Layer: 0
+  m_Name: TiltHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4641324598090946596
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2946121483927655427}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2696105404623524780}
+  m_Father: {fileID: 1580579352849969695}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2975807663040378442
 GameObject:
   m_ObjectHideFlags: 0
@@ -9169,7 +9209,7 @@ Transform:
   m_Children:
   - {fileID: 6840011977804701247}
   - {fileID: 8791636999014664249}
-  - {fileID: 2696105404623524780}
+  - {fileID: 4641324598090946596}
   m_Father: {fileID: 5434268492611050028}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5545682926656172300
@@ -9345,7 +9385,7 @@ Transform:
   m_Children:
   - {fileID: 4743144184728065560}
   - {fileID: 7777119432887961544}
-  m_Father: {fileID: 1580579352849969695}
+  m_Father: {fileID: 4641324598090946596}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &5328048724476021633
 Camera:

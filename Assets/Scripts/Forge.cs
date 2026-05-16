@@ -14,6 +14,7 @@ public class Forge : NetworkBehaviour
 
     [SerializeField] private Transform content1;
     [SerializeField] private Transform content2;
+    [SerializeField] private GameObject CombineParticle;
 
     [SerializeField] private Transform AllContent;
 
@@ -52,7 +53,11 @@ public class Forge : NetworkBehaviour
             rotationSpeed = Mathf.Lerp(rotationSpeed, maxCombineRotationSpeed, Time.deltaTime * 5f);
             if (contentAwayFromMiddle < 0.01f)
             {
-                CompleteCraftingRecipeRpc();
+                if (IsServer)
+                {
+                    CompleteCraftingRecipeRpc();
+                    Debug.Log("Can Access");
+                }
                 Combining = false;
             }
         }
@@ -69,6 +74,17 @@ public class Forge : NetworkBehaviour
     [Rpc(SendTo.Server)]
     public void PutInForgeRpc(NetworkObjectReference netObjRef)
     {
+        GameManager.Instance.soundManager.SpawnSoundRpc(transform.position, 5 , 1 , 1 , 13);
+        Debug.Log("PuT IN FORGE");
+        netObjRef.TryGet(out NetworkObject item);
+        SetFollowForAllRpc(item);
+
+        CheckForCrafts();
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void SetFollowForAllRpc(NetworkObjectReference netObjRef)
+    {
         netObjRef.TryGet(out NetworkObject item);
         if (item1 != null)
         {
@@ -84,8 +100,6 @@ public class Forge : NetworkBehaviour
             item1 = item.transform;
             FT.SetTargetTransform(content1 , null);
         }
-
-        CheckForCrafts();
     }
     
     public void CheckForCrafts()
@@ -101,7 +115,8 @@ public class Forge : NetworkBehaviour
                 {
                     Debug.Log("Have A RESULT " + recipie.ItemOutPut.name);
                     resultItem = recipie.ItemOutPut;
-                    Combining = true;
+                    CombineOnEVERYONERpc();
+                    GameManager.Instance.soundManager.SpawnSoundRpc(transform.position, 10 , 1 , 1 , 14);
                     //CompleteCraftingRecipeRpc();
                     return;
                 }
@@ -109,14 +124,27 @@ public class Forge : NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.Server)]
+    [Rpc(SendTo.Everyone)]
+    private void CombineOnEVERYONERpc()
+    {
+        Combining = true;
+    }
+
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
     private void CompleteCraftingRecipeRpc()
     {
+        SpawnRpc();
+        Debug.Log("COMPLETE FORGING");
         //netObjRef.TryGet(out NetworkObject resultItem);
         GameObject result = Instantiate(resultItem, AllContent.position, Quaternion.identity);
         result.GetComponent<NetworkObject>().Spawn();
-
         ResetForge();
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void SpawnRpc()
+    {
+        Instantiate(CombineParticle , AllContent.position , Quaternion.identity);
     }
 
     private void ResetForge()

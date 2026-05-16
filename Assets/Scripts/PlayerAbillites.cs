@@ -15,6 +15,7 @@ public class PlayerAbillites : NetworkBehaviour
     [SerializeField] private float AttackRange = 2f;
     [SerializeField] private GameObject BoostJumpEffect;
     [SerializeField] private Transform groundPoint;
+    [SerializeField] private GameObject hitEffect;
     [Header("dashing")]
     [SerializeField] private float MaxDashCooldown;
     [SerializeField] private float DashStaminaNeeded;
@@ -333,6 +334,7 @@ public class PlayerAbillites : NetworkBehaviour
             {
                 Debug.Log(hit.collider.gameObject.name);
                 hit.collider.GetComponent<PlayerKnockbackSystem>().KnockBack(transform.position, PunchPower , gameObject);
+                Instantiate(hitEffect , hit.point, Quaternion.identity);
                 GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 3f , 0.55f , 0.88f , 7);
                 if (hit.collider.gameObject == this.gameObject)
                 {
@@ -351,6 +353,7 @@ public class PlayerAbillites : NetworkBehaviour
                 }
                 GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 3f , 0.55f , 0.88f , 7);
                 Debug.Log(hit.collider.gameObject.name);
+                Instantiate(hitEffect , hit.point, Quaternion.identity);
                 hit.collider.GetComponent<PlayerKnockbackSystem>().KnockBack(transform.position, PunchPower , gameObject);
                 return;
             }

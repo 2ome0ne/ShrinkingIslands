@@ -2,6 +2,13 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 
+[System.Serializable]
+public class EnviormentSound
+{
+    public AudioSource audioSource;
+    public float multiplier;
+}
+
 public class SoundManager : NetworkBehaviour
 {
     public GameObject soundPrefab;
@@ -11,13 +18,16 @@ public class SoundManager : NetworkBehaviour
     public float soundVolume;
     public float EnviromentSoundVolume;
     
-    [SerializeField] private AudioSource[] EnviromentSource;
+    [SerializeField] private EnviormentSound[] EnviromentSource;
 
     private void FixedUpdate()
     {
-        foreach (AudioSource source in EnviromentSource)
+        if (GameManager.Instance.escapeMenu.Pausing)
         {
-            source.volume = EnviromentSoundVolume;
+            foreach (EnviormentSound source in EnviromentSource)
+            {
+                source.audioSource.volume = EnviromentSoundVolume * source.multiplier;
+            }
         }
     }
 

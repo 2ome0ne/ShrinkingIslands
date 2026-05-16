@@ -77,7 +77,7 @@ public class GumRock : NetworkBehaviour , IGearBehavior
     {
         StopEveryoneServerRpc(true);
         Holder.GetComponent<StaminaSystem>().AddStamina(AddStaminaValue);
-        Holder.DestoryHoldingGear();
+        Holder.DestoryHoldingGear(true);
     }
 
     [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]

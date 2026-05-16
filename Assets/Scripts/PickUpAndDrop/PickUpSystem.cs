@@ -28,6 +28,7 @@ public class PickUpSystem : NetworkBehaviour
     [SerializeField] private Transform ThrowPoint;
     public Transform CurrentHoldObject;
     [SerializeField] private GameObject[] PlayerObjects;
+    private bool placedForge = false;
     //1 TestCube
     //2 SlimeBomb
     
@@ -46,7 +47,7 @@ public class PickUpSystem : NetworkBehaviour
         if (HasItem.Value) return;
         Debug.Log("Pick up server");
         CurrentHoldObject = Instantiate(PlayerObjects[ItemIndex].transform);
-        
+        placedForge = false;
         NetworkObject netObj = CurrentHoldObject.GetComponent<NetworkObject>();
         netObj.Spawn();
         SetParentTransformClientRpc(netObj);
@@ -69,6 +70,7 @@ public class PickUpSystem : NetworkBehaviour
     private void SetHoldingBooleanServerRpc(bool value)
     {
         ArmAnimaton.Animator.SetBool("IsHolding", value);
+        placedForge = false;
     }
 
     private void Update()
@@ -93,9 +95,7 @@ public class PickUpSystem : NetworkBehaviour
             }
             else
             {
-                if (CurrentHoldObject == null) return;
-                forgeInteractor.lookingForge.GetComponent<Forge>().PutInForgeRpc(CurrentHoldObject.GetComponent<NetworkObject>());
-                DePick();
+                PutInForgeServerRpc();
             }
         }
 
@@ -107,6 +107,16 @@ public class PickUpSystem : NetworkBehaviour
             _abillites.PunchCooldown = _abillites.MaxPunchCooldown;
             uImanager.EnableDisableThrowForceSlider(false);
         }
+    }
+
+    [ServerRpc]
+    private void PutInForgeServerRpc()
+    {
+        if (CurrentHoldObject == null) return;
+        if(placedForge) return;
+        forgeInteractor.lookingForge.GetComponent<Forge>().PutInForgeRpc(CurrentHoldObject.GetComponent<NetworkObject>());
+        placedForge = true;
+        DePick();
     }
 
     [ServerRpc]

@@ -1,6 +1,8 @@
 using Unity.Netcode;
 using UnityEngine;
 using EZCameraShake;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 
 public class CameraController : NetworkBehaviour
 {
@@ -10,6 +12,7 @@ public class CameraController : NetworkBehaviour
     public bool CanMoveCamera = true;
     [Header("Refrences")] 
     public Transform Camera;
+    [SerializeField] private Transform tiltTransform;
     [SerializeField] private Transform CamHolder;
     [SerializeField] private Transform Ppos;
     [SerializeField] private bool SpectatorCamera;
@@ -39,6 +42,12 @@ public class CameraController : NetworkBehaviour
     private Camera cam;
     private float PersonalxRotation;
     private float mouseY;
+
+    [SerializeField] private float targetTilt;
+    [SerializeField] private float maxTilt;
+    [SerializeField] private float tiltMultiplier;
+
+    private float beforelerptargetlerp;
     void Start()
     {
         cam = Camera.GetComponent<Camera>();
@@ -77,8 +86,29 @@ public class CameraController : NetworkBehaviour
         PersonalxRotation = Mathf.Clamp(PersonalxRotation, -90f, 90f);
         //Can boost jump logic
         if(CamHolder != null && !SpectatorCamera) canBoostJump = CamHolder.localEulerAngles.x > player_abillites.boostJumpEyeLevel;
-        CamHolder.localRotation = Quaternion.Euler(PersonalxRotation, 0f, 0f);
+        CamHolder.localRotation = Quaternion.Euler(PersonalxRotation, 0f, targetTilt);
         transform.Rotate(Vector3.up * mouseX);
+        
+        if (Input.GetKey(KeyCode.D))
+        {
+            if(targetTilt != -maxTilt)
+                beforelerptargetlerp = -maxTilt;
+                
+        }
+        else if (Input.GetKey(KeyCode.A))
+        {
+            if (targetTilt != maxTilt)
+                beforelerptargetlerp = maxTilt;
+        }
+        else
+        {
+            if (targetTilt != 0)
+                beforelerptargetlerp = 0;
+        }
+        
+        targetTilt = Mathf.MoveTowards(targetTilt , beforelerptargetlerp , Time.deltaTime * tiltMultiplier);
+
+        //tiltTransform.rotation = targetTilt;
     }
 
     private float VerticalRotation;

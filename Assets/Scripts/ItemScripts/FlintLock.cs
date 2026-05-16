@@ -56,7 +56,7 @@ public class FlintLock : NetworkBehaviour , IGearBehavior
     private void WaitToDestroy()
     {
         WaitToThrowRpc();
-        Holder.DestoryHoldingGear();
+        Holder.DestoryHoldingGear(true);
     }
 
     [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]

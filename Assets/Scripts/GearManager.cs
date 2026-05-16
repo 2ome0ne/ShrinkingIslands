@@ -31,6 +31,7 @@ public class GearManager : NetworkBehaviour
     [Header("--Refrences--")] 
     public NetworkAnimator leftArmAnimator;
 
+    [SerializeField] private ForgeInteractor forgeInteractor;
     [SerializeField] private Transform holdPoint;
     [SerializeField] private NetworkObject currentHoldingGear;
     
@@ -129,14 +130,34 @@ public class GearManager : NetworkBehaviour
     IEnumerator DropGearItem()
     {
         leftArmAnimator.SetTrigger("Drop");
+        bool forged = false;
+        if (forgeInteractor.LookingAtForge)
+        {
+            forgeInteractor.lookingForge.GetComponent<Forge>().PutInForgeRpc(currentHoldingGear.GetComponent<NetworkObject>());
+            forged = true;
+        }
         yield return new WaitForSeconds(1f);
-        DestoryHoldingGear();
+        PutInForgeServerRpc(forged);
     }
 
-    public void DestoryHoldingGear()
+    [ServerRpc]
+    private void PutInForgeServerRpc(bool forged)
+    {
+        if (!forged)
+        {
+            DestoryHoldingGear(true);
+        }
+        else
+        {
+            DestoryHoldingGear(false);
+        }
+    }
+
+    public void DestoryHoldingGear(bool destroy)
     {
         UpdateHoldWhenDestoryedRpc();
-        DestroyHoldRpc();
+        if(destroy)
+            DestroyHoldRpc();
         StopHoldingGearRpc(false);
     }
 
