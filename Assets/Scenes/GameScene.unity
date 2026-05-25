@@ -1481,8 +1481,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 200, y: 95.864525, z: 200}
-  m_Center: {x: 0, y: -47.017735, z: 2.5654175}
+  m_Size: {x: 215.47205, y: 96.37838, z: 200}
+  m_Center: {x: 7.736023, y: -46.760807, z: 2.5654175}
 --- !u!114 &66404912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23283,98 +23283,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1087592504
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1087592507}
-  - component: {fileID: 1087592505}
-  - component: {fileID: 1087592506}
-  m_Layer: 0
-  m_Name: SoundManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1087592505
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1087592504}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 162409754
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 0
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
---- !u!114 &1087592506
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1087592504}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1498f34d13d538f4288147d247cc389a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SoundManager
-  ShowTopMostFoldoutHeaderGroup: 1
-  soundPrefab: {fileID: 7641974918753247909, guid: 5a65cdc6aef1eba42b4afd8d0c175cb6, type: 3}
-  soundClips:
-  - {fileID: 8300000, guid: fe922bf37bb90f948b6d72ecfc2f42c9, type: 3}
-  - {fileID: 8300000, guid: 7aea6237a0623674eb93db25c68fdc91, type: 3}
-  - {fileID: 8300000, guid: 9b0fa224aade35a43897851d7012d566, type: 3}
-  - {fileID: 8300000, guid: d9c4341b44f76d84f83d8244537ae7a5, type: 3}
-  - {fileID: 8300000, guid: 67da12bb34ea4024f9364a330acb6cc3, type: 3}
-  - {fileID: 8300000, guid: 46d45a7a57295494f9457c7657ca523f, type: 3}
-  - {fileID: 8300000, guid: 68fd0aae71de8a540b38b8e599328067, type: 3}
-  - {fileID: 8300000, guid: 39442b0a0a959e144aa182bd3a18f2f3, type: 3}
-  - {fileID: 8300000, guid: 069b5d80d37871947b4417fe728dd88c, type: 3}
-  - {fileID: 8300000, guid: 742eda0dba93e264ba424d7849b9216e, type: 3}
-  - {fileID: 8300000, guid: 83f93f7016e21fe45822201e58bb6130, type: 3}
-  - {fileID: 8300000, guid: fc399063463d4554c8201d00baa0fd2d, type: 3}
-  - {fileID: 8300000, guid: a0b7838223d048c4d9d7d661a475a2ab, type: 3}
-  soundVolume: 0
-  EnviromentSoundVolume: 0
-  EnviromentSource:
-  - {fileID: 533617498}
-  - {fileID: 1350101898}
-  - {fileID: 942344100}
---- !u!4 &1087592507
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1087592504}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1245026250
 GameObject:
   m_ObjectHideFlags: 0
@@ -28336,7 +28244,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1350101897
 Transform:
   m_ObjectHideFlags: 0
@@ -33795,6 +33703,101 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1692847307}
   m_CullTransparentMesh: 1
+--- !u!1 &1704140333
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1704140336}
+  - component: {fileID: 1704140335}
+  - component: {fileID: 1704140334}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1704140334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1704140333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1498f34d13d538f4288147d247cc389a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoundManager
+  ShowTopMostFoldoutHeaderGroup: 1
+  soundPrefab: {fileID: 7641974918753247909, guid: 5a65cdc6aef1eba42b4afd8d0c175cb6, type: 3}
+  soundClips:
+  - {fileID: 8300000, guid: fe922bf37bb90f948b6d72ecfc2f42c9, type: 3}
+  - {fileID: 8300000, guid: 7aea6237a0623674eb93db25c68fdc91, type: 3}
+  - {fileID: 8300000, guid: 9b0fa224aade35a43897851d7012d566, type: 3}
+  - {fileID: 8300000, guid: d9c4341b44f76d84f83d8244537ae7a5, type: 3}
+  - {fileID: 8300000, guid: 67da12bb34ea4024f9364a330acb6cc3, type: 3}
+  - {fileID: 8300000, guid: 46d45a7a57295494f9457c7657ca523f, type: 3}
+  - {fileID: 8300000, guid: 68fd0aae71de8a540b38b8e599328067, type: 3}
+  - {fileID: 8300000, guid: 39442b0a0a959e144aa182bd3a18f2f3, type: 3}
+  - {fileID: 8300000, guid: 069b5d80d37871947b4417fe728dd88c, type: 3}
+  - {fileID: 8300000, guid: 742eda0dba93e264ba424d7849b9216e, type: 3}
+  - {fileID: 8300000, guid: 83f93f7016e21fe45822201e58bb6130, type: 3}
+  - {fileID: 8300000, guid: fc399063463d4554c8201d00baa0fd2d, type: 3}
+  - {fileID: 8300000, guid: a0b7838223d048c4d9d7d661a475a2ab, type: 3}
+  - {fileID: 8300000, guid: 94595a1d83dfc2445a68d16a4041ec79, type: 3}
+  - {fileID: 8300000, guid: 444762eef7d33d2449c1a5f46d9a16c2, type: 3}
+  soundVolume: 0
+  EnviromentSoundVolume: 0
+  EnviromentSource:
+  - audioSource: {fileID: 533617498}
+    multiplier: 1.5
+  - audioSource: {fileID: 942344100}
+    multiplier: 0.8
+--- !u!114 &1704140335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1704140333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 1720391040
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!4 &1704140336
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1704140333}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1723988964
 GameObject:
   m_ObjectHideFlags: 0
@@ -39560,7 +39563,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 4158232433353681693, guid: 68a075743e9a93640bffaad20797a24f, type: 3}
   spawnManager: {fileID: 1961144409}
   terrainGenerator: {fileID: 1831919988}
-  soundManager: {fileID: 1087592506}
+  soundManager: {fileID: 1704140334}
   AmountOfHold: 0
   Players: []
   SpectatorPlayer: {fileID: 7161271764440588732, guid: 111b360335971eb4daf865a304ed94a4, type: 3}
@@ -39581,7 +39584,7 @@ Transform:
   m_GameObject: {fileID: 1961144405}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 15, z: 0}
+  m_LocalPosition: {x: 0, y: 14.24, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -39654,7 +39657,7 @@ MonoBehaviour:
     ableToSpawn: 0
   SpawnIndicator: {fileID: 3574269667675813573, guid: 0a1185a01718251468ea1836085889ae, type: 3}
   minSpawnTime: 2
-  maxSpawnTime: 8
+  maxSpawnTime: 4.5
   UpPushForce: 50
   StartSpawnDelayTime: 10
   spt1: {fileID: 666825126}
@@ -39680,7 +39683,7 @@ MonoBehaviour:
   SensitivitySlider: {fileID: 3711355299791881560}
   CameraController: {fileID: 0}
   SensitivityText: {fileID: 1165306390496754774}
-  soundManager: {fileID: 1087592506}
+  soundManager: {fileID: 1704140334}
   EnviromentSoundSlider: {fileID: 1976044391}
   EnviromentSoundText: {fileID: 867947853}
   SoundSlider: {fileID: 1386445819}
@@ -39743,6 +39746,8 @@ MonoBehaviour:
   Small_Island: {fileID: 425961524518173536, guid: e956e5ae1a1939a4dba3f12ba2f48a1a, type: 3}
   MinIslandDistance: 40
   MaxIslandDistance: 60
+  Test: 1
+  AddyForSmallIsland: 8.67
 --- !u!114 &1961144413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39767,8 +39772,8 @@ MonoBehaviour:
   ThunderStormEnabled: 0
   MinLightingStrike: 6
   MaxLightingStrike: 14
-  minSpawnTime: 1.5
-  maxSpawnTime: 4
+  minSpawnTime: 1
+  maxSpawnTime: 3
   WarningEffect: {fileID: 7004055304653429653, guid: 700ab2614a17a82418451a347c4340b3, type: 3}
   LightingPrefab: {fileID: 6376181269441086924, guid: 7a62e0e0e41553b47883102d1b03dcba, type: 3}
   TargetTransform: {fileID: 0}
@@ -39813,6 +39818,7 @@ MonoBehaviour:
   lowtideIncoming: Low Tide
   hightideIncoming: High Tide
   midtideIncoming: Normal Tide
+  Testing: 0
 --- !u!1 &1976044389
 GameObject:
   m_ObjectHideFlags: 0
@@ -41197,7 +41203,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 526378380}
   - {fileID: 1961144408}
-  - {fileID: 1087592507}
   - {fileID: 1831919989}
   - {fileID: 338653956}
   - {fileID: 966920732}
@@ -41208,3 +41213,4 @@ SceneRoots:
   - {fileID: 66404908}
   - {fileID: 977375610}
   - {fileID: 947592700}
+  - {fileID: 1704140336}

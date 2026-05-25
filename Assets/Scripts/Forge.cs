@@ -1,11 +1,14 @@
 using System;
 using Unity.Netcode;
 using UnityEngine;
+using Random = System.Random;
 
 public class Forge : NetworkBehaviour
 {
     [SerializeField] private CraftingRecpiesScriptableObject craftingRecipes;
 
+    [SerializeField] private float currentForgeValue;
+    
     [SerializeField] private string currentItem1;
     [SerializeField] private string currentItem2;
     
@@ -26,7 +29,7 @@ public class Forge : NetworkBehaviour
     [SerializeField] private float maxCombineRotationSpeed = 20;
     [SerializeField] private float minCombineRotationSpeed = 10;
 
-    private GameObject resultItem;
+    [SerializeField] private GameObject resultItem;
 
     [SerializeField] private bool Combining = false;
 
@@ -71,7 +74,7 @@ public class Forge : NetworkBehaviour
     }
 
 
-    [Rpc(SendTo.Server)]
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
     public void PutInForgeRpc(NetworkObjectReference netObjRef)
     {
         GameManager.Instance.soundManager.SpawnSoundRpc(transform.position, 5 , 1 , 1 , 13);
@@ -79,13 +82,14 @@ public class Forge : NetworkBehaviour
         netObjRef.TryGet(out NetworkObject item);
         SetFollowForAllRpc(item);
 
-        CheckForCrafts();
+        CheckForCraftsRpc();
     }
 
     [Rpc(SendTo.Everyone)]
     private void SetFollowForAllRpc(NetworkObjectReference netObjRef)
     {
         netObjRef.TryGet(out NetworkObject item);
+        Debug.Log("SetFollowForAllRpc" + item.name);
         if (item1 != null)
         {
             FollowTransform FT = item.GetComponent<FollowTransform>();
@@ -102,26 +106,28 @@ public class Forge : NetworkBehaviour
         }
     }
     
-    public void CheckForCrafts()
+    [Rpc(SendTo.Server )]
+    public void CheckForCraftsRpc()
     {
-        foreach (var recipie in craftingRecipes.recipies)
+        currentForgeValue = 0;
+        foreach (var item in craftingRecipes.itemValues)
         {
-            memeoryitem1 = false;
-            memeoryitem2 = false;
-            if (CheckEqual(recipie, currentItem1))
+            if (item.ItemName == currentItem1)
             {
-                Debug.Log("Have A CHANCE");
-                if (CheckEqual(recipie, currentItem2))
-                {
-                    Debug.Log("Have A RESULT " + recipie.ItemOutPut.name);
-                    resultItem = recipie.ItemOutPut;
-                    CombineOnEVERYONERpc();
-                    GameManager.Instance.soundManager.SpawnSoundRpc(transform.position, 10 , 1 , 1 , 14);
-                    //CompleteCraftingRecipeRpc();
-                    return;
-                }
+                currentForgeValue += item._ItemValue;
+            }
+            if (item.ItemName == currentItem2)
+            {
+                currentForgeValue += item._ItemValue;
+                resultItem = GetRandomItemFromValues();
+                Debug.Log("Have A RESULT " + resultItem.name);
+                CombineOnEVERYONERpc();
+                GameManager.Instance.soundManager.SpawnSoundRpc(transform.position, 10 , 1 , 1 , 14);
+                //CompleteCraftingRecipeRpc();
+                return;
             }
         }
+        //currentForgeValue += currentItem1
     }
 
     [Rpc(SendTo.Everyone)]
@@ -174,5 +180,28 @@ public class Forge : NetworkBehaviour
             return true;
         }
         return false;
+    }
+
+    private GameObject GetRandomItemFromValues()
+    {
+        float currentMaxValue = currentForgeValue;
+
+        int result = 0;
+
+        for (int i = 0; i < craftingRecipes.itemValues.Length; i++)
+        {
+            Debug.Log("BAAAAAAAAAAAAA"+i);
+            if (craftingRecipes.itemValues[i]._ItemNeededValue <= currentMaxValue)
+            {
+                float random = UnityEngine.Random.Range(0, currentMaxValue);
+                if (craftingRecipes.itemValues[i]._ItemNeededValue > random)
+                {
+                    Debug.Log("Random IS = " + random);
+                    result = i;
+                }
+            }
+        }
+
+        return craftingRecipes.itemValues[result].ItemPrefab;
     }
 }

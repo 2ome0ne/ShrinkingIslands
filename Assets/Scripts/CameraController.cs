@@ -17,6 +17,7 @@ public class CameraController : NetworkBehaviour
     [SerializeField] private Transform Ppos;
     [SerializeField] private bool SpectatorCamera;
 
+    [SerializeField] private StaminaSystem Stamina;
     [SerializeField] private CharecterController controller;
     //FOR SPECTATOR
     [SerializeField] private CharacterController _movementController;
@@ -91,14 +92,30 @@ public class CameraController : NetworkBehaviour
         
         if (Input.GetKey(KeyCode.D))
         {
-            if(targetTilt != -maxTilt)
-                beforelerptargetlerp = -maxTilt;
+            if (stamina_system.Sprinting)
+            {
+                if(targetTilt != -maxTilt)
+                    beforelerptargetlerp = -maxTilt * 2;
+            }
+            else
+            {
+                if(targetTilt != -maxTilt)
+                    beforelerptargetlerp = -maxTilt;
+            }
                 
         }
         else if (Input.GetKey(KeyCode.A))
         {
-            if (targetTilt != maxTilt)
-                beforelerptargetlerp = maxTilt;
+            if (stamina_system.Sprinting)
+            {
+                if(targetTilt != maxTilt)
+                    beforelerptargetlerp = maxTilt * 2;
+            }
+            else
+            {
+                if(targetTilt != maxTilt)
+                    beforelerptargetlerp = maxTilt;
+            }
         }
         else
         {

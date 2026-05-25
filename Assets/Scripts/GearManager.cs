@@ -22,6 +22,7 @@ public class GearManager : NetworkBehaviour
         GumRock,
         FlintLock,
         Harpoon,
+        ShieldPotion,
         ShockwaveDevice
     }
 
@@ -64,7 +65,23 @@ public class GearManager : NetworkBehaviour
     [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
     private void UpdateHoldingGearServerRpc()
     {
+        switch (currentGear)
+        {
+            case Gear.GumRock:
+                currentGearIndex = 0;
+                break;
+            case Gear.FlintLock:
+                currentGearIndex = 1;
+                break;
+            case Gear.Harpoon:
+                currentGearIndex = 2;
+                break;
+            case Gear.ShieldPotion:
+                currentGearIndex = 3;
+                break;
+        }
         
+        /*
         if (currentGear == Gear.GumRock)
         {
             currentGearIndex = 0;
@@ -77,11 +94,11 @@ public class GearManager : NetworkBehaviour
         {
             currentGearIndex = 2;
         }
-        else if (currentGear == Gear.ShockwaveDevice)
+        else if (currentGear == Gear.ShieldPotion)
         {
             currentGearIndex = 3;
         }
-        
+        */
         currentHoldingGear = Instantiate(Gears[currentGearIndex]).GetComponent<NetworkObject>();
         currentHoldingGear.Spawn();
         currentHoldingGear.GetComponent<FollowTransform>().SetTargetTransform(holdPoint , transform);

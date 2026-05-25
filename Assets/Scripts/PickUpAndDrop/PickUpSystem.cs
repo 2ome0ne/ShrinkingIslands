@@ -29,6 +29,9 @@ public class PickUpSystem : NetworkBehaviour
     public Transform CurrentHoldObject;
     [SerializeField] private GameObject[] PlayerObjects;
     private bool placedForge = false;
+    private bool throwing = false;
+
+    private bool seeForge;
     //1 TestCube
     //2 SlimeBomb
     
@@ -63,6 +66,7 @@ public class PickUpSystem : NetworkBehaviour
         netObj.GetComponent<Collider>().enabled = false;
         netObj.GetComponent<Rigidbody>().isKinematic = true;
         CurrentHoldObject = netObj.transform;
+        seeForge = false;
     }
     
 
@@ -86,8 +90,14 @@ public class PickUpSystem : NetworkBehaviour
         }
 
 
-        if (Input.GetKey(KeyCode.Q) && !Input.GetMouseButton(1))
+        if (Input.GetKey(KeyCode.Q) && !Input.GetMouseButton(1) && HasItem.Value && !seeForge)
         {
+            
+            if (!throwing)
+            {
+                throwing = true;
+                ArmAnimaton.SetTrigger("Throwing");
+            }
             if (!forgeInteractor.LookingAtForge)
             {
                 CalculateThrowForce();
@@ -95,13 +105,17 @@ public class PickUpSystem : NetworkBehaviour
             }
             else
             {
-                PutInForgeServerRpc();
+                seeForge = true;
+                Debug.Log("Send Put In forge");
+                PutInForgeServerRpc(CurrentHoldObject.GetComponent<NetworkObject>());
             }
         }
 
-        if (Input.GetKeyUp(KeyCode.Q) && !Input.GetMouseButton(1))
+        if (Input.GetKeyUp(KeyCode.Q) && !Input.GetMouseButton(1) && !seeForge)
         {
+            throwing = false;
             DropItem(ThrowForce.Value);
+            SetThrowForceToZeroServerRpc();
             EditThrowForceServerRpc(MinThrowForce);
             animationManager.TriggerThrow();
             _abillites.PunchCooldown = _abillites.MaxPunchCooldown;
@@ -109,32 +123,42 @@ public class PickUpSystem : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
-    private void PutInForgeServerRpc()
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
+    private void PutInForgeServerRpc(NetworkObjectReference NetObj)
     {
-        if (CurrentHoldObject == null) return;
+        NetObj.TryGet(out NetworkObject _currentHoldObject);
+        Debug.Log("Name Of Object Is = " + _currentHoldObject.name);
+        if (_currentHoldObject == null) return;
         if(placedForge) return;
-        forgeInteractor.lookingForge.GetComponent<Forge>().PutInForgeRpc(CurrentHoldObject.GetComponent<NetworkObject>());
+        Debug.Log("Looking if it works");
+        forgeInteractor.lookingForge.GetComponent<Forge>().PutInForgeRpc(_currentHoldObject);
         placedForge = true;
         DePick();
     }
+    
 
-    [ServerRpc]
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
     private void EditThrowForceServerRpc(float value)
     {
         ThrowForce.Value = value;
     }
 
-    [ServerRpc]
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
     private void SetHasItemServerRpc(bool value)
     {
         HasItem.Value = value;
     }
 
-    [ServerRpc]
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
     private void EditAddThrowForceServerRpc(float value)
     {
         ThrowForce.Value += value;
+    }
+
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
+    private void SetThrowForceToZeroServerRpc()
+    {
+        ThrowForce.Value = 0;
     }
 
     public void DePick()
@@ -174,7 +198,7 @@ public class PickUpSystem : NetworkBehaviour
         SetHoldingBooleanServerRpc(false);
     }
     
-    [ServerRpc]
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
     private void SetFollowTransformNullServerRpc(NetworkObjectReference networkObjectReference , float throwforce)
     {
         networkObjectReference.TryGet(out NetworkObject netObj);
@@ -199,7 +223,7 @@ public class PickUpSystem : NetworkBehaviour
         this.CurrentHoldObject = null;
     }
 
-    [ServerRpc]
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
     private void ThrowForceServerRpc(float throwforce , NetworkObjectReference objRef)
     {
         objRef.TryGet(out NetworkObject netObj);

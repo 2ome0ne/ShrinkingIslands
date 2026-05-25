@@ -28,18 +28,11 @@ public class PropSpawner : NetworkBehaviour
     [SerializeField] private float MinIslandDistance;
     [SerializeField] private float MaxIslandDistance;
 
+    [SerializeField] private bool Test;
+    [SerializeField] private float AddyForSmallIsland;
     private void Awake()
     {
         SetRandomSpawnPosition();
-    }
-
-    private void Update()
-    {
-        //TEST
-        if (Input.GetKeyDown(KeyCode.G) && IsHost)
-        {
-            SpawnProp(props[0]);
-        }
     }
     
     public void EnablePropByIndex(int index)
@@ -62,11 +55,19 @@ public class PropSpawner : NetworkBehaviour
     {
         for (int i = 0; i < spawn_Amount; i++)
         {
-            GameObject Small_Island_prefab = Instantiate(Small_Island , transform.position, Quaternion.identity);
-            Small_Island_prefab.GetComponent<NetworkObject>().Spawn();
+            GameObject Small_Island_prefab;
+            if (Test)
+            {
+                Small_Island_prefab = Instantiate(Small_Island , new Vector3(transform.position.x , transform.position.y + AddyForSmallIsland , transform.position.z), Quaternion.identity);
+            }
+            else
+            {
+                Small_Island_prefab = Instantiate(Small_Island , transform.position, Quaternion.identity);
+            }
+            Small_Island_prefab.GetComponent<NetworkObject>().Spawn(true);
             Small_Island_prefab.transform.rotation = Quaternion.Euler(0, Random.Range(0 , 360), 0);
             Small_Island_prefab.transform.position = Small_Island_prefab.transform.forward * Random.Range(MinIslandDistance, MaxIslandDistance);
-            Small_Island_prefab.GetComponent<SmallIslandTile>().Set_a_GTXRpc();
+            Small_Island_prefab.GetComponent<SmallIslandTile>().Set_a_GTXRpc(Random.Range(0, 2));
         }
     }
 

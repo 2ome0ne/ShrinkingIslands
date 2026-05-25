@@ -94,6 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c70e840238e6f4b9219c575fe2d9fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FollowTransform
+  ItemName: Gum Rock
   targetTransform: {fileID: 0}
   player: {fileID: 0}
 --- !u!114 &-3571963727911421095

@@ -70,4 +70,9 @@ public class PlayerAnimationManager : NetworkBehaviour
     {
         animator.SetTrigger("ThrowItem");
     }
+
+    public void TriggerThrowing()
+    {
+        animator.SetTrigger("Throwing");
+    }
 }

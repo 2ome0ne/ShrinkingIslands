@@ -78,10 +78,10 @@ public class PlayerAbillites : NetworkBehaviour
             PunchUpdate();
         }
 
-        BlockUpdate();
+        ParryUpdate();
     }
 
-    void BlockUpdate()
+    void ParryUpdate()
     {
         if (Input.GetKeyDown(KeyCode.F) && CanParry)
         {
@@ -109,7 +109,7 @@ public class PlayerAbillites : NetworkBehaviour
                 {
                     if (ParriedObject.GetComponent<PlayerKnockbackSystem>())
                     {
-                        ParriedObject.GetComponent<PlayerKnockbackSystem>().KnockBack(transform.position , ParryKnockback , gameObject);
+                        ParryKbRpc();
                         _staminaSystem.AddStamina(100);
                     }
                     else
@@ -131,7 +131,7 @@ public class PlayerAbillites : NetworkBehaviour
                 {
                     if (ParriedObject != null)
                     {
-                        ParriedObject.GetComponent<PlayerKnockbackSystem>().KnockBack(transform.position , ParryKnockback , gameObject);
+                        ParryKbRpc();
                         _staminaSystem.AddStamina(100);
                     }
                     LeftHandAnimator.SetTrigger("SuccesfulParry");
@@ -149,7 +149,12 @@ public class PlayerAbillites : NetworkBehaviour
         if (ParryStunTime <= 0 && !Parrying) CanParry = true;
         
     }
-
+    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
+    private void ParryKbRpc()
+    {
+        ParriedObject.GetComponent<PlayerKnockbackSystem>().KnockBack(transform.position , ParryKnockback , gameObject);
+    }
+    
     [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
     void ParryRpc()
     {
@@ -324,7 +329,7 @@ public class PlayerAbillites : NetworkBehaviour
         Instantiate(BoostJumpEffect , groundPoint.position , Quaternion.identity);
     }
 
-    [Rpc(SendTo.Everyone)]
+    [Rpc(SendTo.Server)]
     void PunchServerRpc(bool CanBoost)
     {
         if (CanBoost)
@@ -333,8 +338,7 @@ public class PlayerAbillites : NetworkBehaviour
             if (Physics.Raycast(AttackPoint.position, AttackPoint.forward, out hit, AttackRange, AttackableLayer))
             {
                 Debug.Log(hit.collider.gameObject.name);
-                hit.collider.GetComponent<PlayerKnockbackSystem>().KnockBack(transform.position, PunchPower , gameObject);
-                Instantiate(hitEffect , hit.point, Quaternion.identity);
+                AddKbToPunchRpc(hit.collider.gameObject.GetComponent<NetworkObject>() , hit.point);
                 GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 3f , 0.55f , 0.88f , 7);
                 if (hit.collider.gameObject == this.gameObject)
                 {
@@ -353,10 +357,17 @@ public class PlayerAbillites : NetworkBehaviour
                 }
                 GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 3f , 0.55f , 0.88f , 7);
                 Debug.Log(hit.collider.gameObject.name);
-                Instantiate(hitEffect , hit.point, Quaternion.identity);
-                hit.collider.GetComponent<PlayerKnockbackSystem>().KnockBack(transform.position, PunchPower , gameObject);
+                AddKbToPunchRpc(hit.collider.gameObject.GetComponent<NetworkObject>() , hit.point);
                 return;
             }
         }
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void AddKbToPunchRpc(NetworkObjectReference netObj , Vector3 hitpoint)
+    {
+        netObj.TryGet(out NetworkObject hit);
+        hit.GetComponent<PlayerKnockbackSystem>().KnockBack(transform.position, PunchPower , gameObject);
+        Instantiate(hitEffect , hitpoint, Quaternion.identity);
     }
 }

@@ -33,11 +33,19 @@ public class TideManager : NetworkBehaviour
     [SerializeField] private string lowtideIncoming = "Low Tide";
     [SerializeField] private string hightideIncoming = "High Tide";
     [SerializeField] private string midtideIncoming  = "Normal Tide";
+
+    [SerializeField] private bool Testing;
     
     public override void OnNetworkSpawn()
     {
         if(!IsHost) return;
         SetCurrentTide();
+
+        if (Testing)
+        {
+            SetTideTypeRpc(TideType.lowTide);
+            SetCurrentTide();
+        }
     }
 
     private void SetCurrentTide()
@@ -49,7 +57,7 @@ public class TideManager : NetworkBehaviour
     {
         if(!IsHost) return;
         MoveTide();
-        if (currentTide <= 0)
+        if (currentTide <= 0 && !Testing)
         {
             Invoke(nameof(allowMove), WaitTimeTide);
             switch (tideType)
@@ -97,6 +105,11 @@ public class TideManager : NetworkBehaviour
                     }
                     break;
             }
+            SetCurrentTide();
+        }
+        else if (Testing && currentTide <= 0)
+        {
+            SetTideTypeRpc(TideType.lowTide);
             SetCurrentTide();
         }
         else

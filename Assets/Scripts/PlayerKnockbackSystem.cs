@@ -56,8 +56,14 @@ public class PlayerKnockbackSystem : NetworkBehaviour
     {
         IconShower.AddIcon(ShieldTime , shieldSprite ,"Shield" , true);
         EnableShieldValueRpc(true);
-        HasShield = true;
+        SetShieldRpc();
         Invoke("RemoveShield", ShieldTime);
+    }
+
+    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
+    private void SetShieldRpc()
+    {
+        HasShield = true;
     }
 
     public void RemoveShield()
@@ -80,8 +86,7 @@ public class PlayerKnockbackSystem : NetworkBehaviour
             //playerAbillites._staminaSystem.EatStamina(KbForce / 100f);
             if (player != null)
             {
-                playerAbillites.ParriedObject = player;
-                playerAbillites.ParryKnockback = KbForce;
+                GiveParriedObjectInfoRpc(player, KbForce);
             }
             playerAbillites.succesfulParry = true;
             return;
@@ -91,6 +96,14 @@ public class PlayerKnockbackSystem : NetworkBehaviour
         Direction.y = 0.2f;
         impact += Direction * KbForce / mass;
         //knockback
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void GiveParriedObjectInfoRpc(NetworkObjectReference netObj , float KbForce)
+    {
+        netObj.TryGet(out NetworkObject player);
+        playerAbillites.ParriedObject = player.gameObject;
+        playerAbillites.ParryKnockback = KbForce;
     }
 
     void Update()
