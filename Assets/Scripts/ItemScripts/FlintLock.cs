@@ -1,0 +1,76 @@
+using Unity.Netcode;
+using UnityEngine;
+
+public class FlintLock : NetworkBehaviour , IGearBehavior
+{
+    [SerializeField] private bool hasShot = false;
+    [SerializeField] private LineRenderer lineRenderer;
+
+    [SerializeField] private float knockBackForce = 400;
+    [SerializeField] private float ThrowForce = 140;
+    [SerializeField] private float AnimationTime = 0.6f;
+
+    [SerializeField] private Transform shootPoint;
+    [SerializeField] private GameObject flintLockthrow;
+
+    private Transform cameraPosition;
+    public void OnUsing()
+    {
+        if (!hasShot)
+        {
+            //hasShot = true;
+            ShootRpc();
+        }
+    }
+
+    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
+    private void ShootRpc()
+    {
+        RaycastHit hit;
+        cameraPosition = Holder.GetComponent<CameraController>().Camera.transform;
+        Holder.leftArmAnimator.SetTrigger("FlintLockShoot");
+        GameManager.Instance.soundManager.SpawnSoundRpc(transform.position, 2 , 1 , 1 , 8);
+        if (Physics.Raycast(cameraPosition.position, cameraPosition.forward, out hit, 100))
+        {
+            lineRenderer.SetPosition(0, shootPoint.position);
+            lineRenderer.SetPosition(1, hit.point);
+            if (hit.collider.GetComponent<PlayerKnockbackSystem>())
+            {
+                hit.collider.GetComponent<PlayerKnockbackSystem>().KnockBack(hit.point, knockBackForce , null);
+            }
+
+            Invoke(nameof(WaitToDestroy), AnimationTime);
+        }
+        else
+        {
+            Debug.Log("No shot found");
+            lineRenderer.SetPosition(0, shootPoint.position);
+            Vector3 shoot = shootPoint.position;
+            shoot += cameraPosition.forward * 50;
+            lineRenderer.SetPosition(1, shoot);
+
+            Invoke(nameof(WaitToDestroy), AnimationTime);
+        }
+    }
+
+    private void WaitToDestroy()
+    {
+        WaitToThrowRpc();
+        Holder.DestoryHoldingGear();
+    }
+
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
+    private void WaitToThrowRpc()
+    {
+        Rigidbody rb = Instantiate(flintLockthrow , transform.position , transform.rotation).GetComponent<Rigidbody>();
+        rb.GetComponent<NetworkObject>().Spawn();
+        rb.AddForce(transform.forward * knockBackForce);
+    }
+
+    public void OnStopUsing()
+    {
+
+    }
+
+    public GearManager Holder { get; set; }
+}
