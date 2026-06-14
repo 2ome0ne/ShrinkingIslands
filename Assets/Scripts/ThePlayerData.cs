@@ -8,6 +8,7 @@ public class ThePlayerData : NetworkBehaviour
     public TextMeshProUGUI PlayerNameText;
     [SerializeField] private Transform NameCanvas;
     public string PlayerName;
+    public int IndexColor;
     
     [SerializeField] private PickUpSystem pickUpSystem;
 
@@ -22,6 +23,12 @@ public class ThePlayerData : NetworkBehaviour
         {
             PlayerNameText.gameObject.SetActive(false);
         }
+    }
+
+    [Rpc(SendTo.Everyone)]
+    public void SetIndexColorToAllRpc(int Index)
+    {
+        IndexColor = Index;
     }
 
     [Rpc(SendTo.Everyone)]

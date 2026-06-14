@@ -7,6 +7,7 @@ public struct PlayerData : IEquatable<PlayerData> , INetworkSerializable
 {
     public ulong clientId;
     public FixedString64Bytes name;
+    public int IndexColor;
     public bool Equals(PlayerData other)
     {
         return clientId == other.clientId && name == other.name;

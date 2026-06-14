@@ -10,10 +10,6 @@ public class PlayerUImanager : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         ThrowForceSlider.gameObject.SetActive(false);
-        if (!IsOwner)
-        {
-            StaminaSlider.gameObject.SetActive(false);
-        }
     }
 
     public void EnableDisableThrowForceSlider(bool value)
@@ -25,6 +21,7 @@ public class PlayerUImanager : NetworkBehaviour
         else
         {
             ThrowForceSlider.gameObject.SetActive(false);
+            Debug.Log("CLOSE");
         }
     }
 

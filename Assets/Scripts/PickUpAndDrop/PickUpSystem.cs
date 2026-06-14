@@ -52,7 +52,7 @@ public class PickUpSystem : NetworkBehaviour
         CurrentHoldObject = Instantiate(PlayerObjects[ItemIndex].transform);
         placedForge = false;
         NetworkObject netObj = CurrentHoldObject.GetComponent<NetworkObject>();
-        netObj.Spawn();
+        netObj.Spawn(true);
         SetParentTransformClientRpc(netObj);
 
         SetHoldingBooleanServerRpc(true);
@@ -96,7 +96,7 @@ public class PickUpSystem : NetworkBehaviour
             if (!throwing)
             {
                 throwing = true;
-                ArmAnimaton.SetTrigger("Throwing");
+                ThrowAnimatorArmRpc(true);
             }
             if (!forgeInteractor.LookingAtForge)
             {
@@ -113,9 +113,12 @@ public class PickUpSystem : NetworkBehaviour
 
         if (Input.GetKeyUp(KeyCode.Q) && !Input.GetMouseButton(1) && !seeForge)
         {
+            ThrowAnimatorArmRpc(false);
+            GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 3f , 0.58f , 0.78f , 4);
             throwing = false;
             DropItem(ThrowForce.Value);
             SetThrowForceToZeroServerRpc();
+            //uImanager.EnableDisableThrowForceSlider()
             EditThrowForceServerRpc(MinThrowForce);
             animationManager.TriggerThrow();
             _abillites.PunchCooldown = _abillites.MaxPunchCooldown;
@@ -141,6 +144,12 @@ public class PickUpSystem : NetworkBehaviour
     private void EditThrowForceServerRpc(float value)
     {
         ThrowForce.Value = value;
+    }
+
+    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
+    private void ThrowAnimatorArmRpc(bool value)
+    {
+        ArmAnimaton.Animator.SetBool("Throwing", value);
     }
 
     [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]

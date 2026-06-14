@@ -218,11 +218,16 @@ public void BackToLobby()
     [Rpc(SendTo.Everyone)]
     private void MakeSpectatorCameraNotMoveRpc(NetworkObjectReference playerRef , NetworkObjectReference winnerPlayerNetObj)
     {
+        playerRef.TryGet(out NetworkObject player);
+        player.GetComponent<CameraController>().TeleportToWinnerClientRpc(winnerPlayerNetObj);
+        /*
         winnerPlayerNetObj.TryGet(out NetworkObject winnerplayer);
         playerRef.TryGet(out NetworkObject player);
         player.GetComponent<CameraController>().CanMoveSpectatorCamera = false;
-        player.transform.position = winnerplayer.transform.position;
-        player.transform.position -= winnerplayer.transform.forward * 5;
+        Vector3 teleportVector = winnerplayer.transform.position;
+        teleportVector += winnerplayer.transform.forward * 5;
+        player.transform.position = teleportVector;
+        */
     }
 
     [Rpc(SendTo.Everyone)]

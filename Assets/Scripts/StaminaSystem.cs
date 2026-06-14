@@ -7,7 +7,9 @@ public class StaminaSystem : NetworkBehaviour
     public float CurrentStamina;
     public float MaxStamina;
     public float StaminaRegen;
-    
+    [SerializeField] private float CantSprintTime = 0.7f;
+
+    public float CurrentSprintTime;
     public float SprintMultiplier;
 
     [SerializeField] private float maxCanRegen = 1f;
@@ -15,7 +17,10 @@ public class StaminaSystem : NetworkBehaviour
     [SerializeField] private ParticleSystem sprintParticles;
     
     public bool Sprinting = false;
-    [Header("References")]
+
+    [Header("References")] 
+    [SerializeField] private Sprite cantSprintIcon;
+    [SerializeField] private PlayerIconShower playerIcon;
     [SerializeField] private Slider StaminaSlider;
     [SerializeField] private CharecterController _controller;
     [SerializeField] private PlayerAbillites _playerAbillites;
@@ -23,6 +28,7 @@ public class StaminaSystem : NetworkBehaviour
     void Start()
     {
         CurrentStamina = MaxStamina;
+        if(!IsOwner) StaminaSlider.gameObject.SetActive(false);
     }
 
     private bool PlayingParticles;
@@ -30,24 +36,28 @@ public class StaminaSystem : NetworkBehaviour
     void Update()
     {
         if (!IsOwner) return;
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.LeftShift) && CurrentSprintTime <= 0)
         {
             if(CurrentStamina > 0)
                 Sprinting = true;
             Stopped = false;
             AddSprint();
         }
-        if(Input.GetKeyUp(KeyCode.LeftShift))
+        if(Input.GetKeyUp(KeyCode.LeftShift)  && CurrentSprintTime <= 0)
         {
             if (Sprinting && !Stopped)
             {
                 Stopped = true;
                 Sprinting = false;
-                AddSprint();
+                RemoveSprint();
                 currentCanRegen = maxCanRegen;
             }
         }
         currentCanRegen -= Time.deltaTime;
+        if (CurrentSprintTime > 0)
+        {
+            CurrentSprintTime -= Time.deltaTime;
+        }
         if (CurrentStamina > MaxStamina)
         {
             CurrentStamina = MaxStamina;
@@ -87,7 +97,9 @@ public class StaminaSystem : NetworkBehaviour
             if(Stopped) return;
             Sprinting = false;
             Stopped = true;
-            AddSprint();
+            CurrentSprintTime = CantSprintTime;
+            playerIcon.AddIcon(CantSprintTime , cantSprintIcon , "cant Sprint" , true);
+            RemoveSprint();
         }
     }
 
@@ -111,14 +123,12 @@ public class StaminaSystem : NetworkBehaviour
     
     void AddSprint()
     {
-        if (Sprinting == true)
-        {
-            _controller.SpeedMultiplier += SprintMultiplier;
-        }
-        else
-        {
-            _controller.SpeedMultiplier -= SprintMultiplier;
-        }
+        _controller.SpeedMultiplier += SprintMultiplier;
+    }
+
+    void RemoveSprint()
+    {
+        _controller.SpeedMultiplier -= SprintMultiplier;
     }
     
 }

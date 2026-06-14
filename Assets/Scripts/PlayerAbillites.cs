@@ -107,15 +107,21 @@ public class PlayerAbillites : NetworkBehaviour
                 ParryRpc();
                 if (ParriedObject != null)
                 {
-                    if (ParriedObject.GetComponent<PlayerKnockbackSystem>())
+                    if (ParriedObject.GetComponent<PlayerKnockbackSystem>() && ParriedObject != this.gameObject)
                     {
                         ParryKbRpc();
-                        _staminaSystem.AddStamina(100);
+                        _staminaSystem.AddStamina(10);
+                        Debug.Log("DID NOT PARRY MY SELF");
+                    }
+                    else if(ParriedObject != this.gameObject)
+                    {
+                        _staminaSystem.AddStamina(5);
+                        ParriedObject.GetComponent<Rigidbody>().AddForce(_cameraController.Camera.forward * ParryKnockback , ForceMode.Impulse);
                     }
                     else
                     {
-                        _staminaSystem.AddStamina(50);
-                        ParriedObject.GetComponent<Rigidbody>().AddForce(_cameraController.Camera.forward * ParryKnockback , ForceMode.Impulse);
+                        _staminaSystem.AddStamina(2);
+                        Debug.Log("yes");
                     }
                     
                 }
@@ -132,7 +138,8 @@ public class PlayerAbillites : NetworkBehaviour
                     if (ParriedObject != null)
                     {
                         ParryKbRpc();
-                        _staminaSystem.AddStamina(100);
+                        _staminaSystem.AddStamina(10);
+                        Debug.Log("DID NOT PARRY MY SELF");
                     }
                     LeftHandAnimator.SetTrigger("SuccesfulParry");
                     ParryRpc();

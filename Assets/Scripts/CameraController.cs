@@ -149,6 +149,17 @@ public class CameraController : NetworkBehaviour
         //_movementController.Move(move * spectatorSpeed * Time.deltaTime);
     }
 
+    [ClientRpc]
+    public void TeleportToWinnerClientRpc(NetworkObjectReference winner)
+    {
+        winner.TryGet(out NetworkObject netObj);
+        Transform player = netObj.GetComponent<Transform>();
+        CanMoveCamera = false;
+        transform.position = player.position + player.forward * 5;
+        transform.position -= -player.right * 2;
+        transform.LookAt(player);
+    }
+
     private void UpdateState()
     {
         if (player_abillites.currentlyDashing)

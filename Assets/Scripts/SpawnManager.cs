@@ -88,9 +88,12 @@ public class SpawnManager : NetworkBehaviour
         Transform playerTransform = Instantiate(gameManager.playerPrefab);
         playerTransform.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId , true);
         PlayerData playerData = readyUp.GetPlayerDataFromClientId(clientId);
-        playerTransform.GetComponent<ThePlayerData>().PlayerName = playerData.name.ToString();
-        playerTransform.GetComponent<ThePlayerData>().PlayerId.Value = clientId;
-        playerTransform.GetComponent<ThePlayerData>().SetPlayerNameServerRpc(playerData.name.ToString());
+        var _playerData = playerTransform.GetComponent<ThePlayerData>();
+        _playerData.SetIndexColorToAllRpc(playerData.IndexColor);
+        playerTransform.GetComponent<PlayerPose>().SetColorRpc();
+        _playerData.PlayerName = playerData.name.ToString();
+        _playerData.PlayerId.Value = clientId;
+        _playerData.SetPlayerNameServerRpc(playerData.name.ToString());
         GetComponent<GameManager>().AddPlayerRpc(playerTransform.gameObject.GetComponent<NetworkObject>() , true);
         sea.players.Add(playerTransform.gameObject);
         Vector3 spawnPos = CalulateSpawnPoint() + Vector3.up * 2f;

@@ -121,22 +121,22 @@ public class ReadyUp : NetworkBehaviour
     }
 
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-    private void NetworkSetPlayerNameServerRpc(ulong clientId, string playerName)
+    private void NetworkSetPlayerNameServerRpc(ulong clientId, string playerName , int indexColor)
     {
-        playerDataNetworkList.Add(new PlayerData {clientId = clientId, name = playerName});
+        playerDataNetworkList.Add(new PlayerData {clientId = clientId, name = playerName , IndexColor = indexColor});
     }
     
     public void SetPlayerReady()
     {
         //if(!IsOwner) return;
-        SetPlayer_ReadyServerRpc( ChangeScene , relayManager.player_Name);
+        SetPlayer_ReadyServerRpc( ChangeScene , relayManager.player_Name , relayManager.player_color_index);
     }
     
     [Rpc(SendTo.Server, InvokePermission = RpcInvokePermission.Everyone)]
-    private void SetPlayer_ReadyServerRpc(Loader.Scene loadScene ,FixedString64Bytes playerName , RpcParams serverRpcPrams = default)
+    private void SetPlayer_ReadyServerRpc(Loader.Scene loadScene ,FixedString64Bytes playerName , int indexColor , RpcParams serverRpcPrams = default)
     {
         Debug.Log($"Client {serverRpcPrams.Receive.SenderClientId} readied up!" + " Name Is :" + playerName);
-        NetworkSetPlayerNameServerRpc(serverRpcPrams.Receive.SenderClientId , playerName.ToString());
+        NetworkSetPlayerNameServerRpc(serverRpcPrams.Receive.SenderClientId , playerName.ToString() , indexColor);
         playerReadyDic[serverRpcPrams.Receive.SenderClientId] = true;
 
         if(!IsHost) return;
@@ -206,12 +206,6 @@ public class ReadyUp : NetworkBehaviour
         }
 
         hasCreatedPlayers = true;
-    }
-
-    IEnumerator WaitForAllClientsToConnect(string playerName , Loader.Scene scene)
-    {
-        yield return new WaitUntil(()=> NetworkManager.Singleton.ConnectedClientsIds.Count == relayManager.amountOfPlayers);
-        SetPlayer_ReadyServerRpc(scene , playerName);
     }
     
     

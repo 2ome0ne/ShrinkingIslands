@@ -81,26 +81,8 @@ public class GearManager : NetworkBehaviour
                 break;
         }
         
-        /*
-        if (currentGear == Gear.GumRock)
-        {
-            currentGearIndex = 0;
-        }
-        else if (currentGear == Gear.FlintLock)
-        {
-            currentGearIndex = 1;
-        }
-        else if (currentGear == Gear.Harpoon)
-        {
-            currentGearIndex = 2;
-        }
-        else if (currentGear == Gear.ShieldPotion)
-        {
-            currentGearIndex = 3;
-        }
-        */
         currentHoldingGear = Instantiate(Gears[currentGearIndex]).GetComponent<NetworkObject>();
-        currentHoldingGear.Spawn();
+        currentHoldingGear.Spawn(true);
         currentHoldingGear.GetComponent<FollowTransform>().SetTargetTransform(holdPoint , transform);
         Debug.Log("PickedUpGear");
         Debug.Log(currentHoldingGear.name + currentHoldingGear.GetComponent<IGearBehavior>().Holder);
@@ -146,12 +128,21 @@ public class GearManager : NetworkBehaviour
 
     IEnumerator DropGearItem()
     {
-        leftArmAnimator.SetTrigger("Drop");
         bool forged = false;
         if (forgeInteractor.LookingAtForge)
         {
             forgeInteractor.lookingForge.GetComponent<Forge>().PutInForgeRpc(currentHoldingGear.GetComponent<NetworkObject>());
             forged = true;
+            RemoveHoldingGearRpc();
+        }
+
+        if (!forged)
+        {
+            leftArmAnimator.SetTrigger("Drop");
+        }
+        else
+        {
+            leftArmAnimator.SetTrigger("DropInstant");
         }
         yield return new WaitForSeconds(1f);
         PutInForgeServerRpc(forged);
@@ -176,6 +167,12 @@ public class GearManager : NetworkBehaviour
         if(destroy)
             DestroyHoldRpc();
         StopHoldingGearRpc(false);
+    }
+
+    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone)]
+    private void RemoveHoldingGearRpc()
+    {
+        currentHoldingGear = null;
     }
 
     [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]

@@ -31,6 +31,14 @@ public class SoundManager : NetworkBehaviour
         }
     }
 
+    public void updateForStart()
+    {
+        foreach (EnviormentSound source in EnviromentSource)
+        {
+            source.audioSource.volume = EnviromentSoundVolume * source.multiplier;
+        }
+    }
+    
     [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone)]
     public void SpawnSoundRpc(Vector3 position, float soundRadius, float volume, float pitch , int soundIndex)
     {

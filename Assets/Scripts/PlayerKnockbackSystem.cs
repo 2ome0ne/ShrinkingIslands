@@ -56,26 +56,19 @@ public class PlayerKnockbackSystem : NetworkBehaviour
     {
         IconShower.AddIcon(ShieldTime , shieldSprite ,"Shield" , true);
         EnableShieldValueRpc(true);
-        SetShieldRpc();
         Invoke("RemoveShield", ShieldTime);
-    }
-
-    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
-    private void SetShieldRpc()
-    {
-        HasShield = true;
     }
 
     public void RemoveShield()
     {
         EnableShieldValueRpc(false);
-        HasShield = false;
     }
 
     [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
     private void EnableShieldValueRpc(bool value)
     {
         Shield.SetActive(value);
+        HasShield = value;
     }
 
     public void KnockBack(Vector3 attackpositon , float KbForce , GameObject player)

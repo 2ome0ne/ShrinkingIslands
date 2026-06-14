@@ -22,7 +22,7 @@ public class ForgeInteractor : NetworkBehaviour
             forgeLayer);
         if (LookingAtForge)
         {
-            if (pickUpSystem.HasItem.Value)
+            if (pickUpSystem.HasItem.Value && IsOwner)
             {
                 foreach (var item in craftingRecipes.itemValues)
                 {
@@ -34,7 +34,7 @@ public class ForgeInteractor : NetworkBehaviour
                 RightHandValueText.text = "";
             }
             
-            if (gearManager.HasGear)
+            if (gearManager.HasGear && IsOwner)
             {
                 foreach (var item in craftingRecipes.itemValues)
                 {

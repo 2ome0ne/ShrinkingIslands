@@ -24,7 +24,6 @@ public class ModifierManager : NetworkBehaviour
     //Fog
     [SerializeField]
     private float defaultfog = 0.01f;
-
     [SerializeField] private float AlotOfFogAmount = 0.1f;
     
     //Lighting Strike
@@ -188,6 +187,7 @@ public class ModifierManager : NetworkBehaviour
     [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
     public void AlotOfFogActivateRpc()
     {
+        RenderSettings.fog = true;
         RenderSettings.fogDensity = AlotOfFogAmount;
     }
 
