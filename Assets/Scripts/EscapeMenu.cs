@@ -48,6 +48,7 @@ public class EscapeMenu : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        if(!IsOwner) return;
         GameManager.Instance.AddEscapeToAllRpc();
         SaveData data = PlayerSaveSystem.LoadPlayer();
         if (data == null)
@@ -56,13 +57,9 @@ public class EscapeMenu : NetworkBehaviour
             PlayerSaveSystem.SavePlayer(this);
             return;
         }
-        Debug.Log("Loaded Sens = " + data.cameraSensitivity);
-        SensitivitySlider.value = data.cameraSensitivity;
-        SoundSlider.value = data.soundVolume;
-        EnviromentSoundSlider.value = data.Enviroment_Volume;
         Saved = false;
     }
-
+    
     public void LoadSaveDataEscapeMenu()
     {
         SaveData data = PlayerSaveSystem.LoadPlayer();
@@ -72,23 +69,20 @@ public class EscapeMenu : NetworkBehaviour
             PlayerSaveSystem.SavePlayer(this);
             return;
         }
-        Debug.Log("Loaded Sens = " + data.cameraSensitivity);
+        Debug.Log("Loaded Sens = " + data.Enviroment_Volume);
         SensitivitySlider.value = data.cameraSensitivity;
         SoundSlider.value = data.soundVolume;
         EnviromentSoundSlider.value = data.Enviroment_Volume;
-        Saved = false;
-
-        CameraController.CameraSensitivity = SensitivitySlider.value;
-        SensitivityText.text = $"Sensitivity: {CameraController.CameraSensitivity}";
+        
+        CameraController.CameraSensitivity = data.cameraSensitivity;
+        SensitivityText.text = $"Sensitivity: {data.cameraSensitivity}";
                 
-        soundManager.EnviromentSoundVolume = EnviromentSoundSlider.value;
-        EnviromentSoundText.text = $"Enviorment Sound Volume: {EnviromentSoundSlider.value}";
+        soundManager.EnviromentSoundVolume = data.Enviroment_Volume;
+        EnviromentSoundText.text = $"Enviorment Sound Volume: {data.Enviroment_Volume}";
                 
-        soundManager.soundVolume = SoundSlider.value;
-        SoundText.text = $"Sound Volume: {SoundSlider.value}";
-        CameraController.CanMoveCamera = false;
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+        soundManager.soundVolume = data.soundVolume;
+        SoundText.text = $"Sound Volume: {data.soundVolume}";
+        soundManager.updateForStart();
     }
 
     public void GetAllRefrences()
@@ -104,6 +98,7 @@ public class EscapeMenu : NetworkBehaviour
     public void Update()
     {
         //Escape Detection
+        
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (!Pausing)

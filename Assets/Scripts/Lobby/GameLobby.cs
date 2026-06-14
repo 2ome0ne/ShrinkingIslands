@@ -28,6 +28,7 @@ public class GameLobby : MonoBehaviour
     [SerializeField] private GameObject StartDiscconectButton;
     [SerializeField] private GameObject nameShow;
     [SerializeField] private Transform Content;
+    [SerializeField] private FadeCamera _fadeCamera;
 
     [SerializeField] private RelayManager relayManager;
     private const string PLAYER_PREFS_PLAYER_NAME_MULTIPLAYER = "PlayerNameMultiplayer";
@@ -43,6 +44,12 @@ public class GameLobby : MonoBehaviour
     }
 
     public void BackToMainMenu()
+    {
+        _fadeCamera.FadeOut();
+        Invoke("BackToMainMenuWait" , 2);
+    }
+
+    private void BackToMainMenuWait()
     {
         Destroy(NetworkManager.Singleton.GameObject());
         var relay = FindAnyObjectByType<RelayManager>();
@@ -180,6 +187,7 @@ public class GameLobby : MonoBehaviour
 
     public void LobbyStart()
     {
+        _fadeCamera.FadeOut();
         HasStarted = true;
     }
 

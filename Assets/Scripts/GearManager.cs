@@ -1,7 +1,9 @@
+using System.Collections;
 using Unity.Netcode.Components;
 using UnityEngine;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine.AdaptivePerformance;
 
 public interface IGearBehavior
@@ -20,6 +22,7 @@ public class GearManager : NetworkBehaviour
         GumRock,
         FlintLock,
         Harpoon,
+        ShieldPotion,
         ShockwaveDevice
     }
 
@@ -29,6 +32,7 @@ public class GearManager : NetworkBehaviour
     [Header("--Refrences--")] 
     public NetworkAnimator leftArmAnimator;
 
+    [SerializeField] private ForgeInteractor forgeInteractor;
     [SerializeField] private Transform holdPoint;
     [SerializeField] private NetworkObject currentHoldingGear;
     
@@ -38,7 +42,7 @@ public class GearManager : NetworkBehaviour
 
     private int currentGearIndex;
     public bool HasGear;
-
+    
     public Transform Harpoonpoint;
 
     [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
@@ -61,26 +65,24 @@ public class GearManager : NetworkBehaviour
     [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
     private void UpdateHoldingGearServerRpc()
     {
-        
-        if (currentGear == Gear.GumRock)
+        switch (currentGear)
         {
-            currentGearIndex = 0;
-        }
-        else if (currentGear == Gear.FlintLock)
-        {
-            currentGearIndex = 1;
-        }
-        else if (currentGear == Gear.Harpoon)
-        {
-            currentGearIndex = 2;
-        }
-        else if (currentGear == Gear.ShockwaveDevice)
-        {
-            currentGearIndex = 3;
+            case Gear.GumRock:
+                currentGearIndex = 0;
+                break;
+            case Gear.FlintLock:
+                currentGearIndex = 1;
+                break;
+            case Gear.Harpoon:
+                currentGearIndex = 2;
+                break;
+            case Gear.ShieldPotion:
+                currentGearIndex = 3;
+                break;
         }
         
         currentHoldingGear = Instantiate(Gears[currentGearIndex]).GetComponent<NetworkObject>();
-        currentHoldingGear.Spawn();
+        currentHoldingGear.Spawn(true);
         currentHoldingGear.GetComponent<FollowTransform>().SetTargetTransform(holdPoint , transform);
         Debug.Log("PickedUpGear");
         Debug.Log(currentHoldingGear.name + currentHoldingGear.GetComponent<IGearBehavior>().Holder);
@@ -105,6 +107,13 @@ public class GearManager : NetworkBehaviour
     void ItemUpdate()
     {
         if (currentHoldingGear == null) return;
+        
+        //Drop Gear
+        if (Input.GetKeyDown(KeyCode.Q) && Input.GetMouseButton(1))
+        {
+            StartCoroutine(DropGearItem());
+        }
+        
         //Use item
         if (Input.GetKeyDown(UseItemKey))
         {
@@ -117,11 +126,53 @@ public class GearManager : NetworkBehaviour
         }
     }
 
-    public void DestoryHoldingGear()
+    IEnumerator DropGearItem()
+    {
+        bool forged = false;
+        if (forgeInteractor.LookingAtForge)
+        {
+            forgeInteractor.lookingForge.GetComponent<Forge>().PutInForgeRpc(currentHoldingGear.GetComponent<NetworkObject>());
+            forged = true;
+            RemoveHoldingGearRpc();
+        }
+
+        if (!forged)
+        {
+            leftArmAnimator.SetTrigger("Drop");
+        }
+        else
+        {
+            leftArmAnimator.SetTrigger("DropInstant");
+        }
+        yield return new WaitForSeconds(1f);
+        PutInForgeServerRpc(forged);
+    }
+
+    [ServerRpc]
+    private void PutInForgeServerRpc(bool forged)
+    {
+        if (!forged)
+        {
+            DestoryHoldingGear(true);
+        }
+        else
+        {
+            DestoryHoldingGear(false);
+        }
+    }
+
+    public void DestoryHoldingGear(bool destroy)
     {
         UpdateHoldWhenDestoryedRpc();
-        DestroyHoldRpc();
+        if(destroy)
+            DestroyHoldRpc();
         StopHoldingGearRpc(false);
+    }
+
+    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone)]
+    private void RemoveHoldingGearRpc()
+    {
+        currentHoldingGear = null;
     }
 
     [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]

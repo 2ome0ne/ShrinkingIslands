@@ -36,7 +36,7 @@ public class SlimeBombExploder : NetworkBehaviour
         Collider[] hits = Physics.OverlapSphere(transform.position, HitBoxRange, HittableLayer);
         if (hits.Length > 0 && !Exploded && ExplodeOnContact)
         {
-            Debug.Log(hits[0].gameObject.name);
+            //Debug.Log(hits[0].gameObject.name);
             if(!IsServer) return;
             if(hits[0].transform == followTransform.player) return;
             Exploded = true;

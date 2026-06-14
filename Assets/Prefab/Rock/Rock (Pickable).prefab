@@ -20,7 +20,6 @@ GameObject:
   - component: {fileID: 6561909417859873005}
   - component: {fileID: -1229808539203683754}
   - component: {fileID: 149354241121094609}
-  - component: {fileID: -1837669824283958650}
   m_Layer: 7
   m_Name: Rock (Pickable)
   m_TagString: DestroyCheck
@@ -248,6 +247,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c70e840238e6f4b9219c575fe2d9fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FollowTransform
+  ItemName: Rock
   targetTransform: {fileID: 0}
   player: {fileID: 0}
 --- !u!114 &6561909417859873005
@@ -408,17 +408,3 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
---- !u!114 &-1837669824283958650
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2616786947292956178}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b68baf2b8f6f8f42b8b9a8b40604f11, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DestroyItSelfNetworkObject
-  ShowTopMostFoldoutHeaderGroup: 1
-  DespawnTime: 50

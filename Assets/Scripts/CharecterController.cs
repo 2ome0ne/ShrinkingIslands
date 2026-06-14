@@ -35,7 +35,7 @@ public class CharecterController : NetworkBehaviour
     
     private CharacterController controller;
     private Vector3 velocity;
-    private Vector3 move;
+    public Vector3 move;
 
     private bool AirMultiply;
     

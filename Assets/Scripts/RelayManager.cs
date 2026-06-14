@@ -20,6 +20,7 @@ public class RelayManager : MonoBehaviour
 
     public List<Player> Players = new List<Player>();
     public string player_Name;
+    public int player_color_index = -1;
     
     public int amountOfPlayers;
     

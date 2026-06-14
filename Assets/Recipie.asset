@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abdffdf5ec628f745973cf83103e8f72, type: 3}
+  m_Name: Recipie
+  m_EditorClassIdentifier: Assembly-CSharp::CraftingRecpiesScriptableObject
+  recipies:
+  - Item1: Rock
+    Item2: Slime Bomb
+    ItemOutPut: {fileID: 1704087385980603390, guid: 0e5024d17c2ff1140afc4a1d51dd4874, type: 3}
+  - Item1: Rock
+    Item2: Rock
+    ItemOutPut: {fileID: 9038464959185521177, guid: 935bbb2527d89264db78e838120a1978, type: 3}
+  itemValues:
+  - ItemName: Slime Bomb
+    ItemPrefab: {fileID: 1884317658690159484, guid: 8fda79b39ea10a84fa90791e8670ba40, type: 3}
+    _ItemValue: 1
+    _ItemNeededValue: 0.3
+  - ItemName: Time Bomb
+    ItemPrefab: {fileID: 5125897179230367140, guid: 65d6f18ee6066824c8d14d176ed9cf47, type: 3}
+    _ItemValue: 5
+    _ItemNeededValue: 0.5
+  - ItemName: Gum Rock
+    ItemPrefab: {fileID: 9038464959185521177, guid: 935bbb2527d89264db78e838120a1978, type: 3}
+    _ItemValue: 1.5
+    _ItemNeededValue: 0.3
+  - ItemName: Flint Lock
+    ItemPrefab: {fileID: 2992412976907015911, guid: 481edf44724d82a458ef0a06056f2aff, type: 3}
+    _ItemValue: 2.5
+    _ItemNeededValue: 1
+  - ItemName: Harpoon
+    ItemPrefab: {fileID: 1704087385980603390, guid: 0e5024d17c2ff1140afc4a1d51dd4874, type: 3}
+    _ItemValue: 3
+    _ItemNeededValue: 1
+  - ItemName: Battery Bomb
+    ItemPrefab: {fileID: 3067559344082766108, guid: f06b089557f81be4c97ec7ab97035f8c, type: 3}
+    _ItemValue: 4.5
+    _ItemNeededValue: 1.5
+  - ItemName: Shield Potion
+    ItemPrefab: {fileID: 396754823299837651, guid: dabc055eba04eb14d8be6fccf84bb623, type: 3}
+    _ItemValue: 4
+    _ItemNeededValue: 1.5
+  - ItemName: Pickable Land Mine
+    ItemPrefab: {fileID: 1353412661165834876, guid: 643fad64ab487344d8f809fa0faf357c, type: 3}
+    _ItemValue: 4.5
+    _ItemNeededValue: 1.5

@@ -17,6 +17,7 @@ public class PickUpSystem : NetworkBehaviour
 
     [Header("--[References]--")] 
     private PlayerUImanager uImanager;
+    [SerializeField] private ForgeInteractor forgeInteractor;
     [SerializeField] private PlayerAbillites _abillites;
     [SerializeField] private Transform HoldPoint;
     [SerializeField] private Transform Cam;
@@ -27,6 +28,10 @@ public class PickUpSystem : NetworkBehaviour
     [SerializeField] private Transform ThrowPoint;
     public Transform CurrentHoldObject;
     [SerializeField] private GameObject[] PlayerObjects;
+    private bool placedForge = false;
+    private bool throwing = false;
+
+    private bool seeForge;
     //1 TestCube
     //2 SlimeBomb
     
@@ -45,9 +50,9 @@ public class PickUpSystem : NetworkBehaviour
         if (HasItem.Value) return;
         Debug.Log("Pick up server");
         CurrentHoldObject = Instantiate(PlayerObjects[ItemIndex].transform);
-        
+        placedForge = false;
         NetworkObject netObj = CurrentHoldObject.GetComponent<NetworkObject>();
-        netObj.Spawn();
+        netObj.Spawn(true);
         SetParentTransformClientRpc(netObj);
 
         SetHoldingBooleanServerRpc(true);
@@ -61,6 +66,7 @@ public class PickUpSystem : NetworkBehaviour
         netObj.GetComponent<Collider>().enabled = false;
         netObj.GetComponent<Rigidbody>().isKinematic = true;
         CurrentHoldObject = netObj.transform;
+        seeForge = false;
     }
     
 
@@ -68,6 +74,7 @@ public class PickUpSystem : NetworkBehaviour
     private void SetHoldingBooleanServerRpc(bool value)
     {
         ArmAnimaton.Animator.SetBool("IsHolding", value);
+        placedForge = false;
     }
 
     private void Update()
@@ -81,16 +88,37 @@ public class PickUpSystem : NetworkBehaviour
         {
             SetHasItemServerRpc(false);
         }
-        
-        if (Input.GetKey(KeyCode.Q))
+
+
+        if (Input.GetKey(KeyCode.Q) && !Input.GetMouseButton(1) && HasItem.Value && !seeForge)
         {
-            CalculateThrowForce();
-            uImanager.EnableDisableThrowForceSlider(true);
+            
+            if (!throwing)
+            {
+                throwing = true;
+                ThrowAnimatorArmRpc(true);
+            }
+            if (!forgeInteractor.LookingAtForge)
+            {
+                CalculateThrowForce();
+                uImanager.EnableDisableThrowForceSlider(true);
+            }
+            else
+            {
+                seeForge = true;
+                Debug.Log("Send Put In forge");
+                PutInForgeServerRpc(CurrentHoldObject.GetComponent<NetworkObject>());
+            }
         }
 
-        if (Input.GetKeyUp(KeyCode.Q))
+        if (Input.GetKeyUp(KeyCode.Q) && !Input.GetMouseButton(1) && !seeForge)
         {
+            ThrowAnimatorArmRpc(false);
+            GameManager.Instance.soundManager.SpawnSoundRpc(transform.position , 3f , 0.58f , 0.78f , 4);
+            throwing = false;
             DropItem(ThrowForce.Value);
+            SetThrowForceToZeroServerRpc();
+            //uImanager.EnableDisableThrowForceSlider()
             EditThrowForceServerRpc(MinThrowForce);
             animationManager.TriggerThrow();
             _abillites.PunchCooldown = _abillites.MaxPunchCooldown;
@@ -98,22 +126,48 @@ public class PickUpSystem : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
+    private void PutInForgeServerRpc(NetworkObjectReference NetObj)
+    {
+        NetObj.TryGet(out NetworkObject _currentHoldObject);
+        Debug.Log("Name Of Object Is = " + _currentHoldObject.name);
+        if (_currentHoldObject == null) return;
+        if(placedForge) return;
+        Debug.Log("Looking if it works");
+        forgeInteractor.lookingForge.GetComponent<Forge>().PutInForgeRpc(_currentHoldObject);
+        placedForge = true;
+        DePick();
+    }
+    
+
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
     private void EditThrowForceServerRpc(float value)
     {
         ThrowForce.Value = value;
     }
 
-    [ServerRpc]
+    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
+    private void ThrowAnimatorArmRpc(bool value)
+    {
+        ArmAnimaton.Animator.SetBool("Throwing", value);
+    }
+
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
     private void SetHasItemServerRpc(bool value)
     {
         HasItem.Value = value;
     }
 
-    [ServerRpc]
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
     private void EditAddThrowForceServerRpc(float value)
     {
         ThrowForce.Value += value;
+    }
+
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
+    private void SetThrowForceToZeroServerRpc()
+    {
+        ThrowForce.Value = 0;
     }
 
     public void DePick()
@@ -153,7 +207,7 @@ public class PickUpSystem : NetworkBehaviour
         SetHoldingBooleanServerRpc(false);
     }
     
-    [ServerRpc]
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
     private void SetFollowTransformNullServerRpc(NetworkObjectReference networkObjectReference , float throwforce)
     {
         networkObjectReference.TryGet(out NetworkObject netObj);
@@ -178,7 +232,7 @@ public class PickUpSystem : NetworkBehaviour
         this.CurrentHoldObject = null;
     }
 
-    [ServerRpc]
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
     private void ThrowForceServerRpc(float throwforce , NetworkObjectReference objRef)
     {
         objRef.TryGet(out NetworkObject netObj);

@@ -1,6 +1,8 @@
 using Unity.Netcode;
 using UnityEngine;
 using EZCameraShake;
+using Unity.Mathematics;
+using Unity.VisualScripting;
 
 public class CameraController : NetworkBehaviour
 {
@@ -10,10 +12,12 @@ public class CameraController : NetworkBehaviour
     public bool CanMoveCamera = true;
     [Header("Refrences")] 
     public Transform Camera;
+    [SerializeField] private Transform tiltTransform;
     [SerializeField] private Transform CamHolder;
     [SerializeField] private Transform Ppos;
     [SerializeField] private bool SpectatorCamera;
 
+    [SerializeField] private StaminaSystem Stamina;
     [SerializeField] private CharecterController controller;
     //FOR SPECTATOR
     [SerializeField] private CharacterController _movementController;
@@ -39,6 +43,12 @@ public class CameraController : NetworkBehaviour
     private Camera cam;
     private float PersonalxRotation;
     private float mouseY;
+
+    [SerializeField] private float targetTilt;
+    [SerializeField] private float maxTilt;
+    [SerializeField] private float tiltMultiplier;
+
+    private float beforelerptargetlerp;
     void Start()
     {
         cam = Camera.GetComponent<Camera>();
@@ -77,8 +87,45 @@ public class CameraController : NetworkBehaviour
         PersonalxRotation = Mathf.Clamp(PersonalxRotation, -90f, 90f);
         //Can boost jump logic
         if(CamHolder != null && !SpectatorCamera) canBoostJump = CamHolder.localEulerAngles.x > player_abillites.boostJumpEyeLevel;
-        CamHolder.localRotation = Quaternion.Euler(PersonalxRotation, 0f, 0f);
+        CamHolder.localRotation = Quaternion.Euler(PersonalxRotation, 0f, targetTilt);
         transform.Rotate(Vector3.up * mouseX);
+        
+        if (Input.GetKey(KeyCode.D))
+        {
+            if (stamina_system.Sprinting)
+            {
+                if(targetTilt != -maxTilt)
+                    beforelerptargetlerp = -maxTilt * 2;
+            }
+            else
+            {
+                if(targetTilt != -maxTilt)
+                    beforelerptargetlerp = -maxTilt;
+            }
+                
+        }
+        else if (Input.GetKey(KeyCode.A))
+        {
+            if (stamina_system.Sprinting)
+            {
+                if(targetTilt != maxTilt)
+                    beforelerptargetlerp = maxTilt * 2;
+            }
+            else
+            {
+                if(targetTilt != maxTilt)
+                    beforelerptargetlerp = maxTilt;
+            }
+        }
+        else
+        {
+            if (targetTilt != 0)
+                beforelerptargetlerp = 0;
+        }
+        
+        targetTilt = Mathf.MoveTowards(targetTilt , beforelerptargetlerp , Time.deltaTime * tiltMultiplier);
+
+        //tiltTransform.rotation = targetTilt;
     }
 
     private float VerticalRotation;
@@ -100,6 +147,17 @@ public class CameraController : NetworkBehaviour
 
         transform.Translate(input * Time.deltaTime * spectatorSpeed);
         //_movementController.Move(move * spectatorSpeed * Time.deltaTime);
+    }
+
+    [ClientRpc]
+    public void TeleportToWinnerClientRpc(NetworkObjectReference winner)
+    {
+        winner.TryGet(out NetworkObject netObj);
+        Transform player = netObj.GetComponent<Transform>();
+        CanMoveCamera = false;
+        transform.position = player.position + player.forward * 5;
+        transform.position -= -player.right * 2;
+        transform.LookAt(player);
     }
 
     private void UpdateState()
