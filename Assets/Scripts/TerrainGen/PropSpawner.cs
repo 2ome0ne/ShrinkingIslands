@@ -13,10 +13,10 @@ public class PropSpawner : NetworkBehaviour
         public int MaxSpawn;
         public bool CanSpawn = true;
     }
-    [SerializeField] private Prop[] props;
+    public Prop[] props;
     [SerializeField] private float Ylevel;
     //Ray transform
-    [SerializeField]private Transform checkspawnPostion;
+    [SerializeField] private Transform checkspawnPostion;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private TerrainGeneration terrainGenerator;
 
@@ -24,14 +24,22 @@ public class PropSpawner : NetworkBehaviour
     [SerializeField] private Vector3 randomPoint2;
     
     //Get Small Island
+    
     [SerializeField] private GameObject Small_Island;
     [SerializeField] private float MinIslandDistance;
     [SerializeField] private float MaxIslandDistance;
 
     [SerializeField] private bool Test;
     [SerializeField] private float AddyForSmallIsland;
+    
+    public static PropSpawner Instance;
+    
     private void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
         SetRandomSpawnPosition();
     }
     
@@ -73,56 +81,8 @@ public class PropSpawner : NetworkBehaviour
 
     public void SpawnAllProps()
     {
-        foreach (var prop in props)
-        {
-            if(prop.CanSpawn)
-                SpawnProp(prop);
-        }
-
         terrainGenerator.AllowSpawnManagerToSpawnServerRpc();
     }
 
 
-    private void SpawnProp(Prop prop)
-    {
-        for (int i = 0; i < GetSpawnCountForProp(prop); i++)
-        {
-            GameObject spawnedProp = Instantiate(prop.prefab, GetRandomPositionForProp(), GetRandomRotation());
-            spawnedProp.GetComponent<NetworkObject>().Spawn(true);
-        }
-    }
-
-    private Quaternion GetRandomRotation()
-    {
-        return Quaternion.Euler(0, Random.Range(0, 360), 0);
-    }
-    
-    private int GetSpawnCountForProp(Prop prop)
-    {
-        var spawnCount = UnityEngine.Random.Range(prop.MinSpawn, prop.MaxSpawn);
-        return spawnCount;
-    }
-
-    private Vector3 GetRandomPositionForProp()
-    {
-        int MaxIterations = 500;
-        Vector3 returnPos = Vector3.zero;
-        bool hasReturnPosition = false;
-        while (MaxIterations > 0 && !hasReturnPosition)
-        {
-            checkspawnPostion.position = new Vector3(UnityEngine.Random.Range(randomPoint1.x , randomPoint2.x), Ylevel, UnityEngine.Random.Range(randomPoint1.z , randomPoint2.z));
-            if (Physics.Raycast(checkspawnPostion.position, Vector3.down, out RaycastHit hit , 100, groundLayer))
-            {
-                returnPos = hit.point;
-                hasReturnPosition = true;
-            }
-            MaxIterations--;
-        }
-
-        if (MaxIterations <= 0)
-        {
-            Debug.LogError("Max iterations reached");
-        }
-        return returnPos;
-    }
 }
