@@ -18,9 +18,15 @@ public class RandomlySpawnItems : NetworkBehaviour
     
     [SerializeField] private spawnItem[] spawnableItems;
     [SerializeField] private GameObject SpawnIndicator;
+    [SerializeField] private IslandHeart islandHeart;
+    [SerializeField] private TheSea theSea;
+
     [Header("--[Settings]--")] 
     public float minSpawnTime;
     public float maxSpawnTime;
+    //if there is any islands near it don't allow to spawn
+    [SerializeField] private float checkGroundNearRadius = 0.4f;
+    [SerializeField] private float centerpushPower;
     [SerializeField] private float UpPushForce;
 
     [SerializeField] private float StartSpawnDelayTime = 10f;
@@ -43,12 +49,6 @@ public class RandomlySpawnItems : NetworkBehaviour
         
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(ray.origin, ray.direction * 100f);
-    }
-
     [ServerRpc]
     public void EnableItemToSpawnByIndexServerRpc(int index)
     {
@@ -62,12 +62,15 @@ public class RandomlySpawnItems : NetworkBehaviour
         if (CalculateIfItemSpawns(index))
         {
             //spawn item
-            GameObject spawnedObj = Instantiate(spawnableItems[index].prefab, GetRandomPostion() , Quaternion.identity);
-            spawnedObj.GetComponent<NetworkObject>().Spawn(true);
-            SetNoGravityToItemServerRpc(spawnedObj);
-            SpawnTheIndicatorServerRpc(spawnedObj.transform.position);
-            //Spawn Push force
-            spawnedObj.GetComponent<Rigidbody>().AddForce(UpPushForce * spawnedObj.transform.up, ForceMode.Force);
+            if (checkIfRandomPointInWater(out Vector3 spawnPos))
+            {
+                GameObject spawnedObj = Instantiate(spawnableItems[index].prefab, spawnPos , Quaternion.identity);
+                spawnedObj.GetComponent<NetworkObject>().Spawn(true);
+                SetNoGravityToItemServerRpc(spawnedObj);
+                SpawnTheIndicatorServerRpc(spawnedObj.transform.position);
+                //Spawn Push force
+                spawnedObj.GetComponent<Rigidbody>().AddForce(UpPushForce * spawnedObj.transform.up, ForceMode.Force);
+            }
         }
         currentSpawnTime = Random.Range(minSpawnTime, maxSpawnTime);
     }
@@ -90,37 +93,31 @@ public class RandomlySpawnItems : NetworkBehaviour
     [SerializeField] private Transform spt1;
     [SerializeField] private Transform spt2;
 
-    [SerializeField] private LayerMask WaterLayer;
-
-
-    private Ray ray;
-    private Vector3 GetRandomPostion()
+    [SerializeField] private LayerMask GroundLayer;
+    
+    private bool checkIfRandomPointInWater(out Vector3 spawnPos)
     {
-        Vector3 returnPos = new Vector3();
-        bool HitTheWater = false;
-        int maxcal = 100;
-        int currentcal = 0;
-        while (!HitTheWater ||currentcal < maxcal)
+        spawnPos = GetRandomPointInCircle();
+        if (!Physics.CheckSphere(spawnPos, checkGroundNearRadius, GroundLayer))
         {
-            ray = new Ray(new Vector3(Random.Range(spt1.position.x, spt2.position.x), spt1.position.y, Random.Range(spt1.position.z, spt2.position.z)), Vector3.down);
-            if(Physics.Raycast(ray, out RaycastHit hit) && hit.collider.gameObject.layer == LayerMask.NameToLayer("Water"))
-            {
-                HitTheWater = true;
-            }
-            else
-            {
-                currentcal++;
-                HitTheWater = false;
-            }
-
-            if (currentcal >= maxcal)
-            {
-                Debug.LogWarning("To Many Calculations");
-            }
-            Debug.DrawRay(ray.origin, hit.point, Color.red);
-            returnPos = hit.point;
+            return true;
         }
-        return returnPos;
+
+        return false;
+    }
+    
+    private Vector3 GetRandomPointInCircle()
+    {
+        float angle = Random.Range(0f, Mathf.PI * 1.2f);
+
+        // Pow > 1 biases distance toward 0 (center)
+        float t = Random.value;
+        float distance = Mathf.Pow(t, -centerpushPower) * islandHeart.IslandRadius;
+
+        float x = Mathf.Cos(angle) * distance;
+        float z = Mathf.Sin(angle) * distance;
+
+        return new Vector3(x, theSea.transform.position.y, z);
     }
 
     public int GetRandomItemIndex()

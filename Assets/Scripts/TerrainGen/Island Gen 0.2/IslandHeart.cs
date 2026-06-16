@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class IslandHeart : MonoBehaviour
+public class IslandHeart : NetworkBehaviour
 {
     [Header("Heart Settings")] 
     [SerializeField] private float MinIrrosionTime;
@@ -20,7 +21,7 @@ public class IslandHeart : MonoBehaviour
 
     [SerializeField] private int IslandStrength = 10;
 
-    [SerializeField] private float IslandRadius;
+    public float IslandRadius;
 
     [SerializeField] private int CurrentIslandTileCount;
 
@@ -29,7 +30,7 @@ public class IslandHeart : MonoBehaviour
     
     [Header("Heart Refrences")] 
     [SerializeField] private GameObject IslandPrefab;
-
+    [SerializeField] private SpawnManager _spawnManager;
 
     private int maxPlacementAttempts = 150;
     
@@ -37,7 +38,10 @@ public class IslandHeart : MonoBehaviour
 
     private void Update()
     {
-        IrrosionUpdate();
+        if (IsHost)
+        {
+            IrrosionUpdate();
+        }
     }
 
     private void IrrosionUpdate()
@@ -56,8 +60,9 @@ public class IslandHeart : MonoBehaviour
         }
     }
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
+        if(!IsHost) return;
         GetRandomIrrosionTime();
         StartSpawn();
     }
@@ -71,24 +76,48 @@ public class IslandHeart : MonoBehaviour
     {
         for (int i = 0; i < MaxIslandTileCount; i++)
         {
-            SpawnIslandTile();
+            SpawnOriginalIslandTileRpc();
         }
+        _spawnManager.GenerateComplete = true;
     }
 
     public void IslandCrumble(SOIslandTile islandTile)
     {
         activeIslands.Remove(islandTile);
-        Destroy(islandTile.gameObject);
+        DestroyIslandTileServerRpc(islandTile.GetComponent<NetworkObject>());
         CurrentIslandTileCount--;
-        SpawnIslandTile();
+        SpawnIslandTileRpc();
     }
 
-    public void SpawnIslandTile()
+    [ServerRpc]
+    private void DestroyIslandTileServerRpc(NetworkObjectReference netObj)
+    {
+        netObj.TryGet(out NetworkObject island);
+        island.Despawn(true);
+    }
+
+    [Rpc(SendTo.Server)]
+    public void SpawnIslandTileRpc()
     {
         if (CurrentIslandTileCount < MaxIslandTileCount && TryGetValidSpawnPoint(out Vector3 point))
         {
             CurrentIslandTileCount++;
             SOIslandTile islandTile = Instantiate(IslandPrefab , point, Quaternion.identity).GetComponent<SOIslandTile>();
+            islandTile.GetComponent<NetworkObject>().Spawn(true);
+            islandTile.islandHeart = this;
+            activeIslands.Add(islandTile);
+        }
+    }
+    
+    [Rpc(SendTo.Server)]
+    public void SpawnOriginalIslandTileRpc()
+    {
+        if (CurrentIslandTileCount < MaxIslandTileCount && TryGetValidSpawnPoint(out Vector3 point))
+        {
+            CurrentIslandTileCount++;
+            SOIslandTile islandTile = Instantiate(IslandPrefab , point, Quaternion.identity).GetComponent<SOIslandTile>();
+            islandTile.originalIsland = true;
+            islandTile.GetComponent<NetworkObject>().Spawn(true);
             islandTile.islandHeart = this;
             activeIslands.Add(islandTile);
         }

@@ -42,6 +42,8 @@ GameObject:
   - component: {fileID: 1817940517903140275}
   - component: {fileID: 376499419726584618}
   - component: {fileID: 8646035589559297374}
+  - component: {fileID: 7799961836197110502}
+  - component: {fileID: 6167858736957545504}
   m_Layer: 0
   m_Name: Island Tile
   m_TagString: Untagged
@@ -81,15 +83,16 @@ MonoBehaviour:
   PropsSpawned: 0
   islandHeart: {fileID: 0}
   islandGTX: {fileID: 7457021553837178293}
-  CurrentIrrosionTime: 0
-  MinIrrosionTime: 10
-  MaxIrrosionTime: 23
+  WarningTime: 2
+  Crumbling: 0
   spawnHight: 1
+  CrumbleMultiplier: 0.5
   snapDistance: 0.05
   IrrosionDistance: 0.4
   Spawned: 0
   ShakeMultiplier: 40
   MoveAmount: 0.04
+  TiltSpeed: 3
   spawnPostion: {fileID: 3480738154491934826}
   Islands:
   - {fileID: 1739275658310343017, guid: e63372e21a3cccc4984d6b9d3f3a294d, type: 3}
@@ -124,6 +127,77 @@ MonoBehaviour:
   min_propCount: 2
   max_propCount: 5
   PlaceHolderProp: {fileID: 8845441122139227096, guid: f287890d7b499594ab84333b494b50b9, type: 3}
+--- !u!114 &7799961836197110502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2475287339846724675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 0
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!114 &6167858736957545504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2475287339846724675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkTransform
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
+  AuthorityMode: 1
+  TickSyncChildren: 0
+  UseUnreliableDeltas: 0
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 1
+  SyncRotAngleX: 1
+  SyncRotAngleY: 1
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 0
+  SwitchTransformSpaceWhenParented: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!1 &6101341597737245764
 GameObject:
   m_ObjectHideFlags: 0

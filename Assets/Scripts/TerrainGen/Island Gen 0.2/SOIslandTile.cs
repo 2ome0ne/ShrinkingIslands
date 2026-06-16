@@ -1,9 +1,11 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class SOIslandTile : MonoBehaviour
+public class SOIslandTile : NetworkBehaviour
 {
+    public bool originalIsland = false;
     public bool PropsSpawned = false;
     public IslandHeart islandHeart;
     public Transform islandGTX;
@@ -26,8 +28,10 @@ public class SOIslandTile : MonoBehaviour
     private SOIslandPropSpawner _soIslandPropSpawner;
 
     private float CurrentWarningTime;
-    public void Start()
+
+    public override void OnNetworkSpawn()
     {
+        if(!IsServer) return;
         SetRandomIsland();
         transform.Rotate(0 , Random.Range (0f, 360f), 0f);
     }
@@ -41,23 +45,40 @@ public class SOIslandTile : MonoBehaviour
     void SetRandomIsland()
     {
         int RandomNum = Random.Range(0, Islands.Length);
-        GameObject island = Instantiate(Islands[RandomNum], spawnPostion.position, Quaternion.identity , transform);
-        island.transform.Rotate(Vector3.zero, Random.Range(0f, 360f));
+        float RandomRange = Random.Range(0f, 360f);
+        spawnIslandSelecetedRpc(RandomNum , RandomRange);
+        _soIslandPropSpawner.SpawnPropsServerRpc();
+    }
+
+    [Rpc(SendTo.Server)]
+    private void spawnIslandSelecetedRpc(int randomNum , float RandomRange)
+    {
+        GameObject island = Instantiate(Islands[randomNum], spawnPostion.position, Quaternion.identity , transform);
+        var islandNetObj = island.GetComponent<NetworkObject>();
+        islandNetObj.Spawn(true);
+        islandNetObj.TrySetParent(transform);
+        island.transform.Rotate(Vector3.zero, RandomRange);
         islandGTX = island.transform;
         _soIslandPropSpawner.islandSurfaceCollider = island.GetComponent<IslandGTX>().Collider;
-        _soIslandPropSpawner.SpawnProps();
     }
 
     public void AnimateSpawn()
     {
-        if (!Spawned)
+        if (originalIsland)
         {
-            islandGTX.position = Vector3.Lerp(islandGTX.position , transform.position , Time.deltaTime * 10f);  
-            
-            if (Vector3.Distance(islandGTX.position, transform.position) <= IrrosionDistance)
+            islandGTX.position = transform.position;
+        }
+        else
+        {
+            if (!Spawned)
             {
-                islandGTX.position = transform.position; // snap exactly
-                Spawned = true;
+                islandGTX.position = Vector3.Lerp(islandGTX.position , transform.position , Time.deltaTime * 10f);  
+            
+                if (Vector3.Distance(islandGTX.position, transform.position) <= IrrosionDistance)
+                {
+                    islandGTX.position = transform.position; // snap exactly
+                    Spawned = true;
+                }
             }
         }
     }
@@ -68,7 +89,8 @@ public class SOIslandTile : MonoBehaviour
         islandGTX.Rotate(Vector3.forward * Time.deltaTime * TiltSpeed);
         if (Vector3.Distance(islandGTX.position, spawnPostion.position) <= snapDistance * 2)
         {
-            islandHeart.IslandCrumble(this);
+            if(IsServer)
+                islandHeart.IslandCrumble(this);
         }
     }
 
@@ -80,6 +102,7 @@ public class SOIslandTile : MonoBehaviour
 
     private void Update()
     {
+        if(!IsOwner) return;
         AnimateSpawn();
         if (Spawned)
         {

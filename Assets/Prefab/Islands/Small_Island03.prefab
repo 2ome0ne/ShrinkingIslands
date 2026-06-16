@@ -212,6 +212,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2574619147913793769}
+  - component: {fileID: 7260983548521691417}
   - component: {fileID: 578265983777027684}
   m_Layer: 0
   m_Name: Small_Island03
@@ -238,6 +239,31 @@ Transform:
   - {fileID: 6324329430502291401}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7260983548521691417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3765186734755522908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 1547827465
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!114 &578265983777027684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,6 +276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5eba8c0a03d6c84c983000fa2a7fb99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IslandGTX
+  ShowTopMostFoldoutHeaderGroup: 1
   Collider: {fileID: 7860706958657834692}
   IslandRadius: 2
 --- !u!1 &7973871427721683472

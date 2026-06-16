@@ -1,7 +1,8 @@
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class SOIslandPropSpawner : MonoBehaviour
+public class SOIslandPropSpawner : NetworkBehaviour
 {
     [Header("Spawner References")] 
     public Collider islandSurfaceCollider;
@@ -19,7 +20,9 @@ public class SOIslandPropSpawner : MonoBehaviour
     [SerializeField] private int max_propCount = 5;
 
     [SerializeField] private GameObject PlaceHolderProp;
-    public void SpawnProps()
+    
+    [ServerRpc]
+    public void SpawnPropsServerRpc()
     {
         foreach (var prop in PropSpawner.Instance.props)
         {
@@ -30,8 +33,9 @@ public class SOIslandPropSpawner : MonoBehaviour
                 if (TryFindValidSpawnPoint(out Vector3 point, out Vector3 normal))
                 {
                     GameObject newProp = Instantiate(prop.prefab, point, Quaternion.identity , _soIslandTile.islandGTX);
-                
-                    //newProp.transform.up = normal;
+                    var propNetObj = newProp.GetComponent<NetworkObject>();
+                    propNetObj.Spawn(true);
+                    propNetObj.TrySetParent(_soIslandTile.islandGTX);
                     newProp.transform.Rotate(Vector3.up, Random.Range(0 , 360) , Space.Self);
                 
                     placedPositions.Add(point);
