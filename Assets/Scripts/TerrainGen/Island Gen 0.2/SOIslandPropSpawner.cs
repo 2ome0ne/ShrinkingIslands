@@ -44,6 +44,13 @@ public class SOIslandPropSpawner : NetworkBehaviour
             }
         }
 
+        propsSpawnedRpc();
+    }
+    
+
+    [Rpc(SendTo.Everyone)]
+    private void propsSpawnedRpc()
+    {
         _soIslandTile.PropsSpawned = true;
     }
 

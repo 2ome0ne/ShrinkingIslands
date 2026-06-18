@@ -14302,15 +14302,19 @@ MonoBehaviour:
     probability: 0.603
     ableToSpawn: 0
   SpawnIndicator: {fileID: 3574269667675813573, guid: 0a1185a01718251468ea1836085889ae, type: 3}
+  islandHeart: {fileID: 0}
+  theSea: {fileID: 0}
   minSpawnTime: 2
   maxSpawnTime: 8
+  checkGroundNearRadius: 0.4
+  centerpushPower: 0
   UpPushForce: 50
   StartSpawnDelayTime: 10
   spt1: {fileID: 1400903137}
   spt2: {fileID: 717531347}
-  WaterLayer:
+  GroundLayer:
     serializedVersion: 2
-    m_Bits: 16
+    m_Bits: 0
 --- !u!114 &879218774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20831,6 +20835,91 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 10.44825, y: 9.08948, z: -2.61108}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1255209012
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1255209015}
+  - component: {fileID: 1255209014}
+  - component: {fileID: 1255209013}
+  m_Layer: 0
+  m_Name: Island Generator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1255209013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1255209012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 774dd1256fc48f3469dbe25eab97d572, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IslandHeart
+  ShowTopMostFoldoutHeaderGroup: 1
+  MinIrrosionTime: 13
+  MaxIrrosionTime: 25
+  MaxIslandCrumblePerIrrosion: 3
+  CurrentIrrosionTime: 2
+  centerBiasPower: 1.3
+  minTileSpacing: 6
+  MaxIslandTileCount: 10
+  IslandStrength: 10
+  IslandRadius: 45.5
+  CurrentIslandTileCount: 0
+  IslandSpawnY: -2
+  IslandPrefab: {fileID: 2475287339846724675, guid: a0708e4328761a2448c925518f2ad373, type: 3}
+  _spawnManager: {fileID: 0}
+  activeIslands: []
+--- !u!114 &1255209014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1255209012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 2623743142
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
+--- !u!4 &1255209015
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1255209012}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -36745,3 +36834,4 @@ SceneRoots:
   - {fileID: 839581981}
   - {fileID: 2383855922723880354}
   - {fileID: 691769149}
+  - {fileID: 1255209015}

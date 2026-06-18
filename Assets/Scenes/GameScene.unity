@@ -1453,7 +1453,7 @@ MonoBehaviour:
   WaterPrefab: {fileID: 1490960838433943169, guid: c993da7d9e55c6744a5704c3c136cc96, type: 3}
   checkspawn: {fileID: 364817053}
   gameManager: {fileID: 1961144407}
-  terrainRender: {fileID: 1831919985}
+  terrainRender: {fileID: 0}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -11291,7 +11291,7 @@ MonoBehaviour:
   MinIrrosionTime: 13
   MaxIrrosionTime: 25
   MaxIslandCrumblePerIrrosion: 3
-  CurrentIrrosionTime: 0
+  CurrentIrrosionTime: 2
   centerBiasPower: 1.3
   minTileSpacing: 6
   MaxIslandTileCount: 10
@@ -24588,185 +24588,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!1 &1831919983
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1831919989}
-  - component: {fileID: 1831919990}
-  - component: {fileID: 1831919988}
-  - component: {fileID: 1831919987}
-  - component: {fileID: 1831919986}
-  - component: {fileID: 1831919985}
-  - component: {fileID: 1831919984}
-  m_Layer: 3
-  m_Name: Terrain
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!33 &1831919984
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831919983}
-  m_Mesh: {fileID: 0}
---- !u!23 &1831919985
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831919983}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 1557bee3fe99c034591b4ae6944fdfe9, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &1831919986
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831919983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 324c76a264c89474bbef02ac9f85dd98, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NoiseGeneration
-  ShowTopMostFoldoutHeaderGroup: 1
-  noiseScale: 0.3
-  threshold: 0.4
-  higherThreshold: 0.6
-  highestThreshold: 0.7
-  higherSize: 3.29
-  highestSize: 3.56
-  falloffStrength: 3
-  offsetX: 0
-  offsetY: 0
---- !u!114 &1831919987
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831919983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce797a8c34bd2a24aa46f783c5d6132e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CellularAutomata
-  ShowTopMostFoldoutHeaderGroup: 1
-  Iterations: 0
---- !u!114 &1831919988
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831919983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8277c209ce2a56b4a821dc6bcf0a5d55, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TerrainGeneration
-  ShowTopMostFoldoutHeaderGroup: 1
-  IsTestWorld: 0
-  width: 16
-  height: 16
-  tilePrefab: {fileID: 8103718621843397098, guid: b013637035d07654bbb450e5a6ef0fd4, type: 3}
-  TileSize: 4
-  spawnManager: {fileID: 1961144409}
-  propSpawner: {fileID: 1961144412}
-  CheckPoint: {fileID: 8035746623584932949, guid: faf29acdfbeaaf0429b43e30be837eb7, type: 3}
-  GroundLayer:
-    serializedVersion: 2
-    m_Bits: 8
---- !u!4 &1831919989
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831919983}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -10, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1831919990
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831919983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1421258809
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 0
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
 --- !u!1 &1874856924
 GameObject:
   m_ObjectHideFlags: 0
@@ -25080,7 +24901,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   playerPrefab: {fileID: 4158232433353681693, guid: 68a075743e9a93640bffaad20797a24f, type: 3}
   spawnManager: {fileID: 1961144409}
-  terrainGenerator: {fileID: 1831919988}
+  terrainGenerator: {fileID: 0}
   soundManager: {fileID: 1704140334}
   AmountOfHold: 0
   Players: []
@@ -25179,7 +25000,7 @@ MonoBehaviour:
   minSpawnTime: 2
   maxSpawnTime: 4.5
   checkGroundNearRadius: 0.4
-  centerpushPower: 1.2
+  centerpushPower: 0.2
   UpPushForce: 50
   StartSpawnDelayTime: 10
   spt1: {fileID: 666825126}
@@ -25226,43 +25047,43 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   props:
   - prefab: {fileID: 8845441122139227096, guid: f287890d7b499594ab84333b494b50b9, type: 3}
-    MinSpawn: 14
-    MaxSpawn: 45
+    MinSpawn: 1
+    MaxSpawn: 5
     CanSpawn: 1
   - prefab: {fileID: 4499722211982727255, guid: 35bf50e79b838594389aa2624132b730, type: 3}
-    MinSpawn: 10
-    MaxSpawn: 30
+    MinSpawn: 0
+    MaxSpawn: 3
     CanSpawn: 1
   - prefab: {fileID: 9038464959185521177, guid: 935bbb2527d89264db78e838120a1978, type: 3}
-    MinSpawn: 5
-    MaxSpawn: 20
+    MinSpawn: 0
+    MaxSpawn: 2
     CanSpawn: 0
   - prefab: {fileID: 5971004666329287794, guid: b9b847b9c5efafe4eaa163860ba3fa50, type: 3}
-    MinSpawn: 2
-    MaxSpawn: 10
+    MinSpawn: 0
+    MaxSpawn: 2
     CanSpawn: 0
   - prefab: {fileID: 1859934512519469128, guid: 1951c1e7139d9ef48890096e07dfe918, type: 3}
-    MinSpawn: 2
-    MaxSpawn: 10
+    MinSpawn: 0
+    MaxSpawn: 2
     CanSpawn: 0
   - prefab: {fileID: 4216435716947858741, guid: 257eb310a1162c744ba92dc014bb0eac, type: 3}
-    MinSpawn: 3
-    MaxSpawn: 14
+    MinSpawn: 0
+    MaxSpawn: 3
     CanSpawn: 0
   - prefab: {fileID: 3837749307440386740, guid: f77af4ec3fb8f9e47854da178694b4f1, type: 3}
-    MinSpawn: 5
-    MaxSpawn: 20
+    MinSpawn: 0
+    MaxSpawn: 2
     CanSpawn: 0
   - prefab: {fileID: 6444394292002250702, guid: 35171de44c4e0824a99a7d528be887e6, type: 3}
-    MinSpawn: 16
-    MaxSpawn: 30
+    MinSpawn: 1
+    MaxSpawn: 5
     CanSpawn: 0
   Ylevel: 21
   checkspawnPostion: {fileID: 716282691}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  terrainGenerator: {fileID: 1831919988}
+  terrainGenerator: {fileID: 0}
   randomPoint1: {x: 0, y: 0, z: 0}
   randomPoint2: {x: 0, y: 0, z: 0}
   Small_Island: {fileID: 425961524518173536, guid: e956e5ae1a1939a4dba3f12ba2f48a1a, type: 3}
@@ -26726,7 +26547,6 @@ SceneRoots:
   - {fileID: 526378380}
   - {fileID: 1961144408}
   - {fileID: 220905955}
-  - {fileID: 1831919989}
   - {fileID: 338653956}
   - {fileID: 966920732}
   - {fileID: 182255259}

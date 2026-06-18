@@ -1,4 +1,5 @@
 using System;
+using NUnit.Framework;
 using Unity.Netcode;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -10,13 +11,15 @@ public class SOIslandTile : NetworkBehaviour
     public IslandHeart islandHeart;
     public Transform islandGTX;
     [SerializeField] private float WarningTime = 2;
-    [SerializeField] private bool Crumbling = false;
+    public bool Crumbling = false;
     [SerializeField] private float spawnHight = 1;
+    [SerializeField] private float ShakeWarningTime = 2.5f;
 
+    [SerializeField] private float crumbleTime;
     [SerializeField] private float CrumbleMultiplier = 0.5f;
     [SerializeField] private float snapDistance = 0.05f;
     [SerializeField] private float IrrosionDistance = 0.4f;
-    [SerializeField] private bool Spawned = false;
+    public bool Spawned = false;
     [SerializeField] private float ShakeMultiplier = 1.5f;
     [SerializeField] private float MoveAmount = 0.7f;
 
@@ -31,35 +34,49 @@ public class SOIslandTile : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        Debug.Log($"Island Spawned - NetId: {NetworkObjectId}, IsServer: {IsServer}, Position: {transform.position}, Parent: {transform.parent}");
         if(!IsServer) return;
         SetRandomIsland();
         transform.Rotate(0 , Random.Range (0f, 360f), 0f);
     }
 
+    public override void OnNetworkDespawn()
+    {
+        Debug.Log("ISLAND DESPAWNING");
+    }
+
     public void CrumbleThisIsland()
     {
+        Debug.Log($"Island Crumbling");
         CurrentWarningTime = WarningTime;
         Crumbling = true;
     }
     
     void SetRandomIsland()
     {
+        Debug.Log($"Island Set");
         int RandomNum = Random.Range(0, Islands.Length);
         float RandomRange = Random.Range(0f, 360f);
-        spawnIslandSelecetedRpc(RandomNum , RandomRange);
+        spawnIslandSeleceted(RandomNum , RandomRange);
         _soIslandPropSpawner.SpawnPropsServerRpc();
     }
-
-    [Rpc(SendTo.Server)]
-    private void spawnIslandSelecetedRpc(int randomNum , float RandomRange)
+    
+    private void spawnIslandSeleceted(int randomNum , float RandomRange)
     {
         GameObject island = Instantiate(Islands[randomNum], spawnPostion.position, Quaternion.identity , transform);
         var islandNetObj = island.GetComponent<NetworkObject>();
         islandNetObj.Spawn(true);
         islandNetObj.TrySetParent(transform);
         island.transform.Rotate(Vector3.zero, RandomRange);
-        islandGTX = island.transform;
+        setSpawnedIslandGTXRpc(islandNetObj);
         _soIslandPropSpawner.islandSurfaceCollider = island.GetComponent<IslandGTX>().Collider;
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void setSpawnedIslandGTXRpc(NetworkObjectReference netObjRef)
+    {
+        netObjRef.TryGet(out NetworkObject netObj);
+        islandGTX = netObj.transform;
     }
 
     public void AnimateSpawn()
@@ -67,6 +84,7 @@ public class SOIslandTile : NetworkBehaviour
         if (originalIsland)
         {
             islandGTX.position = transform.position;
+            Spawned = true;
         }
         else
         {
@@ -83,9 +101,16 @@ public class SOIslandTile : NetworkBehaviour
         }
     }
 
+    private float elapsed;
+
     public void AnimateCrumble()
     {
-        islandGTX.position = Vector3.Lerp(islandGTX.position , spawnPostion.position , Time.deltaTime * CrumbleMultiplier);  
+        Debug.Log("ISLAND crumble");
+        elapsed += Time.deltaTime;
+        float t = Mathf.Clamp01(elapsed / crumbleTime);
+        float easedT = t * t; 
+        
+        islandGTX.position = Vector3.Lerp(islandGTX.position , spawnPostion.position , easedT);  
         islandGTX.Rotate(Vector3.forward * Time.deltaTime * TiltSpeed);
         if (Vector3.Distance(islandGTX.position, spawnPostion.position) <= snapDistance * 2)
         {
@@ -96,28 +121,36 @@ public class SOIslandTile : NetworkBehaviour
 
     public void AnimateShake()
     {
-        transform.position = transform.position + new Vector3(Mathf.Sin(Time.time * ShakeMultiplier) * MoveAmount, 0, 0);
+        Debug.Log("ISLAND shake");
+        islandGTX.position = islandGTX.position + new Vector3(Mathf.Sin(Time.time * ShakeMultiplier) * MoveAmount, 0, 0);
     }
 
 
     private void Update()
     {
-        if(!IsOwner) return;
-        AnimateSpawn();
+        if(!IsServer) return;
         if (Spawned)
         {
             if (Crumbling)
             {
+                Debug.Log(this.name + "  is Crumbling");
                 CurrentWarningTime -= Time.deltaTime;
-                if (CurrentWarningTime <= 1.5f && PropsSpawned)
+                if (CurrentWarningTime <= ShakeWarningTime)
                 {
-                    AnimateShake();
                     if (CurrentWarningTime <= 0)
                     {
                         AnimateCrumble();
                     }
+                    else
+                    {
+                        AnimateShake();
+                    }
                 }
             }
+        }
+        else
+        {
+            AnimateSpawn();
         }
     }
 }

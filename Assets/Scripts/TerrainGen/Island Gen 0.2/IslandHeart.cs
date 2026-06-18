@@ -40,6 +40,7 @@ public class IslandHeart : NetworkBehaviour
     {
         if (IsHost)
         {
+            if (Input.GetKeyDown(KeyCode.E)) SpawnIslandTile();
             IrrosionUpdate();
         }
     }
@@ -54,6 +55,7 @@ public class IslandHeart : NetworkBehaviour
             for (int i = 0; i < CrumbleIslandAmount; i++)
             {
                 int randomIsland = Random.Range(0, activeIslands.Count);
+                Debug.Log("CRUMBLE ISLAND : " + randomIsland);
                 activeIslands[randomIsland].CrumbleThisIsland();
             }
             GetRandomIrrosionTime();
@@ -76,7 +78,7 @@ public class IslandHeart : NetworkBehaviour
     {
         for (int i = 0; i < MaxIslandTileCount; i++)
         {
-            SpawnOriginalIslandTileRpc();
+            SpawnOriginalIslandTile();
         }
         _spawnManager.GenerateComplete = true;
     }
@@ -86,21 +88,22 @@ public class IslandHeart : NetworkBehaviour
         activeIslands.Remove(islandTile);
         DestroyIslandTileServerRpc(islandTile.GetComponent<NetworkObject>());
         CurrentIslandTileCount--;
-        SpawnIslandTileRpc();
+        SpawnIslandTile();
     }
 
     [ServerRpc]
     private void DestroyIslandTileServerRpc(NetworkObjectReference netObj)
     {
+        Debug.Log("DESTROYED AN ISLAND");
         netObj.TryGet(out NetworkObject island);
         island.Despawn(true);
     }
 
-    [Rpc(SendTo.Server)]
-    public void SpawnIslandTileRpc()
+    public void SpawnIslandTile()
     {
         if (CurrentIslandTileCount < MaxIslandTileCount && TryGetValidSpawnPoint(out Vector3 point))
         {
+            Debug.Log("SPAWNING ISLAND");
             CurrentIslandTileCount++;
             SOIslandTile islandTile = Instantiate(IslandPrefab , point, Quaternion.identity).GetComponent<SOIslandTile>();
             islandTile.GetComponent<NetworkObject>().Spawn(true);
@@ -109,18 +112,25 @@ public class IslandHeart : NetworkBehaviour
         }
     }
     
-    [Rpc(SendTo.Server)]
-    public void SpawnOriginalIslandTileRpc()
+    public void SpawnOriginalIslandTile()
     {
         if (CurrentIslandTileCount < MaxIslandTileCount && TryGetValidSpawnPoint(out Vector3 point))
         {
             CurrentIslandTileCount++;
             SOIslandTile islandTile = Instantiate(IslandPrefab , point, Quaternion.identity).GetComponent<SOIslandTile>();
-            islandTile.originalIsland = true;
-            islandTile.GetComponent<NetworkObject>().Spawn(true);
+            var NetObj = islandTile.GetComponent<NetworkObject>();
+            NetObj.Spawn();
+            SetSpawnedAsOriginalIslandRpc(NetObj);
             islandTile.islandHeart = this;
             activeIslands.Add(islandTile);
         }
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void SetSpawnedAsOriginalIslandRpc(NetworkObjectReference netObj)
+    {
+        netObj.TryGet(out NetworkObject island);
+        island.GetComponent<SOIslandTile>().originalIsland = true;
     }
 
 
