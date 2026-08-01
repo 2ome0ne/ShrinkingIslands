@@ -11288,8 +11288,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::IslandHeart
   ShowTopMostFoldoutHeaderGroup: 1
-  MinIrrosionTime: 13
-  MaxIrrosionTime: 25
+  MinIrrosionTime: 9.5
+  MaxIrrosionTime: 20
   MaxIslandCrumblePerIrrosion: 3
   CurrentIrrosionTime: 2
   centerBiasPower: 1.3
@@ -11298,7 +11298,9 @@ MonoBehaviour:
   IslandStrength: 10
   IslandRadius: 45.5
   CurrentIslandTileCount: 0
-  IslandSpawnY: -2
+  CurrentTallislandTileCount: 0
+  IslandSpawnY: -4
+  modifierManager: {fileID: 1961144413}
   IslandPrefab: {fileID: 2475287339846724675, guid: a0708e4328761a2448c925518f2ad373, type: 3}
   _spawnManager: {fileID: 1961144409}
   activeIslands: []
@@ -24950,16 +24952,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpawnManager
   ShowTopMostFoldoutHeaderGroup: 1
   IsTestMode: 0
-  RotaionPerPlayer: 90
-  SpawnPodiumPrefab: {fileID: 6356516164951873503, guid: 49537fe7a17069741889267ae786a53c, type: 3}
-  SpawnCheckPrefab: {fileID: 5424852568803372485, guid: faf29acdfbeaaf0429b43e30be837eb7, type: 3}
+  SpawnRange: 20
+  SpawnPodiumPrefab: {fileID: 3426552520523205224, guid: c6091867e192dcd4496b3018852b8c68, type: 3}
   amount_off_players: 1
+  islandHeart: {fileID: 220905954}
   MoveAmount: 100
-  SpawnPoints: []
-  GroundLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  CurrentRotaion: 0
   sea: {fileID: 66404910}
   spawnpoint: {fileID: 0}
   gameManager: {fileID: 1961144407}
@@ -24999,8 +24996,9 @@ MonoBehaviour:
   theSea: {fileID: 66404910}
   minSpawnTime: 2
   maxSpawnTime: 4.5
-  checkGroundNearRadius: 0.4
-  centerpushPower: 0.2
+  checkGroundNearRadius: 0.1
+  centerpushPower: 1.65
+  reduceRadius: 5
   UpPushForce: 50
   StartSpawnDelayTime: 10
   spt1: {fileID: 666825126}
@@ -25110,6 +25108,7 @@ MonoBehaviour:
   randomlySpawnItems: {fileID: 1961144410}
   allModifiersHolder: {fileID: 11400000, guid: 70af773062f206c468a5c43485a2e758, type: 2}
   AllModifiersEnabled: []
+  Spawned: 0
   defaultfog: 0.01
   AlotOfFogAmount: 0.1
   ThunderStormEnabled: 0

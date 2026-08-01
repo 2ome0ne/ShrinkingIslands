@@ -159,7 +159,7 @@ public class TerrainGeneration : NetworkBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         propSpawner.SpawnAllProps();
-        propSpawner.SpawnIslandServerRpc(Random.Range(10 , 15));
+        //propSpawner.SpawnIslandServerRpc(Random.Range(10 , 15));
     }
     
     [ServerRpc]

@@ -5,28 +5,22 @@ using System.Collections;
 using Unity.Services.Lobbies.Models;
 using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class SpawnManager : NetworkBehaviour
 {
     //0 , 0 will be the spawn and will spawn two
     [SerializeField] private bool IsTestMode = false;
 
-    [SerializeField] private float RotaionPerPlayer;
+    [SerializeField] private float SpawnRange;
 
     [SerializeField] private GameObject SpawnPodiumPrefab;
 
-    [SerializeField] private GameObject SpawnCheckPrefab;
-
     [SerializeField] private int amount_off_players;
 
+    [SerializeField] private IslandHeart islandHeart;
     [SerializeField] private float MoveAmount;
 
-    private GameObject spawnCheck;
-
-    [SerializeField] private List<Vector3> SpawnPoints;
-    [SerializeField] private LayerMask GroundLayer;
-
-    [SerializeField] private float CurrentRotaion;
     [SerializeField] private TheSea sea;
 
     public Transform spawnpoint;
@@ -35,6 +29,8 @@ public class SpawnManager : NetworkBehaviour
 
     [SerializeField] private GameManager gameManager;
     [SerializeField] private ReadyUp readyUp;
+
+    private int playerIndex = 0;
 
     public bool GenerateComplete;
 
@@ -60,6 +56,7 @@ public class SpawnManager : NetworkBehaviour
     private void Awake()
     {
         Instance = this;
+        amount_off_players = FindFirstObjectByType<RelayManager>().amountOfPlayers;
     }
     
     
@@ -85,6 +82,12 @@ public class SpawnManager : NetworkBehaviour
     [ServerRpc]
     void spawnPlayerServerRpc(ulong clientId)
     {
+        //Spawn Island Podium
+        Vector3 spawnPos = GetSpawnIsland_SpawnPoint();
+        GameObject SPS = Instantiate(SpawnPodiumPrefab, spawnPos + new Vector3( 0 , islandHeart.IslandSpawnY , 0), Quaternion.LookRotation(Vector3.zero - spawnPos));
+        Vector3 PlayerSpawnPos = SPS.GetComponent<SpawnPodium>().PlayerSpawnPoint.position;
+        SPS.GetComponent<NetworkObject>().Spawn();
+        
         Transform playerTransform = Instantiate(gameManager.playerPrefab);
         playerTransform.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId , true);
         PlayerData playerData = readyUp.GetPlayerDataFromClientId(clientId);
@@ -96,8 +99,7 @@ public class SpawnManager : NetworkBehaviour
         _playerData.SetPlayerNameServerRpc(playerData.name.ToString());
         GetComponent<GameManager>().AddPlayerRpc(playerTransform.gameObject.GetComponent<NetworkObject>() , true);
         sea.players.Add(playerTransform.gameObject);
-        Vector3 spawnPos = CalulateSpawnPoint() + Vector3.up * 2f;
-        SetPositionClientRpc(playerTransform.GetComponent<NetworkObject>() , spawnPos);
+        SetPositionClientRpc(playerTransform.GetComponent<NetworkObject>() , PlayerSpawnPos);
     }
 
     [ClientRpc]
@@ -108,44 +110,16 @@ public class SpawnManager : NetworkBehaviour
         networkObject.transform.position = spawnPosition;
         networkObject.GetComponent<CharacterController>().enabled = true;
     }
-    
-    public Vector3 CalulateSpawnPoint()
+
+    public Vector3 GetSpawnIsland_SpawnPoint()
     {
-        Debug.Log("CalulateSpawnPointServerRpc");
-        Physics.SyncTransforms();
-        CurrentRotaion += RotaionPerPlayer;
-        Quaternion spawnCheckOriatation = Quaternion.Euler(0, CurrentRotaion, 0);
+        Debug.Log("Player Number :" + amount_off_players + " Player Index : " + playerIndex);
+        float angle = (360f / amount_off_players) * playerIndex * Mathf.Deg2Rad;
+
+        float x = Mathf.Cos(angle) * SpawnRange;
+        float z = Mathf.Sin(angle) * SpawnRange;
     
-        // Create the checker
-        GameObject checker = Instantiate(SpawnCheckPrefab, transform.position, spawnCheckOriatation);
-        Transform checkTrans = checker.transform;
-        checkTrans.position += checkTrans.forward * MoveAmount;
-
-        bool hasDetectedLand = false;
-        int maxIterations = 500; // Safety cap to prevent freezing
-        int currentIteration = 0;
-        Vector3 foundPos = Vector3.zero;
-        while (!hasDetectedLand && currentIteration < maxIterations)
-        {
-            // Raycast from high up to ensure we hit the terrain
-            hasDetectedLand = Physics.Raycast(checkTrans.position, Vector3.down, out RaycastHit hit, 100f, GroundLayer);
-        
-            if (!hasDetectedLand)
-            {
-                checkTrans.position -= checkTrans.forward * 0.5f; // Move back in larger chunks for performance
-                currentIteration++;
-            }
-            else
-            {
-                Debug.Log("HIt : " + hit.collider.gameObject.name);
-                // Successfully found land!
-                GameObject podium = Instantiate(SpawnPodiumPrefab, hit.point, Quaternion.identity);
-                foundPos = podium.transform.position; // Set the reference
-                podium.GetComponent<NetworkObject>().Spawn(true);
-            }
-        }
-
-        if (currentIteration >= maxIterations) Debug.LogWarning("SpawnManager: Could not find land!");
-        return foundPos;
+        playerIndex++;
+        return new Vector3(x, 0f, z);
     }
 }

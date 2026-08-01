@@ -27,6 +27,7 @@ public class RandomlySpawnItems : NetworkBehaviour
     //if there is any islands near it don't allow to spawn
     [SerializeField] private float checkGroundNearRadius = 0.4f;
     [SerializeField] private float centerpushPower;
+    [SerializeField] private float reduceRadius = 5;
     [SerializeField] private float UpPushForce;
 
     [SerializeField] private float StartSpawnDelayTime = 10f;
@@ -112,7 +113,7 @@ public class RandomlySpawnItems : NetworkBehaviour
 
         // Pow > 1 biases distance toward 0 (center)
         float t = Random.value;
-        float distance = Mathf.Pow(t, -centerpushPower) * islandHeart.IslandRadius;
+        float distance = Mathf.Pow(t, centerpushPower) * islandHeart.IslandRadius - reduceRadius;
 
         float x = Mathf.Cos(angle) * distance;
         float z = Mathf.Sin(angle) * distance;

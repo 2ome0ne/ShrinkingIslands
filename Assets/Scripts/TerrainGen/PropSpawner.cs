@@ -75,7 +75,7 @@ public class PropSpawner : NetworkBehaviour
             Small_Island_prefab.GetComponent<NetworkObject>().Spawn(true);
             Small_Island_prefab.transform.rotation = Quaternion.Euler(0, Random.Range(0 , 360), 0);
             Small_Island_prefab.transform.position = Small_Island_prefab.transform.forward * Random.Range(MinIslandDistance, MaxIslandDistance);
-            Small_Island_prefab.GetComponent<SmallIslandTile>().Set_a_GTXRpc(Random.Range(0, 2));
+            //Small_Island_prefab.GetComponent<SmallIslandTile>().Set_a_GTXRpc(Random.Range(0, 2));
         }
     }
 

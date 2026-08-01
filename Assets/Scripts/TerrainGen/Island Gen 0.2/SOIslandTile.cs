@@ -4,8 +4,17 @@ using Unity.Netcode;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+
 public class SOIslandTile : NetworkBehaviour
 {
+    public enum IslandType
+    {
+        Low,
+        Medium,
+        Tall
+    }
+
+    public IslandType islandType;
     public bool originalIsland = false;
     public bool PropsSpawned = false;
     public IslandHeart islandHeart;
@@ -25,7 +34,9 @@ public class SOIslandTile : NetworkBehaviour
 
     [SerializeField] private float TiltSpeed = 3;
     [SerializeField] private Transform spawnPostion;
-    [SerializeField] private GameObject[] Islands;
+    [SerializeField] private GameObject[] LowIslands;
+    [SerializeField] private GameObject[] NormalIslands;
+    [SerializeField] private GameObject[] TallIslands;
     
     [SerializeField]
     private SOIslandPropSpawner _soIslandPropSpawner;
@@ -40,11 +51,6 @@ public class SOIslandTile : NetworkBehaviour
         transform.Rotate(0 , Random.Range (0f, 360f), 0f);
     }
 
-    public override void OnNetworkDespawn()
-    {
-        Debug.Log("ISLAND DESPAWNING");
-    }
-
     public void CrumbleThisIsland()
     {
         Debug.Log($"Island Crumbling");
@@ -55,15 +61,42 @@ public class SOIslandTile : NetworkBehaviour
     void SetRandomIsland()
     {
         Debug.Log($"Island Set");
-        int RandomNum = Random.Range(0, Islands.Length);
+        int RandomNum = 0;
         float RandomRange = Random.Range(0f, 360f);
-        spawnIslandSeleceted(RandomNum , RandomRange);
+        switch (islandType)
+        {
+            case IslandType.Low:
+                Random.Range(0, LowIslands.Length);
+                Debug.Log($"Island Spawned - Small");
+                break;
+            case IslandType.Medium:
+                Random.Range(0, NormalIslands.Length);
+                Debug.Log($"Island Spawned - Medium");
+                break;
+            case IslandType.Tall:
+                Random.Range(0, TallIslands.Length);
+                Debug.Log($"Island Spawned - Large");
+                break;
+        }
+        spawnIslandSeleceted(RandomNum , RandomRange , islandType);
         _soIslandPropSpawner.SpawnPropsServerRpc();
     }
     
-    private void spawnIslandSeleceted(int randomNum , float RandomRange)
+    private void spawnIslandSeleceted(int randomNum , float RandomRange , IslandType _islandType)
     {
-        GameObject island = Instantiate(Islands[randomNum], spawnPostion.position, Quaternion.identity , transform);
+        GameObject island = null;
+        switch (_islandType)
+        {
+            case IslandType.Low:
+                island = Instantiate(LowIslands[randomNum], spawnPostion.position, Quaternion.identity , transform);
+                break;
+            case IslandType.Medium:
+                island = Instantiate(NormalIslands[randomNum], spawnPostion.position, Quaternion.identity , transform);
+                break;
+            case IslandType.Tall:
+                island = Instantiate(TallIslands[randomNum], spawnPostion.position, Quaternion.identity , transform);
+                break;
+        }
         var islandNetObj = island.GetComponent<NetworkObject>();
         islandNetObj.Spawn(true);
         islandNetObj.TrySetParent(transform);
@@ -112,7 +145,7 @@ public class SOIslandTile : NetworkBehaviour
         
         islandGTX.position = Vector3.Lerp(islandGTX.position , spawnPostion.position , easedT);  
         islandGTX.Rotate(Vector3.forward * Time.deltaTime * TiltSpeed);
-        if (Vector3.Distance(islandGTX.position, spawnPostion.position) <= snapDistance * 2)
+        if (elapsed > crumbleTime)
         {
             if(IsServer)
                 islandHeart.IslandCrumble(this);

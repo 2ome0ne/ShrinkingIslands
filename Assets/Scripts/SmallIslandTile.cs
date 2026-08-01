@@ -1,3 +1,4 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -6,14 +7,18 @@ public class SmallIslandTile : NetworkBehaviour
     [SerializeField] private GameObject[] ListOfGTXs;
     [SerializeField] private Transform[] ListOfForgeLocations;
 
-    [SerializeField] private GameObject forge;
+    [SerializeField] private NetworkObject forge;
+
+    public override void OnNetworkSpawn()
+    {
+        Set_a_GTXRpc();
+    }
 
     [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
-    public void Set_a_GTXRpc(int random)
+    public void Set_a_GTXRpc()
     {
-        ListOfGTXs[random].SetActive(true);    
         if(!IsServer) return;
-        GameObject Fg = Instantiate(forge , ListOfForgeLocations[random].position , Quaternion.identity);
-        Fg.GetComponent<NetworkObject>().Spawn(true);
+        forge.Spawn(true);
+        forge.TrySetParent(this.transform);
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -24,11 +25,13 @@ public class IslandHeart : NetworkBehaviour
     public float IslandRadius;
 
     [SerializeField] private int CurrentIslandTileCount;
+    [SerializeField] private int CurrentTallislandTileCount;
 
-    [SerializeField] private float IslandSpawnY;
+    public float IslandSpawnY;
     
     
     [Header("Heart Refrences")] 
+    [SerializeField] private ModifierManager modifierManager;
     [SerializeField] private GameObject IslandPrefab;
     [SerializeField] private SpawnManager _spawnManager;
 
@@ -40,7 +43,6 @@ public class IslandHeart : NetworkBehaviour
     {
         if (IsHost)
         {
-            if (Input.GetKeyDown(KeyCode.E)) SpawnIslandTile();
             IrrosionUpdate();
         }
     }
@@ -66,12 +68,18 @@ public class IslandHeart : NetworkBehaviour
     {
         if(!IsHost) return;
         GetRandomIrrosionTime();
-        StartSpawn();
+        StartCoroutine(waitTillModifires());
     }
 
     private void GetRandomIrrosionTime()
     {
         CurrentIrrosionTime = Random.Range (MinIrrosionTime , MaxIrrosionTime);
+    }
+
+    IEnumerator waitTillModifires()
+    {
+        yield return new WaitUntil(()=> modifierManager.Spawned);
+        StartSpawn();
     }
     
     private void StartSpawn()
@@ -85,6 +93,7 @@ public class IslandHeart : NetworkBehaviour
 
     public void IslandCrumble(SOIslandTile islandTile)
     {
+        if (islandTile.islandType == SOIslandTile.IslandType.Low) CurrentTallislandTileCount--;
         activeIslands.Remove(islandTile);
         DestroyIslandTileServerRpc(islandTile.GetComponent<NetworkObject>());
         CurrentIslandTileCount--;
@@ -103,10 +112,40 @@ public class IslandHeart : NetworkBehaviour
     {
         if (CurrentIslandTileCount < MaxIslandTileCount && TryGetValidSpawnPoint(out Vector3 point))
         {
-            Debug.Log("SPAWNING ISLAND");
-            CurrentIslandTileCount++;
+            SOIslandTile.IslandType randomIslandType = SOIslandTile.IslandType.Low;
+            if (CurrentTallislandTileCount < 1)
+            {
+                randomIslandType = SOIslandTile.IslandType.Tall;
+            }
+            else
+            {
+                int randomNum = Random.Range(0, 2);
+                switch (randomNum)
+                {
+                    case 0:
+                        randomIslandType = SOIslandTile.IslandType.Low;
+                        break;
+                    case 1:
+                        randomIslandType = SOIslandTile.IslandType.Medium;
+                        break;
+                    case 2:
+                        randomIslandType = SOIslandTile.IslandType.Tall;
+                        break;
+                }
+            }
+
+            if (randomIslandType == SOIslandTile.IslandType.Tall)
+            {
+                CurrentTallislandTileCount++;
+            }
+            else
+            {
+                CurrentIslandTileCount++;
+            }
+            
             SOIslandTile islandTile = Instantiate(IslandPrefab , point, Quaternion.identity).GetComponent<SOIslandTile>();
             islandTile.GetComponent<NetworkObject>().Spawn(true);
+            islandTile.islandType = randomIslandType;
             islandTile.islandHeart = this;
             activeIslands.Add(islandTile);
         }
@@ -116,8 +155,39 @@ public class IslandHeart : NetworkBehaviour
     {
         if (CurrentIslandTileCount < MaxIslandTileCount && TryGetValidSpawnPoint(out Vector3 point))
         {
-            CurrentIslandTileCount++;
+            SOIslandTile.IslandType randomIslandType = SOIslandTile.IslandType.Low;
+            if (CurrentTallislandTileCount < 1)
+            {
+                randomIslandType = SOIslandTile.IslandType.Tall;
+            }
+            else
+            {
+                int randomNum = Random.Range(0, 10);
+                switch (randomNum)
+                {
+                    case < 2:
+                        randomIslandType = SOIslandTile.IslandType.Low;
+                        break;
+                    case < 8:
+                        randomIslandType = SOIslandTile.IslandType.Medium;
+                        break;
+                    default:
+                        randomIslandType = SOIslandTile.IslandType.Tall;
+                        break;
+                }
+            }
+            
+            if (randomIslandType == SOIslandTile.IslandType.Tall)
+            {
+                CurrentTallislandTileCount++;
+            }
+            else
+            {
+                CurrentIslandTileCount++;
+            }
+            
             SOIslandTile islandTile = Instantiate(IslandPrefab , point, Quaternion.identity).GetComponent<SOIslandTile>();
+            islandTile.islandType = randomIslandType;
             var NetObj = islandTile.GetComponent<NetworkObject>();
             NetObj.Spawn();
             SetSpawnedAsOriginalIslandRpc(NetObj);
@@ -136,7 +206,7 @@ public class IslandHeart : NetworkBehaviour
 
     public Vector3 GetRandomPointInCircle()
     {
-        float angle = Random.Range(0f, Mathf.PI * 1.2f);
+        float angle = Random.Range(0f, Mathf.PI * 2f);
 
         // Pow > 1 biases distance toward 0 (center)
         float t = Random.value;

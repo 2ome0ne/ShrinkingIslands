@@ -20,6 +20,8 @@ public class ModifierManager : NetworkBehaviour
     [SerializeField] private AllModifiersHolderScriptableObject allModifiersHolder;
     [SerializeField] private List<Modifier> AllModifiersEnabled;
 
+    public bool Spawned = false;
+
     [Header("Modifiers")]
     //Fog
     [SerializeField]
@@ -137,6 +139,8 @@ public class ModifierManager : NetworkBehaviour
         RenderSettings.fogDensity = defaultfog;
         if (CheckEnabledModifierByName("Alot Of Fog"))
             AlotOfFogActivateRpc();
+        
+        Spawned = true;
     }
 
     private void EnableModifierByName(string name)
