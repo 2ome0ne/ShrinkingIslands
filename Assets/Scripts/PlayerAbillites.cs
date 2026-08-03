@@ -37,6 +37,13 @@ public class PlayerAbillites : NetworkBehaviour
     [SerializeField] private Sprite ParryCooldownSprite;
     public bool succesfulParry;
     [SerializeField] private bool CanParry;
+
+    [Header("Cling")] 
+    [SerializeField] private float ClingRay;
+    [SerializeField] private float ClingPushPower;
+    [SerializeField] private LayerMask ClingLayer;
+    [SerializeField] private Transform clingPos;
+    
     [Header("--[ Refrences ]--")]
     //[SerializeField] private GameObject HitEffect;
     //Punching
@@ -56,7 +63,8 @@ public class PlayerAbillites : NetworkBehaviour
     
     private bool CanPunch;
     private bool CanDash;
-    
+
+    public bool Clinging;
     private bool CanBlock = true;
     public bool Blocking;
     public bool currentlyDashing = false;
@@ -76,9 +84,47 @@ public class PlayerAbillites : NetworkBehaviour
         {
             DashUpdate();
             PunchUpdate();
+            ClingUpdate();
         }
 
         ParryUpdate();
+    }
+
+    void ClingUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.C) && Physics.Raycast(_cameraController.Camera.transform.position , _cameraController.Camera.transform.forward, ClingRay , ClingLayer))
+        {
+            Clinging = true;
+            //stop movement
+            Armanimator.SetTrigger("Cling");
+            LeftHandAnimator.SetTrigger("Cling");
+        }
+
+        if (Clinging)
+        {
+            CanDash = false;
+            CanPunch = false;
+            CanBlock = false;
+            controller.CanMove = false;
+            controller.ResetTheFuckingYvelocity();
+            controller.CanFall = false;
+            _cameraController.enabled = false;
+        }
+
+        if (Input.GetKeyUp(KeyCode.C) && Clinging)
+        {
+            //ADD KB TO PLAYER FROM cling point
+            Clinging = false;
+            Armanimator.SetTrigger("StopCling");
+            LeftHandAnimator.SetTrigger("StopCling");
+            KBClingRpc();
+            CanDash = true;
+            CanPunch = true;
+            CanBlock = true;
+            controller.CanMove = true;
+            controller.CanFall = true;
+            _cameraController.enabled = true;
+        }
     }
 
     void ParryUpdate()
@@ -160,6 +206,12 @@ public class PlayerAbillites : NetworkBehaviour
     private void ParryKbRpc()
     {
         ParriedObject.GetComponent<PlayerKnockbackSystem>().KnockBack(transform.position , ParryKnockback , gameObject);
+    }
+    
+    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
+    private void KBClingRpc()
+    {
+        transform.GetComponent<PlayerKnockbackSystem>().KnockBack(clingPos.position , ClingPushPower , gameObject);
     }
     
     [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]

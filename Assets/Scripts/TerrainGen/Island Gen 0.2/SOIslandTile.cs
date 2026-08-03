@@ -11,9 +11,11 @@ public class SOIslandTile : NetworkBehaviour
     {
         Low,
         Medium,
-        Tall
+        Tall,
+        Special
     }
 
+    [SerializeField] private bool DontspawnNewAfterDeath = false;
     public IslandType islandType;
     public bool originalIsland = false;
     public bool PropsSpawned = false;
@@ -23,7 +25,9 @@ public class SOIslandTile : NetworkBehaviour
     public bool Crumbling = false;
     [SerializeField] private float spawnHight = 1;
     [SerializeField] private float ShakeWarningTime = 2.5f;
+    [SerializeField] private AudioSource crumbling;
 
+    [SerializeField] private float spawnSpeedMultiplier;
     [SerializeField] private float crumbleTime;
     [SerializeField] private float CrumbleMultiplier = 0.5f;
     [SerializeField] private float snapDistance = 0.05f;
@@ -47,7 +51,8 @@ public class SOIslandTile : NetworkBehaviour
     {
         Debug.Log($"Island Spawned - NetId: {NetworkObjectId}, IsServer: {IsServer}, Position: {transform.position}, Parent: {transform.parent}");
         if(!IsServer) return;
-        SetRandomIsland();
+        if(islandType != IslandType.Special)
+            SetRandomIsland();
         transform.Rotate(0 , Random.Range (0f, 360f), 0f);
     }
 
@@ -56,6 +61,13 @@ public class SOIslandTile : NetworkBehaviour
         Debug.Log($"Island Crumbling");
         CurrentWarningTime = WarningTime;
         Crumbling = true;
+        startCrumblingSoundClientRpc();
+    }
+
+    [ClientRpc]
+    public void startCrumblingSoundClientRpc()
+    {
+        crumbling.Play();
     }
     
     void SetRandomIsland()
@@ -123,7 +135,7 @@ public class SOIslandTile : NetworkBehaviour
         {
             if (!Spawned)
             {
-                islandGTX.position = Vector3.Lerp(islandGTX.position , transform.position , Time.deltaTime * 10f);  
+                islandGTX.position = Vector3.Lerp(islandGTX.position , transform.position , Time.deltaTime * spawnSpeedMultiplier);  
             
                 if (Vector3.Distance(islandGTX.position, transform.position) <= IrrosionDistance)
                 {
@@ -131,6 +143,32 @@ public class SOIslandTile : NetworkBehaviour
                     Spawned = true;
                 }
             }
+        }
+    }
+
+    [ClientRpc]
+    private void SpawnIslandSpecialClientRpc()
+    {
+        islandGTX.position = Vector3.Lerp(islandGTX.position , transform.position , Time.deltaTime * 10f);  
+            
+        if (Vector3.Distance(islandGTX.position, transform.position) <= IrrosionDistance)
+        {
+            islandGTX.position = transform.position; // snap exactly
+            if(IsServer)
+                Spawned = true;
+        }
+    }
+    
+    [ClientRpc]
+    private void SpecialIslandCollapsingClientRpc()
+    {
+        islandGTX.position = Vector3.Lerp(islandGTX.position , transform.position , Time.deltaTime * 10f);  
+            
+        if (Vector3.Distance(islandGTX.position, transform.position) <= IrrosionDistance)
+        {
+            islandGTX.position = transform.position; // snap exactly
+            if(IsServer)
+                Spawned = true;
         }
     }
 
@@ -147,8 +185,17 @@ public class SOIslandTile : NetworkBehaviour
         islandGTX.Rotate(Vector3.forward * Time.deltaTime * TiltSpeed);
         if (elapsed > crumbleTime)
         {
-            if(IsServer)
-                islandHeart.IslandCrumble(this);
+            if (IsServer)
+            {
+                if (DontspawnNewAfterDeath)
+                {
+                    NetworkObject.Despawn(true);
+                }
+                else
+                {
+                    islandHeart.IslandCrumble(this);
+                }
+            }
         }
     }
 
@@ -161,7 +208,7 @@ public class SOIslandTile : NetworkBehaviour
 
     private void Update()
     {
-        if(!IsServer) return;
+        if(!IsServer && islandType != IslandType.Special) return;
         if (Spawned)
         {
             if (Crumbling)

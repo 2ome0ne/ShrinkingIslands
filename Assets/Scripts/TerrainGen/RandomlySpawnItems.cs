@@ -20,8 +20,10 @@ public class RandomlySpawnItems : NetworkBehaviour
     [SerializeField] private GameObject SpawnIndicator;
     [SerializeField] private IslandHeart islandHeart;
     [SerializeField] private TheSea theSea;
-
+    [SerializeField] private GameObject IslandItemPrefab;
     [Header("--[Settings]--")] 
+    public int MaxCanSpawn;
+    public int currentSpawn;
     public float minSpawnTime;
     public float maxSpawnTime;
     //if there is any islands near it don't allow to spawn
@@ -59,18 +61,21 @@ public class RandomlySpawnItems : NetworkBehaviour
 
     private void TrySpawnItem()
     {
+        if (currentSpawn > MaxCanSpawn)
+            return;
+        
         int index = GetRandomItemIndex();
         if (CalculateIfItemSpawns(index))
         {
             //spawn item
             if (checkIfRandomPointInWater(out Vector3 spawnPos))
             {
-                GameObject spawnedObj = Instantiate(spawnableItems[index].prefab, spawnPos , Quaternion.identity);
-                spawnedObj.GetComponent<NetworkObject>().Spawn(true);
-                SetNoGravityToItemServerRpc(spawnedObj);
-                SpawnTheIndicatorServerRpc(spawnedObj.transform.position);
+                var island = Instantiate(IslandItemPrefab, spawnPos, Quaternion.identity);
+                island.GetComponent<SOIslandItemisland>().SpawnThisObject = spawnableItems[index].prefab;
+                island.GetComponent<NetworkObject>().Spawn(true);
+                currentSpawn++;
                 //Spawn Push force
-                spawnedObj.GetComponent<Rigidbody>().AddForce(UpPushForce * spawnedObj.transform.up, ForceMode.Force);
+
             }
         }
         currentSpawnTime = Random.Range(minSpawnTime, maxSpawnTime);

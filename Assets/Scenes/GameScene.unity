@@ -24914,6 +24914,7 @@ MonoBehaviour:
   LoseUI: {fileID: 28003384}
   GameOver: 0
   escapeMenu: {fileID: 1961144411}
+  islandHeart: {fileID: 220905954}
   PlayerPointPrefab: {fileID: 386414057158641034, guid: 57e1c082caa8226439a154bd5277ab51, type: 3}
   playerPointContent: {fileID: 1387157358}
 --- !u!4 &1961144408
@@ -24994,6 +24995,9 @@ MonoBehaviour:
   SpawnIndicator: {fileID: 3574269667675813573, guid: 0a1185a01718251468ea1836085889ae, type: 3}
   islandHeart: {fileID: 220905954}
   theSea: {fileID: 66404910}
+  IslandItemPrefab: {fileID: 5812009403111610254, guid: 1fc4cd1ed76c24b4abc76fcfc0fe3055, type: 3}
+  MaxCanSpawn: 4
+  currentSpawn: 0
   minSpawnTime: 2
   maxSpawnTime: 4.5
   checkGroundNearRadius: 0.1

@@ -21,6 +21,7 @@ public class CharecterController : NetworkBehaviour
     public PlayerState PlayerStates;
     
     public bool CanMove;
+    public bool CanFall = true;
     public bool IsGrounded;
     [Header("References")]
     //gravity stuff
@@ -55,6 +56,11 @@ public class CharecterController : NetworkBehaviour
         GameManager.Instance.escapeMenu.LoadSaveDataEscapeMenu();
     }
 
+    public void ResetTheFuckingYvelocity()
+    {
+        velocity = new Vector3(velocity.x, 0, velocity.z);
+    }
+
     void Update()
     {
         if(!IsOwner) return;
@@ -80,7 +86,8 @@ public class CharecterController : NetworkBehaviour
         {
             velocity.y = -2f;
         }
-        GravityUpdate();
+        if(CanFall)
+            GravityUpdate();
         UpdateState();
     }
 

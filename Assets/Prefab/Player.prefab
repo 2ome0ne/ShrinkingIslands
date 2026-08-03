@@ -1107,6 +1107,7 @@ Transform:
   - {fileID: 7750691639474938260}
   - {fileID: 6283770389668396677}
   - {fileID: 2952935327678043600}
+  - {fileID: 3314521334289115785}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7943667879397639864
@@ -1121,7 +1122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 609134541
+  GlobalObjectIdHash: 3820358935
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1155,6 +1156,7 @@ MonoBehaviour:
   AirMultiplier: -0.3
   PlayerStates: 0
   CanMove: 1
+  CanFall: 1
   IsGrounded: 0
   headCheck: {fileID: 2133072719653766738}
   GroundCheck: {fileID: 129646938154533566}
@@ -1413,6 +1415,12 @@ MonoBehaviour:
   ParryCooldownSprite: {fileID: 21300000, guid: 0129f94cf6898ed4cbe85a73d2f18679, type: 3}
   succesfulParry: 0
   CanParry: 0
+  ClingRay: 2
+  ClingPushPower: 700
+  ClingLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  clingPos: {fileID: 3314521334289115785}
   playerIconShower: {fileID: 9154319154610644523}
   AttackableLayer:
     serializedVersion: 2
@@ -1431,6 +1439,7 @@ MonoBehaviour:
   _animationManager: {fileID: 4463467629784548551}
   controller: {fileID: 4943546848859840295}
   _staminaSystem: {fileID: 2804895273022537818}
+  Clinging: 0
   Blocking: 0
   currentlyDashing: 0
   ParriedObject: {fileID: 0}
@@ -1458,6 +1467,13 @@ MonoBehaviour:
     DestinationState: 885928008
     TransitionDuration: 0.2
     TriggerNameHash: 2011728001
+    TransitionIndex: 0
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: -416472376
+    DestinationState: 1769783305
+    TransitionDuration: 0
+    TriggerNameHash: -232919067
     TransitionIndex: 0
   AnimatorParameterEntries:
     ParameterEntries:
@@ -1505,6 +1521,14 @@ MonoBehaviour:
       NameHash: -925255975
       Synchronize: 1
       ParameterType: 4
+    - name: Cling
+      NameHash: -953163966
+      Synchronize: 1
+      ParameterType: 9
+    - name: StopCling
+      NameHash: -232919067
+      Synchronize: 1
+      ParameterType: 9
   AnimatorParametersExpanded: 0
 --- !u!114 &-5076533175115047576
 MonoBehaviour:
@@ -1760,6 +1784,13 @@ MonoBehaviour:
     TransitionDuration: 0.25
     TriggerNameHash: -1939738482
     TransitionIndex: 5
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 892262176
+    DestinationState: -1655346765
+    TransitionDuration: 0
+    TriggerNameHash: -232919067
+    TransitionIndex: 0
   AnimatorParameterEntries:
     ParameterEntries:
     - name: GearIsHolding
@@ -1808,6 +1839,14 @@ MonoBehaviour:
       ParameterType: 9
     - name: DropInstant
       NameHash: -1939738482
+      Synchronize: 1
+      ParameterType: 9
+    - name: Cling
+      NameHash: -953163966
+      Synchronize: 1
+      ParameterType: 9
+    - name: StopCling
+      NameHash: -232919067
       Synchronize: 1
       ParameterType: 9
   AnimatorParametersExpanded: 0
@@ -9851,6 +9890,37 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &6602264196488426941
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3314521334289115785}
+  m_Layer: 6
+  m_Name: ClingPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3314521334289115785
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6602264196488426941}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -18.892, z: 1.3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4158232433353681693}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6645642241465713473
 GameObject:
   m_ObjectHideFlags: 0
@@ -11425,7 +11495,7 @@ Transform:
   m_GameObject: {fileID: 7912295033377862080}
   serializedVersion: 2
   m_LocalRotation: {x: 0.697054, y: -0.118805386, z: 0.118809365, w: 0.69705474}
-  m_LocalPosition: {x: -6.491712, y: 8.41092, z: 11.090212}
+  m_LocalPosition: {x: 0, y: 8.41092, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -280,7 +280,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickableObject
   ShowTopMostFoldoutHeaderGroup: 1
   ObjectIndex: 1
-  DespawnY: 20
+  DespawnY: 50
   rb: {fileID: 5308707941903390170}
 --- !u!1 &2306278238086571925
 GameObject:
