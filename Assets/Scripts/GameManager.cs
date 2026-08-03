@@ -25,6 +25,7 @@ public class GameManager : NetworkBehaviour
     public bool GameOver = false;
     public EscapeMenu escapeMenu;
     public IslandHeart islandHeart;
+    public RandomlySpawnItems randomlySpawnItems;
     private bool disconnected = false;
 
     [SerializeField]

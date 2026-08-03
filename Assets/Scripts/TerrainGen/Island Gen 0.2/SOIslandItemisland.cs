@@ -27,6 +27,7 @@ public class SOIslandItemisland : NetworkBehaviour
             {
                 if (spawnedItemPrefab == null)
                 {
+                    GameManager.Instance.randomlySpawnItems.currentSpawn--;
                     crumbleThisIslandClientRpc();
                 }
             }

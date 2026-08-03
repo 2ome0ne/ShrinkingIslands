@@ -73,6 +73,8 @@ public class PlayerKnockbackSystem : NetworkBehaviour
 
     public void KnockBack(Vector3 attackpositon , float KbForce , GameObject player)
     {
+        if (playerAbillites.Clinging)
+            playerAbillites.StopClingingFromKBClientRpc();
         if(HasShield) return;
         if (playerAbillites.Parrying)
         {

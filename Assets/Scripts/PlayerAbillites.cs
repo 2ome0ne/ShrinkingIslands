@@ -127,6 +127,21 @@ public class PlayerAbillites : NetworkBehaviour
         }
     }
 
+    [ClientRpc]
+    public void StopClingingFromKBClientRpc()
+    {
+        Clinging = false;
+        Armanimator.SetTrigger("StopCling");
+        LeftHandAnimator.SetTrigger("StopCling");
+        KBClingRpc();
+        CanDash = true;
+        CanPunch = true;
+        CanBlock = true;
+        controller.CanMove = true;
+        controller.CanFall = true;
+        _cameraController.enabled = true;
+    }
+
     void ParryUpdate()
     {
         if (Input.GetKeyDown(KeyCode.F) && CanParry)

@@ -117,7 +117,7 @@ MonoBehaviour:
   spawnHight: 1
   ShakeWarningTime: 2.5
   crumbling: {fileID: 4497252842011767571}
-  spawnSpeedMultiplier: 3
+  spawnSpeedMultiplier: 2
   crumbleTime: 10
   CrumbleMultiplier: 0.25
   snapDistance: 0.05
@@ -243,8 +243,8 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 0
-  MinDistance: 1
-  MaxDistance: 5
+  MinDistance: 2
+  MaxDistance: 15.26
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -294,7 +294,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.008333334
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0

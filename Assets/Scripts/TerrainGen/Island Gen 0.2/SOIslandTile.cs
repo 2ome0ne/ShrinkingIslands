@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using NUnit.Framework;
 using Unity.Netcode;
 using UnityEngine;
@@ -19,6 +20,7 @@ public class SOIslandTile : NetworkBehaviour
     public IslandType islandType;
     public bool originalIsland = false;
     public bool PropsSpawned = false;
+    public bool AssignedEverything = false;
     public IslandHeart islandHeart;
     public Transform islandGTX;
     [SerializeField] private float WarningTime = 2;
@@ -41,6 +43,7 @@ public class SOIslandTile : NetworkBehaviour
     [SerializeField] private GameObject[] LowIslands;
     [SerializeField] private GameObject[] NormalIslands;
     [SerializeField] private GameObject[] TallIslands;
+    private bool tped = false;
     
     [SerializeField]
     private SOIslandPropSpawner _soIslandPropSpawner;
@@ -51,9 +54,15 @@ public class SOIslandTile : NetworkBehaviour
     {
         Debug.Log($"Island Spawned - NetId: {NetworkObjectId}, IsServer: {IsServer}, Position: {transform.position}, Parent: {transform.parent}");
         if(!IsServer) return;
-        if(islandType != IslandType.Special)
-            SetRandomIsland();
+        if (islandType != IslandType.Special)
+            StartCoroutine(WaitTillAssigned());
         transform.Rotate(0 , Random.Range (0f, 360f), 0f);
+    }
+
+    IEnumerator WaitTillAssigned()
+    {
+        yield return new WaitUntil(() => AssignedEverything);
+        SetRandomIsland();
     }
 
     public void CrumbleThisIsland()
@@ -176,7 +185,6 @@ public class SOIslandTile : NetworkBehaviour
 
     public void AnimateCrumble()
     {
-        Debug.Log("ISLAND crumble");
         elapsed += Time.deltaTime;
         float t = Mathf.Clamp01(elapsed / crumbleTime);
         float easedT = t * t; 
@@ -201,19 +209,22 @@ public class SOIslandTile : NetworkBehaviour
 
     public void AnimateShake()
     {
-        Debug.Log("ISLAND shake");
         islandGTX.position = islandGTX.position + new Vector3(Mathf.Sin(Time.time * ShakeMultiplier) * MoveAmount, 0, 0);
     }
 
 
     private void Update()
     {
+        if (!Spawned && IsClient && islandGTX.position != transform.position && islandType != IslandType.Special && !tped)
+        {
+            setPosForClientBugFixRpc();
+            tped = true;
+        }
         if(!IsServer && islandType != IslandType.Special) return;
         if (Spawned)
         {
             if (Crumbling)
             {
-                Debug.Log(this.name + "  is Crumbling");
                 CurrentWarningTime -= Time.deltaTime;
                 if (CurrentWarningTime <= ShakeWarningTime)
                 {
@@ -232,5 +243,11 @@ public class SOIslandTile : NetworkBehaviour
         {
             AnimateSpawn();
         }
+    }
+
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
+    private void setPosForClientBugFixRpc()
+    {
+        islandGTX.position = transform.position;
     }
 }

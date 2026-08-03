@@ -105,6 +105,8 @@ public class IslandHeart : NetworkBehaviour
     {
         Debug.Log("DESTROYED AN ISLAND");
         netObj.TryGet(out NetworkObject island);
+        var E = island.GetComponent<SOIslandTile>().islandGTX.GetComponent<NetworkObject>();
+        E.Despawn(true);
         island.Despawn(true);
     }
 
@@ -119,16 +121,16 @@ public class IslandHeart : NetworkBehaviour
             }
             else
             {
-                int randomNum = Random.Range(0, 2);
+                int randomNum = Random.Range(0, 10);
                 switch (randomNum)
                 {
-                    case 0:
+                    case < 2:
                         randomIslandType = SOIslandTile.IslandType.Low;
                         break;
-                    case 1:
+                    case < 8:
                         randomIslandType = SOIslandTile.IslandType.Medium;
                         break;
-                    case 2:
+                    default:
                         randomIslandType = SOIslandTile.IslandType.Tall;
                         break;
                 }
@@ -145,10 +147,19 @@ public class IslandHeart : NetworkBehaviour
             
             SOIslandTile islandTile = Instantiate(IslandPrefab , point, Quaternion.identity).GetComponent<SOIslandTile>();
             islandTile.GetComponent<NetworkObject>().Spawn(true);
+            Debug.Log("SSRRP SPAWNED ISLAND" + randomIslandType);
             islandTile.islandType = randomIslandType;
             islandTile.islandHeart = this;
             activeIslands.Add(islandTile);
+            SetAssignedEverythingClientRpc(islandTile.GetComponent<NetworkObject>());
         }
+    }
+
+    [ClientRpc]
+    private void SetAssignedEverythingClientRpc(NetworkObjectReference netObj)
+    {
+        netObj.TryGet(out NetworkObject island);
+        island.GetComponent<SOIslandTile>().AssignedEverything = true;
     }
     
     public void SpawnOriginalIslandTile()
@@ -192,6 +203,7 @@ public class IslandHeart : NetworkBehaviour
             NetObj.Spawn();
             SetSpawnedAsOriginalIslandRpc(NetObj);
             islandTile.islandHeart = this;
+            islandTile.AssignedEverything = true;
             activeIslands.Add(islandTile);
         }
     }

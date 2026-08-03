@@ -75,7 +75,6 @@ public class RandomlySpawnItems : NetworkBehaviour
                 island.GetComponent<NetworkObject>().Spawn(true);
                 currentSpawn++;
                 //Spawn Push force
-
             }
         }
         currentSpawnTime = Random.Range(minSpawnTime, maxSpawnTime);

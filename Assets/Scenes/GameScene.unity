@@ -24915,6 +24915,7 @@ MonoBehaviour:
   GameOver: 0
   escapeMenu: {fileID: 1961144411}
   islandHeart: {fileID: 220905954}
+  randomlySpawnItems: {fileID: 1961144410}
   PlayerPointPrefab: {fileID: 386414057158641034, guid: 57e1c082caa8226439a154bd5277ab51, type: 3}
   playerPointContent: {fileID: 1387157358}
 --- !u!4 &1961144408

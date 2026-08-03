@@ -14,8 +14,8 @@ public class LaunchMushroom : NetworkBehaviour
             Debug.Log("LAUNCH MUSHROOM");
             GameManager.Instance.soundManager.SpawnSoundRpc(transform.position, 20 , 1 , 1 , 12);
              PlayerKnockbackSystem player = other.GetComponent<PlayerKnockbackSystem>();
-             MushroomBounceRpc();
              player.MushroomKnockback(PushPower);
+             MushroomBounceRpc();
         }
     }
 

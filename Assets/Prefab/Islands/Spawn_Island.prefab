@@ -225,6 +225,7 @@ GameObject:
   - component: {fileID: 7286962311783029307}
   - component: {fileID: 4946017286355924664}
   - component: {fileID: 5519527870117143023}
+  - component: {fileID: -5117892144061882402}
   m_Layer: 0
   m_Name: Spawn_Island
   m_TagString: Untagged
@@ -342,6 +343,20 @@ MonoBehaviour:
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &-5117892144061882402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3426552520523205224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a72e38563a0a5549baa0503b042f928, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SingleIslandGenerator
+  ShowTopMostFoldoutHeaderGroup: 1
+  DestroyTime: 28
 --- !u!1 &3537499617855652106
 GameObject:
   m_ObjectHideFlags: 0
@@ -812,7 +827,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2567305790329338398, guid: dd10f505653ea4047ad1ac6ede768b66, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 2818173396
+      value: 3693116020
       objectReference: {fileID: 0}
     - target: {fileID: 5149641380006769181, guid: dd10f505653ea4047ad1ac6ede768b66, type: 3}
       propertyPath: m_LocalPosition.x
@@ -889,7 +904,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5351706793326332709, guid: f287890d7b499594ab84333b494b50b9, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 4011427774
+      value: 250289329
       objectReference: {fileID: 0}
     - target: {fileID: 5351706793326332709, guid: f287890d7b499594ab84333b494b50b9, type: 3}
       propertyPath: SceneMigrationSynchronization
@@ -975,7 +990,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -6279457417849403659, guid: 35bf50e79b838594389aa2624132b730, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 2538425003
+      value: 1040572055
       objectReference: {fileID: 0}
     - target: {fileID: -6279457417849403659, guid: 35bf50e79b838594389aa2624132b730, type: 3}
       propertyPath: SceneMigrationSynchronization
