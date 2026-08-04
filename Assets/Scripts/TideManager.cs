@@ -19,9 +19,9 @@ public class TideManager : NetworkBehaviour
     public TideType tideType;
 
     //All Tide Y levels
-    [SerializeField] private float midTideY;
-    [SerializeField] private float lowTideY;
-    [SerializeField] private float HighTideY;
+    public float midTideY;
+    public float lowTideY;
+    public float HighTideY;
 
     private bool finishedMoving;
     [SerializeField] private float tideTransitionSpeed;

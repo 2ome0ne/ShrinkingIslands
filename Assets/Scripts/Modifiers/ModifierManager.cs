@@ -19,6 +19,7 @@ public class ModifierManager : NetworkBehaviour
     [SerializeField] private RandomlySpawnItems randomlySpawnItems;
     [SerializeField] private AllModifiersHolderScriptableObject allModifiersHolder;
     [SerializeField] private List<Modifier> AllModifiersEnabled;
+    [SerializeField] private TideManager tideManager;
 
     public bool Spawned = false;
 
@@ -37,6 +38,11 @@ public class ModifierManager : NetworkBehaviour
     //More From The Sea
     [SerializeField] private float minSpawnTime = 1.5f;
     [SerializeField] private float maxSpawnTime = 4;
+    
+    //Tall Mountain tides change
+    [SerializeField] private float LowTide = 0;
+    [SerializeField] private float MidTide = 14;
+    [SerializeField] private float HighTide = 24;
 
     [SerializeField] private GameObject WarningEffect;
     [SerializeField] private GameObject LightingPrefab;
@@ -176,6 +182,8 @@ public class ModifierManager : NetworkBehaviour
     public void MoutainsSpawn()
     {
         Debug.Log("Mountains Spawn");
+        tideManager.midTideY = MidTide;
+        tideManager.HighTideY = HighTide;
         propSpawner.EnablePropByIndex(3);
         propSpawner.EnablePropByIndex(4);
         propSpawner.EnablePropByIndex(5);

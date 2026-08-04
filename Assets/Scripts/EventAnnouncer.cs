@@ -19,6 +19,7 @@ public class EventAnnouncer : NetworkBehaviour
     public void AnnounceEventRpc(string eventName)
     {
         GameObject currentAnnouncer = Instantiate(eventAnnouncerPrefab, eventAnnouncerContainer);
-        currentAnnouncer.GetComponent<TextMeshProUGUI>().text = "-" + eventName + "-";
+        Debug.Log("ANC: " + eventName + ", currentAnnouncer: " + currentAnnouncer.name);
+        currentAnnouncer.GetComponent<AnnounceerPrefab>().Announce(eventName);
     }
 }

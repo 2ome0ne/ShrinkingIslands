@@ -23975,10 +23975,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1777188886}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -74.28308}
-  m_SizeDelta: {x: 100, y: 148.5662}
+  m_SizeDelta: {x: 0, y: 148.5662}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1692847307
 GameObject:
@@ -25125,6 +25125,7 @@ MonoBehaviour:
   randomlySpawnItems: {fileID: 1961144410}
   allModifiersHolder: {fileID: 11400000, guid: 70af773062f206c468a5c43485a2e758, type: 2}
   AllModifiersEnabled: []
+  tideManager: {fileID: 0}
   Spawned: 0
   defaultfog: 0.01
   AlotOfFogAmount: 0.06
@@ -25133,6 +25134,9 @@ MonoBehaviour:
   MaxLightingStrike: 14
   minSpawnTime: 1
   maxSpawnTime: 3
+  LowTide: 0
+  MidTide: 14
+  HighTide: 24
   WarningEffect: {fileID: 7004055304653429653, guid: 700ab2614a17a82418451a347c4340b3, type: 3}
   LightingPrefab: {fileID: 6376181269441086924, guid: 7a62e0e0e41553b47883102d1b03dcba, type: 3}
   TargetTransform: {fileID: 0}
@@ -25170,7 +25174,7 @@ MonoBehaviour:
   tideType: 1
   midTideY: 5
   lowTideY: 0
-  HighTideY: 11.5
+  HighTideY: 15
   tideTransitionSpeed: 1.4
   _theSea: {fileID: 66404908}
   WaitTimeTide: 3.5
