@@ -26,24 +26,27 @@ public class SOIslandPropSpawner : NetworkBehaviour
     {
         foreach (var prop in PropSpawner.Instance.props)
         {
-            if(!prop.CanSpawn) return;
-            int randomspawn = Random.Range(prop.MinSpawn , prop.MaxSpawn);
-            for (int i = 0; i < randomspawn; i++)
+            Debug.Log("IOEE " + prop.prefab.name + " is" + prop.CanSpawn);
+            if(prop.CanSpawn)
             {
-                if (TryFindValidSpawnPoint(out Vector3 point, out Vector3 normal))
+                int randomspawn = Random.Range(prop.MinSpawn , prop.MaxSpawn);
+                for (int i = 0; i < randomspawn; i++)
                 {
-                    GameObject newProp = Instantiate(prop.prefab, point, Quaternion.identity , _soIslandTile.islandGTX);
-                    var propNetObj = newProp.GetComponent<NetworkObject>();
-                    propNetObj.Spawn(true);
-                    propNetObj.TrySetParent(_soIslandTile.islandGTX);
-                    newProp.transform.Rotate(Vector3.up, Random.Range(0 , 360) , Space.Self);
+                    if (TryFindValidSpawnPoint(out Vector3 point, out Vector3 normal))
+                    {
+                        GameObject newProp = Instantiate(prop.prefab, point, Quaternion.identity , _soIslandTile.islandGTX);
+                        var propNetObj = newProp.GetComponent<NetworkObject>();
+                        propNetObj.Spawn(true);
+                        propNetObj.TrySetParent(_soIslandTile.islandGTX);
+                        newProp.transform.Rotate(Vector3.up, Random.Range(0 , 360) , Space.Self);
+                    
+                        placedPositions.Add(point);
+                    }
                 
-                    placedPositions.Add(point);
                 }
-            
             }
-        }
 
+        }
         propsSpawnedRpc();
     }
     

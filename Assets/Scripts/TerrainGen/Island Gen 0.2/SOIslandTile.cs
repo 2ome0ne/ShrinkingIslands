@@ -138,6 +138,7 @@ public class SOIslandTile : NetworkBehaviour
         if (originalIsland)
         {
             islandGTX.position = transform.position;
+            NetworkObject.DestroyWithScene = true;
             Spawned = true;
         }
         else
@@ -218,6 +219,7 @@ public class SOIslandTile : NetworkBehaviour
         if (!Spawned && IsClient && islandGTX.position != transform.position && islandType != IslandType.Special && !tped)
         {
             setPosForClientBugFixRpc();
+            NetworkObject.DestroyWithScene = true;
             tped = true;
         }
         if(!IsServer && islandType != IslandType.Special) return;

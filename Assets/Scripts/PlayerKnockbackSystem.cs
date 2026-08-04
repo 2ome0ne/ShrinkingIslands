@@ -74,7 +74,7 @@ public class PlayerKnockbackSystem : NetworkBehaviour
     public void KnockBack(Vector3 attackpositon , float KbForce , GameObject player)
     {
         if (playerAbillites.Clinging)
-            playerAbillites.StopClingingFromKBClientRpc();
+            playerAbillites.StopClingingFromKBRpc();
         if(HasShield) return;
         if (playerAbillites.Parrying)
         {
@@ -87,6 +87,25 @@ public class PlayerKnockbackSystem : NetworkBehaviour
             return;
         }
         CameraShaker.Instance.ShakeOnce(KbForce / 80f, KbForce / 95f, 0.1f, 2f);
+        Direction = (transform.position - attackpositon).normalized;
+        Direction.y = 0.2f;
+        impact += Direction * KbForce / mass;
+        //knockback
+    }
+    
+    public void KnockBackNoCamShake(Vector3 attackpositon , float KbForce , GameObject player)
+    {
+        if(HasShield) return;
+        if (playerAbillites.Parrying)
+        {
+            //playerAbillites._staminaSystem.EatStamina(KbForce / 100f);
+            if (player != null)
+            {
+                GiveParriedObjectInfoRpc(player, KbForce);
+            }
+            playerAbillites.succesfulParry = true;
+            return;
+        }
         Direction = (transform.position - attackpositon).normalized;
         Direction.y = 0.2f;
         impact += Direction * KbForce / mass;

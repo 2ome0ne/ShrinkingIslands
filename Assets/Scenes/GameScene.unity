@@ -24993,6 +24993,18 @@ MonoBehaviour:
   - prefab: {fileID: 1704087385980603390, guid: 0e5024d17c2ff1140afc4a1d51dd4874, type: 3}
     probability: 0.603
     ableToSpawn: 0
+  - prefab: {fileID: 3067559344082766108, guid: f06b089557f81be4c97ec7ab97035f8c, type: 3}
+    probability: 0.145
+    ableToSpawn: 0
+  - prefab: {fileID: 396754823299837651, guid: dabc055eba04eb14d8be6fccf84bb623, type: 3}
+    probability: 0.078
+    ableToSpawn: 0
+  - prefab: {fileID: 1353412661165834876, guid: 643fad64ab487344d8f809fa0faf357c, type: 3}
+    probability: 0.096
+    ableToSpawn: 0
+  - prefab: {fileID: 9038464959185521177, guid: 935bbb2527d89264db78e838120a1978, type: 3}
+    probability: 0.274
+    ableToSpawn: 0
   SpawnIndicator: {fileID: 3574269667675813573, guid: 0a1185a01718251468ea1836085889ae, type: 3}
   islandHeart: {fileID: 220905954}
   theSea: {fileID: 66404910}
@@ -25115,7 +25127,7 @@ MonoBehaviour:
   AllModifiersEnabled: []
   Spawned: 0
   defaultfog: 0.01
-  AlotOfFogAmount: 0.1
+  AlotOfFogAmount: 0.06
   ThunderStormEnabled: 0
   MinLightingStrike: 6
   MaxLightingStrike: 14
@@ -25137,7 +25149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EventAnnouncer
   ShowTopMostFoldoutHeaderGroup: 1
-  eventAnnouncerPrefab: {fileID: 6048164174769545907, guid: e0d0d5d1778e24b46938a748aeb67e98, type: 3}
+  eventAnnouncerPrefab: {fileID: 1921979490505102070, guid: 45660e6739b50784f8478047d465530d, type: 3}
   eventAnnouncerContainer: {fileID: 1652081440}
 --- !u!114 &1961144415
 MonoBehaviour:

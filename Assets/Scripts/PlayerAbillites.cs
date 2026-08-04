@@ -127,8 +127,8 @@ public class PlayerAbillites : NetworkBehaviour
         }
     }
 
-    [ClientRpc]
-    public void StopClingingFromKBClientRpc()
+    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
+    public void StopClingingFromKBRpc()
     {
         Clinging = false;
         Armanimator.SetTrigger("StopCling");
@@ -226,7 +226,7 @@ public class PlayerAbillites : NetworkBehaviour
     [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
     private void KBClingRpc()
     {
-        transform.GetComponent<PlayerKnockbackSystem>().KnockBack(clingPos.position , ClingPushPower , gameObject);
+        transform.GetComponent<PlayerKnockbackSystem>().KnockBackNoCamShake(clingPos.position , ClingPushPower , gameObject);
     }
     
     [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]

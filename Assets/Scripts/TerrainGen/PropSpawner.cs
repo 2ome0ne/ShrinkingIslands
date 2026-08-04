@@ -40,7 +40,7 @@ public class PropSpawner : NetworkBehaviour
         {
             Instance = this;
         }
-        SetRandomSpawnPosition();
+        //SetRandomSpawnPosition();
     }
     
     public void EnablePropByIndex(int index)

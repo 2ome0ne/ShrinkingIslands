@@ -11,5 +11,6 @@ public class SpawnPodium : NetworkBehaviour
     {
         JumpMushroom.Spawn(true);
         JumpMushroom.TrySetParent(this.transform);
+        NetworkObject.DestroyWithScene = true;
     }
 }
