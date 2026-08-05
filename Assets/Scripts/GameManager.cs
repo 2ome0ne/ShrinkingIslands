@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -32,6 +33,10 @@ public class GameManager : NetworkBehaviour
     private GameObject PlayerPointPrefab;
 
     [SerializeField] private Transform playerPointContent;
+
+    [SerializeField] private int currentTimer = 0;
+    [SerializeField] private int TimeTillModifier;
+    [SerializeField] private TextMeshProUGUI TimerText;
 
     [System.Serializable]
     public class ActivePlayer
@@ -290,7 +295,9 @@ public void BackToLobby()
             UpdateWinStateCanvasClientRpc(HasWon , clientRpcParams);
         }
 
+        currentTimer = TimeTillModifier;
         GameOverRpc();
+        StartCoroutine(TimerAfterGameOver());
     }
 
     private bool wentToWinner = false;
@@ -318,7 +325,7 @@ public void BackToLobby()
     private void SetCurrentWinnersForEveryOneRpc(string playerName , int currentWins)
     {
         GameObject prefab = Instantiate(PlayerPointPrefab, playerPointContent);
-        prefab.GetComponent<PlayerPoints>().pointsText.text = playerName + ": " + currentWins + "/3 Wins";
+        prefab.GetComponent<PlayerPoints>().AssignPoints(currentWins, playerName);
     }
     
     [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
@@ -356,5 +363,23 @@ public void BackToLobby()
             FindFirstObjectByType<ReadyUp>().ChangeScenesRpc(Loader.Scene.ChooseModifier);
             PressedGoBackModifier = true;
         }
+    }
+
+    IEnumerator TimerAfterGameOver()
+    {
+        yield return new WaitForSeconds(1f);
+        currentTimer--;
+        UpdateTimerTextRpc(currentTimer);
+        if (currentTimer == 0)
+        {
+            GoToModifierSelect();
+        }
+        StartCoroutine(TimerAfterGameOver());
+    }
+
+    [Rpc(SendTo.Everyone, InvokePermission = RpcInvokePermission.Everyone)]
+    private void UpdateTimerTextRpc(int time)
+    {
+        TimerText.text = "Time till Modifiers = " +time.ToString();
     }
 }

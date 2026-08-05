@@ -15,5 +15,5 @@ MonoBehaviour:
   modifierName: Gum Rock
   modifierDescription: Gum Rocks Starts to spawn around maps. Gum Rocks Once Eaten
     will Refill your stamina.
-  modifierIcon: {fileID: 21300000, guid: 9df07b1b86922f341bac4e18d39db515, type: 3}
+  modifierIcon: {fileID: 21300000, guid: 9cc4ed96b75639e4389a020bbb0050f1, type: 3}
   indexValue: 0

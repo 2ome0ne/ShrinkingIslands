@@ -20,4 +20,9 @@ public class ModifierHolder : NetworkBehaviour
     {
         activeModifiers.Add(allModifiers.AllModifiers[index]);
     }
+
+    public ModifierScriptableObject GetModifierByIndex(int index)
+    {
+        return allModifiers.AllModifiers[index];
+    }
 }

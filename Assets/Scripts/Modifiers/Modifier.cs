@@ -7,7 +7,7 @@ public class Modifier : MonoBehaviour , IPointerEnterHandler, IPointerExitHandle
     [SerializeField] private Button Select;
     [SerializeField] private Image Icon;
     [SerializeField] private bool Selected;
-    [SerializeField] private bool Pressed;
+    public bool Pressed;
     [SerializeField] private GameObject SelectedIndicator;
     [SerializeField] private GameObject selectedItem;
     public ModifierScriptableObject modifier;
@@ -25,6 +25,8 @@ public class Modifier : MonoBehaviour , IPointerEnterHandler, IPointerExitHandle
 
     public void SelectThisModifier()
     {
+        var manager = FindFirstObjectByType<ModifierUIManager>();
+        manager.resetOthers();
         Debug.Log("Pressed");
         if (Pressed) return;
         SelectedIndicator.SetActive(true);
@@ -33,13 +35,13 @@ public class Modifier : MonoBehaviour , IPointerEnterHandler, IPointerExitHandle
         Debug.Log(holder.name);
         int index = modifier.indexValue;
         //holder.AddModfierWithIndexRpc(index);
-        FindFirstObjectByType<ModifierUIManager>().ReadyUp(index);
+        manager.ReadyUp(index);
     }
 
-    public void setCantPlace()
+    public void UnPress()
     {
-        Pressed = true;
-        SelectedIndicator.SetActive(true);
+        Pressed = false;
+        SelectedIndicator.SetActive(false);
     }
 
     public void OnPointerEnter(PointerEventData eventData)

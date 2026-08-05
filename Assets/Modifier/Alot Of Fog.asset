@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ModifierScriptableObject
   modifierName: Alot Of Fog
   modifierDescription: Adds alot of fog "what did you expect.."
-  modifierIcon: {fileID: 21300000, guid: 2b5be9468a39c1e4cacffcad623c3854, type: 3}
+  modifierIcon: {fileID: 21300000, guid: 743eb1cf147478245899493daf10c931, type: 3}
   indexValue: 3
