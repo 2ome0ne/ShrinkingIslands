@@ -72,11 +72,18 @@ public class ModifierUIManager : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     public void SetTwoCurrentModifiersWithIdexesRpc(int firstIndex, int secondIndex)
     {
-        if (IsHost) return;
+        StartCoroutine(waitSetTwoCurrentModifiersWithIdexes(firstIndex , secondIndex));
+    }
+
+    IEnumerator waitSetTwoCurrentModifiersWithIdexes(int firstIndex, int secondIndex)
+    {
+        if (IsHost) yield break;
         GameObject mod = Instantiate(modifier , sp1);
         mod.GetComponent<Modifier>().Setmodifier(allModifiers[firstIndex]);
         current_modifiers.Add(mod);
         CurrentModifiers.Add(firstIndex);
+        
+        yield return new WaitForSeconds(0.5f);
         
         GameObject mod2 = Instantiate(modifier , sp2);
         mod2.GetComponent<Modifier>().Setmodifier(allModifiers[secondIndex]);
@@ -228,7 +235,7 @@ public class ModifierUIManager : NetworkBehaviour
             currentTimer.Value = 5;
         }
 
-        GetWinnerModifier();
+        //GetWinnerModifier();
     }
 
     private void GetWinnerModifier()
@@ -246,6 +253,7 @@ public class ModifierUIManager : NetworkBehaviour
                     firstIndexPlayerSelected++;
                 }
             }
+            Debug.Log("AFPC = " + firstIndexPlayerSelected);
             int secondIndexPlayerSelected = 0;
             secondIndexPlayerSelected = playerReadied.Count - firstIndexPlayerSelected;
             if (firstIndexPlayerSelected > secondIndexPlayerSelected)
@@ -269,8 +277,7 @@ public class ModifierUIManager : NetworkBehaviour
             {
                 winnerIndex = secondIndex;
             }
-
-            UpdateShowForEveryOneRpc(winnerIndex);
+            
             playersVoted = true;
         }
     }
@@ -279,7 +286,8 @@ public class ModifierUIManager : NetworkBehaviour
     public void UpdateShowForEveryOneRpc(int WI)
     {
         ModifierHolder holder = FindFirstObjectByType<ModifierHolder>();
-        holder.AddModfierWithIndexRpc(WI);
+        if(IsServer)
+            holder.AddModfierWithIndexRpc(WI);
         modifierIcon.sprite = holder.GetModifierByIndex(WI).modifierIcon;
         modifierText.text = "Modifier: " + holder.GetModifierByIndex(WI).modifierName;
     }
@@ -296,7 +304,7 @@ public class ModifierUIManager : NetworkBehaviour
             CurrentModifiers.Add(mod.indexValue);
         }
     }
-
+    //ModifierHolder
     public void Create2Modifier()
     {
         firstIndex = Random.Range(0 , allModifiers.Length);
@@ -345,6 +353,7 @@ public class ModifierUIManager : NetworkBehaviour
                 IsInShow = true;
                 currentTimer.Value = TimeUntilChangeScenes;
                 StartCoroutine(timerUpdate());
+                UpdateShowForEveryOneRpc(winnerIndex);
                 yield break;
             }
             else if(IsInShow)

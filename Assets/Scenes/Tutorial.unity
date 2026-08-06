@@ -6704,6 +6704,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 2070739281}
     m_Modifications:
     - target: {fileID: 195923603639781821, guid: c2ae79a3c6cf50949a2aa4ef5a45c63b, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 195923603639781821, guid: c2ae79a3c6cf50949a2aa4ef5a45c63b, type: 3}
       propertyPath: m_IsKinematic
       value: 1
       objectReference: {fileID: 0}
@@ -13719,7 +13723,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -202.5}
+  m_AnchoredPosition: {x: 4.1782837, y: -198.014}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &842225941
@@ -13843,9 +13847,9 @@ RectTransform:
   - {fileID: 1622566199}
   m_Father: {fileID: 2108184635}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 148}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: -1.1783, y: -104}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &851594514
@@ -14227,9 +14231,9 @@ RectTransform:
   - {fileID: 887535306}
   m_Father: {fileID: 2108184635}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 75}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: -171}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &890741351
@@ -14358,10 +14362,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2108184635}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0, y: 0}
-  m_SizeDelta: {x: 467.8434, y: 494.8727}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &920763062
 MonoBehaviour:
@@ -14471,7 +14475,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -167.7}
+  m_AnchoredPosition: {x: 4.1782837, y: -163.214}
   m_SizeDelta: {x: 264.1078, y: 22.652008}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1015695105
@@ -14748,7 +14752,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -110.8}
+  m_AnchoredPosition: {x: 4.1782837, y: -106.31401}
   m_SizeDelta: {x: 264.1078, y: 22.652008}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1045798851
@@ -15039,8 +15043,9 @@ MonoBehaviour:
   Text: These are usable items you can find These On Alters like these, there are
     two types of items Throwables and usables. Throwables will Always be held in
     the Right Hand Hold Q to charge how hard you want to throw, and usables are always
-    in left hand press or hold R to use the item. to discard left item Hold Q and
-    Left click at the same time.
+    in left hand press or hold R to use the item. to discard left item Hold Right
+    Click and press Q at the same time (WARNING throwing out a usable will delete
+    The Item).
   HasSteppedIn: 0
 --- !u!65 &1070862059
 BoxCollider:
@@ -16290,7 +16295,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.1783, y: -135.2}
+  m_AnchoredPosition: {x: 2.9999838, y: -130.714}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1465055211
@@ -19695,7 +19700,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1857524274}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -19706,7 +19711,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.1783, y: -80.986}
+  m_AnchoredPosition: {x: 3, y: -76.5}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1857524276
@@ -19825,7 +19830,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -51}
+  m_AnchoredPosition: {x: 4.1782837, y: -46.514008}
   m_SizeDelta: {x: 264.1078, y: 22.652008}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1899447990
@@ -20137,10 +20142,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2108184635}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -0.0000038146973, y: -258.4788}
-  m_SizeDelta: {x: 251.9121, y: 50.7989}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.0000014305115, y: 0}
+  m_SizeDelta: {x: 251.9121, y: 50.798904}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2054283610
 MonoBehaviour:

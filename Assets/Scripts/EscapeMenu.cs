@@ -23,6 +23,7 @@ public class EscapeMenu : NetworkBehaviour
     public Slider SoundSlider;
     [SerializeField] private TextMeshProUGUI SoundText;
     public bool Pausing = false;
+    private bool renabledPunch = true;
     private bool Saved = false;
 
     
@@ -128,12 +129,13 @@ public class EscapeMenu : NetworkBehaviour
                 SensitivityText.text = $"Sensitivity: {CameraController.CameraSensitivity}";
                 
                 soundManager.EnviromentSoundVolume = EnviromentSoundSlider.value;
-                EnviromentSoundText.text = $"Enviorment Sound Volume: {EnviromentSoundSlider.value}";
+                EnviromentSoundText.text = $"Environment Sound Volume: {EnviromentSoundSlider.value}";
                 
                 soundManager.soundVolume = SoundSlider.value;
                 SoundText.text = $"Sound Volume: {SoundSlider.value}";
                 CameraController.CanMoveCamera = false;
                 playerA.CanPunch = false;
+                renabledPunch = false;
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
             }
@@ -143,8 +145,11 @@ public class EscapeMenu : NetworkBehaviour
                 if(CameraController != null)
                     CameraController.CanMoveCamera = true;
                 Cursor.visible = false;
-                if(!playerA.Clinging)
+                if (!playerA.Clinging && !renabledPunch)
+                {
+                    renabledPunch = true;
                     playerA.CanPunch = true;
+                }
                 Cursor.lockState = CursorLockMode.Locked;
             }
         }
