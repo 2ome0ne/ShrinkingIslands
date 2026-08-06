@@ -11,7 +11,8 @@ public static class Loader
         ChooseModifier,
         LoadingScene,
         WinScreen,
-        MainMenu
+        MainMenu,
+        Tutorial,
     }
 
     private static Scene targetScene;

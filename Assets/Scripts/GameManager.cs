@@ -77,6 +77,7 @@ public class GameManager : NetworkBehaviour
     public void SentEscapePlayer(GameObject player)
     {
         escapeMenu.player = player;
+        escapeMenu.playerA = player.GetComponent<PlayerAbillites>();
         escapeMenu.GetAllRefrences();
     }
 

@@ -48,7 +48,20 @@ public class GameLobby : MonoBehaviour
         _fadeCamera.FadeOut();
         Invoke("BackToMainMenuWait" , 2);
     }
+    
+    public void GoToTutorial()
+    {
+        _fadeCamera.FadeOut();
+        Invoke("GoToTutorialWait" , 2);
+    }
 
+    private void GoToTutorialWait()
+    {
+        Destroy(NetworkManager.Singleton.GameObject());
+        var relay = FindAnyObjectByType<RelayManager>();
+        Destroy(relay.GameObject());
+        SceneManager.LoadScene(Loader.Scene.Tutorial.ToString());
+    }
     private void BackToMainMenuWait()
     {
         Destroy(NetworkManager.Singleton.GameObject());

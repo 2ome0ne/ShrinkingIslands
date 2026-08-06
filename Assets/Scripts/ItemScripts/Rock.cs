@@ -16,6 +16,7 @@ public class Rock : NetworkBehaviour
     [SerializeField] private float collidableRange = 2.5f;
     [SerializeField]private bool thrown = false;
     [SerializeField]private bool Canhit = false;
+    [SerializeField] private bool IsForTutorial;
     [SerializeField] private float currentCollidableTime = 0;
 
     private void Start()
@@ -31,7 +32,6 @@ public class Rock : NetworkBehaviour
         {
             CollisonEffectRpc(transform.position);
         }
-        
     }
 
     private void Update()
@@ -47,7 +47,7 @@ public class Rock : NetworkBehaviour
 
             if (thrown) trial.enabled = true;
             currentCollidableTime -= Time.deltaTime;
-            if (currentCollidableTime <= 0)
+            if (currentCollidableTime <= 0 && !IsForTutorial)
             {
                 Canhit = false;
             }
@@ -64,6 +64,10 @@ public class Rock : NetworkBehaviour
                     Debug.Log("HIT" + hit.name);
                     hit.GetComponent<PlayerKnockbackSystem>().KnockBack(transform.position, KbForce , gameObject);
                     Canhit = false;
+                    if (IsForTutorial)
+                    {
+                        //NetworkObject.Despawn(true);
+                    }
                 }
             }
         }

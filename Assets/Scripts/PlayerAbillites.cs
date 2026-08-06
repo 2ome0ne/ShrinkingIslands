@@ -61,7 +61,7 @@ public class PlayerAbillites : NetworkBehaviour
     private PickUpSystem pickUpSystem;
     public StaminaSystem _staminaSystem;
     
-    private bool CanPunch;
+    public bool CanPunch;
     private bool CanDash;
 
     public bool Clinging;

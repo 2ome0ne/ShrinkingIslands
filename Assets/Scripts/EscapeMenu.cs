@@ -14,6 +14,7 @@ public class EscapeMenu : NetworkBehaviour
     public GameObject player;
     public Slider SensitivitySlider;
     public CameraController CameraController;
+    public PlayerAbillites playerA;
     [SerializeField] private TextMeshProUGUI SensitivityText;
     [SerializeField] private SoundManager soundManager;
 
@@ -132,6 +133,7 @@ public class EscapeMenu : NetworkBehaviour
                 soundManager.soundVolume = SoundSlider.value;
                 SoundText.text = $"Sound Volume: {SoundSlider.value}";
                 CameraController.CanMoveCamera = false;
+                playerA.CanPunch = false;
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
             }
@@ -141,6 +143,8 @@ public class EscapeMenu : NetworkBehaviour
                 if(CameraController != null)
                     CameraController.CanMoveCamera = true;
                 Cursor.visible = false;
+                if(!playerA.Clinging)
+                    playerA.CanPunch = true;
                 Cursor.lockState = CursorLockMode.Locked;
             }
         }
