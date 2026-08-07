@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NUnit.Framework;
 using Unity.Netcode;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -37,7 +38,7 @@ public class IslandHeart : NetworkBehaviour
 
     private int maxPlacementAttempts = 150;
     
-    [SerializeField] private List<SOIslandTile> activeIslands;
+    public List<SOIslandTile> activeIslands;
 
     private void Update()
     {
@@ -105,6 +106,11 @@ public class IslandHeart : NetworkBehaviour
     {
         Debug.Log("DESTROYED AN ISLAND");
         netObj.TryGet(out NetworkObject island);
+        foreach (Transform IS in island.transform)
+        {
+            if(IS.TryGetComponent(out NetworkObject networkObj))
+                networkObj.Despawn(true);
+        }
         var E = island.GetComponent<SOIslandTile>().islandGTX.GetComponent<NetworkObject>();
         E.Despawn(true);
         island.Despawn(true);

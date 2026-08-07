@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -17,6 +18,7 @@ public class RandomlySpawnItems : NetworkBehaviour
 
     
     [SerializeField] private spawnItem[] spawnableItems;
+    [SerializeField] private spawnItem[] spawnableRareItems;
     [SerializeField] private GameObject SpawnIndicator;
     [SerializeField] private IslandHeart islandHeart;
     [SerializeField] private TheSea theSea;
@@ -35,9 +37,14 @@ public class RandomlySpawnItems : NetworkBehaviour
     [SerializeField] private float StartSpawnDelayTime = 10f;
     private float currentSpawnTime;
 
+    //NON RAREs
+    [SerializeField] private List<Vector2> currentActiveIslandPositions;
+
+    private TideManager tideManager;
     private void Start()
     {
         currentSpawnTime = StartSpawnDelayTime;
+        tideManager = GetComponent<TideManager>();
     }
 
     private void Update()
@@ -63,15 +70,34 @@ public class RandomlySpawnItems : NetworkBehaviour
     {
         if (currentSpawn > MaxCanSpawn)
             return;
+        float random = Random.Range(0, 10);
+        Debug.Log("TSI" + random);
+        bool isRare = random < 2.5f;
+        int index = 0;
+        if (isRare)
+        {
+            index = GetRandomRareItemIndex();
+        }
+        else
+        {
+            index = GetRandomItemIndex();
+        }
         
-        int index = GetRandomItemIndex();
         if (CalculateIfItemSpawns(index))
         {
             //spawn item
-            if (checkIfRandomPointInWater(out Vector3 spawnPos))
+            if (checkIfRandomPointInWater(out Vector3 spawnPos , isRare))
             {
                 var island = Instantiate(IslandItemPrefab, spawnPos, Quaternion.identity);
-                island.GetComponent<SOIslandItemisland>().SpawnThisObject = spawnableItems[index].prefab;
+                if (isRare)
+                {
+                    island.GetComponent<SOIslandItemisland>().IsRare = true;
+                    island.GetComponent<SOIslandItemisland>().SpawnThisObject = spawnableRareItems[index].prefab;
+                }
+                else
+                {
+                    island.GetComponent<SOIslandItemisland>().SpawnThisObject = spawnableItems[index].prefab;
+                }
                 island.GetComponent<NetworkObject>().Spawn(true);
                 currentSpawn++;
                 //Spawn Push force
@@ -100,15 +126,66 @@ public class RandomlySpawnItems : NetworkBehaviour
 
     [SerializeField] private LayerMask GroundLayer;
     
-    private bool checkIfRandomPointInWater(out Vector3 spawnPos)
+    private bool checkIfRandomPointInWater(out Vector3 spawnPos , bool isRare)
     {
-        spawnPos = GetRandomPointInCircle();
-        if (!Physics.CheckSphere(spawnPos, checkGroundNearRadius, GroundLayer))
+        spawnPos = Vector3.zero;
+        if (isRare)
         {
-            return true;
+            int retryTimes = 0;
+            bool hasHitAnyIslands = false;
+            while (retryTimes < 20 || hasHitAnyIslands == true)
+            {
+                spawnPos = GetRandomPointInCircleLowest();
+                foreach (var island in islandHeart.activeIslands)
+                {
+                    Vector2 islandPos = new Vector2(island.transform.position.x, island.transform.position.z);
+                    if ((new Vector2(spawnPos.x, spawnPos.z) - islandPos).sqrMagnitude <
+                        checkGroundNearRadius * checkGroundNearRadius)
+                    {
+                        hasHitAnyIslands = true;
+                    }
+                }
+                retryTimes++;
+            }
+
+            if (!hasHitAnyIslands)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            spawnPos = Vector3.zero;
+            int retryTimes = 0;
+            bool hasHitAnyIslands = false;
+            while (retryTimes < 10 || hasHitAnyIslands == true)
+            {
+                spawnPos = GetRandomPointInCircle();
+                foreach (var island in currentActiveIslandPositions)
+                {
+                    if ((new Vector2(spawnPos.x, spawnPos.z) - island).sqrMagnitude <
+                        (checkGroundNearRadius * 0.5f) * (checkGroundNearRadius * 0.5f))
+                    {
+                        hasHitAnyIslands = true;
+                    }
+                }
+                retryTimes++;
+            }
+
+            if (!hasHitAnyIslands)
+            {
+                currentActiveIslandPositions.Add(new Vector2(spawnPos.x, spawnPos.z));
+                return true;
+            }
         }
 
         return false;
+    }
+
+    public void RemoveActiveIslandAtVector2Position(Vector2 islandPos)
+    {
+        //var found = currentActiveIslandPositions.Find(x => x.Equals(islandPos));
+        currentActiveIslandPositions.Remove(islandPos);
     }
     
     private Vector3 GetRandomPointInCircle()
@@ -124,6 +201,20 @@ public class RandomlySpawnItems : NetworkBehaviour
 
         return new Vector3(x, theSea.transform.position.y, z);
     }
+    
+    private Vector3 GetRandomPointInCircleLowest()
+    {
+        float angle = Random.Range(0f, Mathf.PI * 1.2f);
+
+        // Pow > 1 biases distance toward 0 (center)
+        float t = Random.value;
+        float distance = Mathf.Pow(t, centerpushPower * 0.3f) * islandHeart.IslandRadius - reduceRadius;
+
+        float x = Mathf.Cos(angle) * distance;
+        float z = Mathf.Sin(angle) * distance;
+
+        return new Vector3(x, tideManager.lowTideY, z);
+    }
 
     public int GetRandomItemIndex()
     {
@@ -133,6 +224,19 @@ public class RandomlySpawnItems : NetworkBehaviour
         {
             random_spawn = Random.Range(0, spawnableItems.Length); 
             if(spawnableItems[random_spawn].ableToSpawn)
+                _abletospawn = true;
+        }
+        return random_spawn;
+    }
+    
+    public int GetRandomRareItemIndex()
+    {
+        bool _abletospawn = false;
+        int random_spawn = 0;
+        while (!_abletospawn)
+        {
+            random_spawn = Random.Range(0, spawnableRareItems.Length); 
+            if(spawnableRareItems[random_spawn].ableToSpawn)
                 _abletospawn = true;
         }
         return random_spawn;

@@ -110,6 +110,7 @@ MonoBehaviour:
   islandType: 0
   originalIsland: 0
   PropsSpawned: 0
+  AssignedEverything: 0
   islandHeart: {fileID: 0}
   islandGTX: {fileID: 0}
   WarningTime: 2
@@ -149,6 +150,7 @@ MonoBehaviour:
   - {fileID: 6569718836760808645, guid: cd06b1f9eea048a46982f61c168185ba, type: 3}
   - {fileID: 6269591163947064240, guid: 463588271ab44134c85c1349442ab59f, type: 3}
   - {fileID: 3874580130362173003, guid: aa01e75a155b5f14d8e427eb0d7bfcf3, type: 3}
+  GoToSpawnPosition: {fileID: 1817940517903140275}
   _soIslandPropSpawner: {fileID: 8646035589559297374}
 --- !u!114 &8646035589559297374
 MonoBehaviour:

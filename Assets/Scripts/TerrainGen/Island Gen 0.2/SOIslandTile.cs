@@ -45,6 +45,7 @@ public class SOIslandTile : NetworkBehaviour
     [SerializeField] private GameObject[] TallIslands;
     private bool tped = false;
     
+    public Transform GoToSpawnPosition;
     [SerializeField]
     private SOIslandPropSpawner _soIslandPropSpawner;
 
@@ -145,7 +146,7 @@ public class SOIslandTile : NetworkBehaviour
         {
             if (!Spawned)
             {
-                islandGTX.position = Vector3.Lerp(islandGTX.position , transform.position , Time.deltaTime * spawnSpeedMultiplier);  
+                islandGTX.position = Vector3.Lerp(islandGTX.position , GoToSpawnPosition.position , Time.deltaTime * spawnSpeedMultiplier);  
             
                 if (Vector3.Distance(islandGTX.position, transform.position) <= IrrosionDistance)
                 {

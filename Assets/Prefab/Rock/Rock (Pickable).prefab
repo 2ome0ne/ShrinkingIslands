@@ -264,7 +264,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PickableObject
   ShowTopMostFoldoutHeaderGroup: 1
   ObjectIndex: 3
-  DespawnY: 40
+  DespawnY: -4
   rb: {fileID: 195923603639781821}
 --- !u!114 &-1229808539203683754
 MonoBehaviour:
@@ -288,6 +288,7 @@ MonoBehaviour:
   collidableRange: 0.6
   thrown: 0
   Canhit: 0
+  IsForTutorial: 0
   currentCollidableTime: 0
 --- !u!96 &149354241121094609
 TrailRenderer:

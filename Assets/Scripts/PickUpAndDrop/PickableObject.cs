@@ -18,7 +18,7 @@ public class PickableObject : NetworkBehaviour
     private void FixedUpdate()
     {
         if(IsServer)
-            if (transform.position.y > DespawnY && !rb.isKinematic)
+            if (transform.position.y < DespawnY && !rb.isKinematic)
             {
                 DespawnItemRpc();
             }
