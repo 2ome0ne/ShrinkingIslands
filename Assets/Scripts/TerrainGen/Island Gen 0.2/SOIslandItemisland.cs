@@ -45,6 +45,8 @@ public class SOIslandItemisland : NetworkBehaviour
             {
                 if (spawnedItemPrefab == null)
                 {
+                    if (IsRare)
+                        StopParticleClientRpc();
                     GameManager.Instance.randomlySpawnItems.currentSpawn--;
                     GameManager.Instance.randomlySpawnItems.RemoveActiveIslandAtVector2Position(new Vector2(transform.position.x, transform.position.z));
                     crumbleThisIslandClientRpc();
@@ -59,6 +61,12 @@ public class SOIslandItemisland : NetworkBehaviour
         tile.GoToSpawnPosition = RarePosition;
         tile.Spawned = true;
         RareParticle.SetActive(true);
+    }
+
+    [ClientRpc]
+    private void StopParticleClientRpc()
+    {
+        RareParticle.GetComponent<ParticleSystem>().Stop();
     }
 
     [ClientRpc]

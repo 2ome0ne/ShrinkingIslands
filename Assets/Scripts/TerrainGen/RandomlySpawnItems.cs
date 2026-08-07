@@ -132,9 +132,10 @@ public class RandomlySpawnItems : NetworkBehaviour
         if (isRare)
         {
             int retryTimes = 0;
-            bool hasHitAnyIslands = false;
-            while (retryTimes < 20 || hasHitAnyIslands == true)
+            bool hasHitAnyIslands = true;
+            while (retryTimes < 20 && hasHitAnyIslands)
             {
+                hasHitAnyIslands = false;
                 spawnPos = GetRandomPointInCircleLowest();
                 foreach (var island in islandHeart.activeIslands)
                 {
@@ -143,6 +144,7 @@ public class RandomlySpawnItems : NetworkBehaviour
                         checkGroundNearRadius * checkGroundNearRadius)
                     {
                         hasHitAnyIslands = true;
+                        break;
                     }
                 }
                 retryTimes++;
@@ -157,9 +159,10 @@ public class RandomlySpawnItems : NetworkBehaviour
         {
             spawnPos = Vector3.zero;
             int retryTimes = 0;
-            bool hasHitAnyIslands = false;
-            while (retryTimes < 10 || hasHitAnyIslands == true)
+            bool hasHitAnyIslands = true;
+            while (retryTimes < 10 && hasHitAnyIslands)
             {
+                hasHitAnyIslands = false;
                 spawnPos = GetRandomPointInCircle();
                 foreach (var island in currentActiveIslandPositions)
                 {
@@ -167,6 +170,7 @@ public class RandomlySpawnItems : NetworkBehaviour
                         (checkGroundNearRadius * 0.5f) * (checkGroundNearRadius * 0.5f))
                     {
                         hasHitAnyIslands = true;
+                        break;
                     }
                 }
                 retryTimes++;
