@@ -68,6 +68,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: e5eeccfa75f2a9f4e9254ba5d856b21b, type: 2}
+  - {fileID: 2100000, guid: 28beaa0d05d8e894eb1c0fb219af28d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -180,6 +181,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: ae05d670826d0d54db36ccf1282e438d, type: 2}
+  - {fileID: 2100000, guid: 28beaa0d05d8e894eb1c0fb219af28d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -251,8 +253,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3661886795
-  InScenePlacedSourceGlobalObjectIdHash: 1850963753
+  GlobalObjectIdHash: 1200330733
+  InScenePlacedSourceGlobalObjectIdHash: 2241280180
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0

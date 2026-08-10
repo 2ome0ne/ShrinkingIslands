@@ -195,6 +195,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 1557bee3fe99c034591b4ae6944fdfe9, type: 2}
+  - {fileID: 2100000, guid: 28beaa0d05d8e894eb1c0fb219af28d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -339,6 +340,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 1557bee3fe99c034591b4ae6944fdfe9, type: 2}
+  - {fileID: 2100000, guid: 28beaa0d05d8e894eb1c0fb219af28d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5348,7 +5350,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 14034223
+  GlobalObjectIdHash: 1501112654
   InScenePlacedSourceGlobalObjectIdHash: 1083410513
   DeferredDespawnTick: 0
   Ownership: 1
@@ -5633,6 +5635,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 1557bee3fe99c034591b4ae6944fdfe9, type: 2}
+  - {fileID: 2100000, guid: 28beaa0d05d8e894eb1c0fb219af28d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5723,6 +5726,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: ae05d670826d0d54db36ccf1282e438d, type: 2}
+  - {fileID: 2100000, guid: 28beaa0d05d8e894eb1c0fb219af28d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5830,7 +5834,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1083410513
+  GlobalObjectIdHash: 2637124495
   InScenePlacedSourceGlobalObjectIdHash: 1083410513
   DeferredDespawnTick: 0
   Ownership: 1
@@ -5967,6 +5971,9 @@ MonoBehaviour:
   islandLayerMask:
     serializedVersion: 2
     m_Bits: 8
+  bothislandAndPropGroundLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   maxSlopeAngle: 10
   minPropSpacing: 2
   placedPositions: []
@@ -6280,6 +6287,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: aa9df21902e5dd04fbcb404539f7154f, type: 2}
+  - {fileID: 2100000, guid: 28beaa0d05d8e894eb1c0fb219af28d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

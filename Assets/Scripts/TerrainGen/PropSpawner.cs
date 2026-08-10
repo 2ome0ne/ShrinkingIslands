@@ -11,6 +11,7 @@ public class PropSpawner : NetworkBehaviour
         public GameObject prefab;
         public int MinSpawn;
         public int MaxSpawn;
+        public bool isPropGround = false;
         public bool CanSpawn = true;
     }
     public Prop[] props;
@@ -18,6 +19,7 @@ public class PropSpawner : NetworkBehaviour
     //Ray transform
     [SerializeField] private Transform checkspawnPostion;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private LayerMask propGroundSpawnableLayer;
     [SerializeField] private TerrainGeneration terrainGenerator;
 
     [SerializeField] private Vector3 randomPoint1;
@@ -29,7 +31,6 @@ public class PropSpawner : NetworkBehaviour
     [SerializeField] private float MinIslandDistance;
     [SerializeField] private float MaxIslandDistance;
 
-    [SerializeField] private bool Test;
     [SerializeField] private float AddyForSmallIsland;
     
     public static PropSpawner Instance;
@@ -56,27 +57,6 @@ public class PropSpawner : NetworkBehaviour
         float movePosition = tileSize * moveSpaces;
         randomPoint1 = new Vector3(movePosition, 0, movePosition);
         randomPoint2 = new Vector3(-movePosition, 0, -movePosition);
-    }
-
-    [ServerRpc]
-    public void SpawnIslandServerRpc(int spawn_Amount)
-    {
-        for (int i = 0; i < spawn_Amount; i++)
-        {
-            GameObject Small_Island_prefab;
-            if (Test)
-            {
-                Small_Island_prefab = Instantiate(Small_Island , new Vector3(transform.position.x , transform.position.y + AddyForSmallIsland , transform.position.z), Quaternion.identity);
-            }
-            else
-            {
-                Small_Island_prefab = Instantiate(Small_Island , transform.position, Quaternion.identity);
-            }
-            Small_Island_prefab.GetComponent<NetworkObject>().Spawn(true);
-            Small_Island_prefab.transform.rotation = Quaternion.Euler(0, Random.Range(0 , 360), 0);
-            Small_Island_prefab.transform.position = Small_Island_prefab.transform.forward * Random.Range(MinIslandDistance, MaxIslandDistance);
-            //Small_Island_prefab.GetComponent<SmallIslandTile>().Set_a_GTXRpc(Random.Range(0, 2));
-        }
     }
 
     public void SpawnAllProps()

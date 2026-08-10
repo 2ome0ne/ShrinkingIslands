@@ -24038,47 +24038,57 @@ MonoBehaviour:
   - prefab: {fileID: 8845441122139227096, guid: f287890d7b499594ab84333b494b50b9, type: 3}
     MinSpawn: 14
     MaxSpawn: 45
+    isPropGround: 0
     CanSpawn: 1
   - prefab: {fileID: 4499722211982727255, guid: 35bf50e79b838594389aa2624132b730, type: 3}
     MinSpawn: 10
     MaxSpawn: 30
+    isPropGround: 0
     CanSpawn: 1
   - prefab: {fileID: 9038464959185521177, guid: 935bbb2527d89264db78e838120a1978, type: 3}
     MinSpawn: 5
     MaxSpawn: 20
+    isPropGround: 0
     CanSpawn: 0
   - prefab: {fileID: 5971004666329287794, guid: b9b847b9c5efafe4eaa163860ba3fa50, type: 3}
     MinSpawn: 2
     MaxSpawn: 10
+    isPropGround: 0
     CanSpawn: 0
   - prefab: {fileID: 1859934512519469128, guid: 1951c1e7139d9ef48890096e07dfe918, type: 3}
     MinSpawn: 2
     MaxSpawn: 10
+    isPropGround: 0
     CanSpawn: 0
   - prefab: {fileID: 4216435716947858741, guid: 257eb310a1162c744ba92dc014bb0eac, type: 3}
     MinSpawn: 3
     MaxSpawn: 14
+    isPropGround: 0
     CanSpawn: 0
   - prefab: {fileID: 3837749307440386740, guid: f77af4ec3fb8f9e47854da178694b4f1, type: 3}
     MinSpawn: 5
     MaxSpawn: 20
+    isPropGround: 0
     CanSpawn: 0
   - prefab: {fileID: 6444394292002250702, guid: 35171de44c4e0824a99a7d528be887e6, type: 3}
     MinSpawn: 16
     MaxSpawn: 30
+    isPropGround: 0
     CanSpawn: 0
   Ylevel: 21
   checkspawnPostion: {fileID: 1033199574}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
+  propGroundSpawnableLayer:
+    serializedVersion: 2
+    m_Bits: 0
   terrainGenerator: {fileID: 0}
   randomPoint1: {x: 0, y: 0, z: 0}
   randomPoint2: {x: 0, y: 0, z: 0}
   Small_Island: {fileID: 425961524518173536, guid: e956e5ae1a1939a4dba3f12ba2f48a1a, type: 3}
   MinIslandDistance: 40
   MaxIslandDistance: 60
-  Test: 0
   AddyForSmallIsland: 0
 --- !u!114 &879218773
 MonoBehaviour:
@@ -24119,10 +24129,12 @@ MonoBehaviour:
   minSpawnTime: 2
   maxSpawnTime: 8
   checkGroundNearRadius: 0.4
+  itemIslandRadius: 0
   centerpushPower: 0
   reduceRadius: 5
   UpPushForce: 50
   StartSpawnDelayTime: 10
+  currentActiveIslandPositions: []
   spt1: {fileID: 1400903137}
   spt2: {fileID: 717531347}
   GroundLayer:
@@ -35892,7 +35904,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1317213106
 MonoBehaviour:
   m_ObjectHideFlags: 0

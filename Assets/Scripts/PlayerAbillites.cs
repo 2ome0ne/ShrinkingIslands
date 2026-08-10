@@ -71,7 +71,8 @@ public class PlayerAbillites : NetworkBehaviour
 
     public GameObject ParriedObject;
     public float ParryKnockback;
-    
+
+    [HideInInspector] public bool autoDashing = false;
     private void Awake()
     {
         pickUpSystem = GetComponent<PickUpSystem>();
@@ -257,10 +258,21 @@ public class PlayerAbillites : NetworkBehaviour
             DashCooldown -= Time.deltaTime;
             CanDash = false;
         }
+
+        if (currentlyDashing && !controller.Moving && autoDashing)
+        {
+            controller.move = transform.forward;
+        }
+
+        if (autoDashing && controller.Moving)
+        {
+            autoDashing = false;
+        }
     }
 
     IEnumerator Dashing()
     {
+        autoDashing = true;
         currentlyDashing = true;
         controller.SpeedMultiplier += DashPower;
         yield return new WaitForSeconds(DashTime);
@@ -270,6 +282,7 @@ public class PlayerAbillites : NetworkBehaviour
                 controller.SpeedMultiplier -= DashPower;
         }
         currentlyDashing = false;
+        autoDashing = false;
     }
 
     [Rpc(SendTo.Everyone)]

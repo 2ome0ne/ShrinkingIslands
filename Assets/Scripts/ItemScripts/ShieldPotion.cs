@@ -25,16 +25,17 @@ public class ShieldPotion : NetworkBehaviour , IGearBehavior
             StopEveryoneServerRpc(false);
             Eating = true;
         }
-        EatSoundRpc();
+        if(IsServer)
+            EatSoundRpc();
     }
 
-    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
     private void EatSoundRpc()
     {
         Debug.Log("PLAY Using");
         EatingSound.Play();
     }
-    [Rpc(SendTo.Everyone , InvokePermission = RpcInvokePermission.Everyone)]
+    [Rpc(SendTo.Server , InvokePermission = RpcInvokePermission.Everyone)]
     private void StopEatSoundRpc()
     {
         EatingSound.Stop();

@@ -9,6 +9,7 @@ public class SOIslandPropSpawner : NetworkBehaviour
     [SerializeField] private int maxAttemptsPerProp = 150;
     [SerializeField] private float raycastHeight = 15;
     [SerializeField] private LayerMask islandLayerMask;
+    [SerializeField] private LayerMask bothislandAndPropGroundLayerMask;
     [SerializeField] private float maxSlopeAngle = 10;
     [SerializeField] private float minPropSpacing = 2;
 
@@ -32,7 +33,7 @@ public class SOIslandPropSpawner : NetworkBehaviour
                 int randomspawn = Random.Range(prop.MinSpawn , prop.MaxSpawn);
                 for (int i = 0; i < randomspawn; i++)
                 {
-                    if (TryFindValidSpawnPoint(out Vector3 point, out Vector3 normal))
+                    if (TryFindValidSpawnPoint(prop.isPropGround , out Vector3 point, out Vector3 normal))
                     {
                         GameObject newProp = Instantiate(prop.prefab, point, Quaternion.identity , _soIslandTile.islandGTX);
                         var propNetObj = newProp.GetComponent<NetworkObject>();
@@ -57,7 +58,7 @@ public class SOIslandPropSpawner : NetworkBehaviour
         _soIslandTile.PropsSpawned = true;
     }
 
-    private bool TryFindValidSpawnPoint(out Vector3 point, out Vector3 normal)
+    private bool TryFindValidSpawnPoint(bool isPropGround , out Vector3 point, out Vector3 normal)
     {
         Bounds bounds = islandSurfaceCollider.bounds;
 
@@ -68,7 +69,17 @@ public class SOIslandPropSpawner : NetworkBehaviour
             float randZ = Random.Range(bounds.min.z, bounds.max.z);
             Vector3 rayOrigin = new Vector3(randX, bounds.max.y + raycastHeight, randZ);
 
-            if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, raycastHeight * 2f, islandLayerMask))
+            LayerMask hittableLayer = islandLayerMask;
+            if (isPropGround)
+            {
+                hittableLayer = islandLayerMask;
+            }
+            else
+            {
+                hittableLayer = bothislandAndPropGroundLayerMask;
+            }
+            
+            if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, raycastHeight * 2f, hittableLayer))
             {
                 // Check slope
                 float slopeAngle = Vector3.Angle(hit.normal, Vector3.up);

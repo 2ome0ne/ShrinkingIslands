@@ -67,6 +67,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: ae05d670826d0d54db36ccf1282e438d, type: 2}
+  - {fileID: 2100000, guid: 28beaa0d05d8e894eb1c0fb219af28d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -157,6 +158,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 28beaa0d05d8e894eb1c0fb219af28d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -269,14 +271,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2124149871
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  GlobalObjectIdHash: 1317628310
+  InScenePlacedSourceGlobalObjectIdHash: 2124149871
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
+  SceneMigrationSynchronization: 0
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
@@ -425,6 +427,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 1557bee3fe99c034591b4ae6944fdfe9, type: 2}
+  - {fileID: 2100000, guid: 28beaa0d05d8e894eb1c0fb219af28d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -538,6 +541,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 6153681d6d61db64ea71c37455164580, type: 2}
+  - {fileID: 2100000, guid: 28beaa0d05d8e894eb1c0fb219af28d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -682,6 +686,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 1557bee3fe99c034591b4ae6944fdfe9, type: 2}
+  - {fileID: 2100000, guid: 28beaa0d05d8e894eb1c0fb219af28d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -794,6 +799,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 1557bee3fe99c034591b4ae6944fdfe9, type: 2}
+  - {fileID: 2100000, guid: 28beaa0d05d8e894eb1c0fb219af28d1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -827,7 +833,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2567305790329338398, guid: dd10f505653ea4047ad1ac6ede768b66, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 3693116020
+      value: 1810178774
+      objectReference: {fileID: 0}
+    - target: {fileID: 2567305790329338398, guid: dd10f505653ea4047ad1ac6ede768b66, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 2124149871
       objectReference: {fileID: 0}
     - target: {fileID: 5149641380006769181, guid: dd10f505653ea4047ad1ac6ede768b66, type: 3}
       propertyPath: m_LocalPosition.x
@@ -904,7 +914,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5351706793326332709, guid: f287890d7b499594ab84333b494b50b9, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 250289329
+      value: 1795415003
       objectReference: {fileID: 0}
     - target: {fileID: 5351706793326332709, guid: f287890d7b499594ab84333b494b50b9, type: 3}
       propertyPath: SceneMigrationSynchronization
@@ -912,7 +922,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5351706793326332709, guid: f287890d7b499594ab84333b494b50b9, type: 3}
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
-      value: 1088978466
+      value: 2124149871
       objectReference: {fileID: 0}
     - target: {fileID: 6710384591257322696, guid: f287890d7b499594ab84333b494b50b9, type: 3}
       propertyPath: m_LocalScale.x
@@ -990,7 +1000,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -6279457417849403659, guid: 35bf50e79b838594389aa2624132b730, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 1040572055
+      value: 781779639
       objectReference: {fileID: 0}
     - target: {fileID: -6279457417849403659, guid: 35bf50e79b838594389aa2624132b730, type: 3}
       propertyPath: SceneMigrationSynchronization
@@ -998,7 +1008,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -6279457417849403659, guid: 35bf50e79b838594389aa2624132b730, type: 3}
       propertyPath: InScenePlacedSourceGlobalObjectIdHash
-      value: 2038651460
+      value: 2124149871
       objectReference: {fileID: 0}
     - target: {fileID: 2244856456980629451, guid: 35bf50e79b838594389aa2624132b730, type: 3}
       propertyPath: m_LocalScale.y

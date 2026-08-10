@@ -27,16 +27,7 @@ public class TheSea : NetworkBehaviour
     {
         StartCoroutine(UpdateSpawnWater());
     }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("DestroyCheck"))
-        {
-            Debug.Log("DestroyCheck " + other.name);
-            //other.GetComponent<NetworkObject>().Despawn();
-        }
-    }
-
+    
     private void FixedUpdate()
     {
         /*

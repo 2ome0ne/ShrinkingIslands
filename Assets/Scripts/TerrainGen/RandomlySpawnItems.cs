@@ -29,16 +29,16 @@ public class RandomlySpawnItems : NetworkBehaviour
     public float minSpawnTime;
     public float maxSpawnTime;
     //if there is any islands near it don't allow to spawn
-    [SerializeField] private float checkGroundNearRadius = 0.4f;
+    public float checkGroundNearRadius = 0.4f;
+    public float itemIslandRadius;
     [SerializeField] private float centerpushPower;
     [SerializeField] private float reduceRadius = 5;
     [SerializeField] private float UpPushForce;
 
     [SerializeField] private float StartSpawnDelayTime = 10f;
     private float currentSpawnTime;
-
-    //NON RAREs
-    [SerializeField] private List<Vector2> currentActiveIslandPositions;
+    
+    public List<Vector2> currentActiveIslandPositions;
 
     private TideManager tideManager;
     private void Start()
@@ -72,7 +72,7 @@ public class RandomlySpawnItems : NetworkBehaviour
             return;
         float random = Random.Range(0, 10);
         Debug.Log("TSI" + random);
-        bool isRare = random < 2.5f;
+        bool isRare = random <= 2f;
         int index = 0;
         if (isRare)
         {
@@ -141,7 +141,16 @@ public class RandomlySpawnItems : NetworkBehaviour
                 {
                     Vector2 islandPos = new Vector2(island.transform.position.x, island.transform.position.z);
                     if ((new Vector2(spawnPos.x, spawnPos.z) - islandPos).sqrMagnitude <
-                        checkGroundNearRadius * checkGroundNearRadius)
+                        (checkGroundNearRadius + itemIslandRadius) * (checkGroundNearRadius + itemIslandRadius))
+                    {
+                        hasHitAnyIslands = true;
+                        break;
+                    }
+                }
+                foreach (var island in currentActiveIslandPositions)
+                {
+                    if ((new Vector2(spawnPos.x, spawnPos.z) - island).sqrMagnitude <
+                        (checkGroundNearRadius * 0.4f) * (checkGroundNearRadius * 0.4f))
                     {
                         hasHitAnyIslands = true;
                         break;
@@ -152,6 +161,7 @@ public class RandomlySpawnItems : NetworkBehaviour
 
             if (!hasHitAnyIslands)
             {
+                currentActiveIslandPositions.Add(new Vector2(spawnPos.x, spawnPos.z));
                 return true;
             }
         }

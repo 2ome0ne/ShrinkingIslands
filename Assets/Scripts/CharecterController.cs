@@ -34,9 +34,12 @@ public class CharecterController : NetworkBehaviour
     [SerializeField] private float maxStep;
     [SerializeField] private StaminaSystem staminaSystem;
     
+    private PlayerAbillites playerAbillites;
     private CharacterController controller;
     private Vector3 velocity;
     public Vector3 move;
+
+    public bool Moving;
 
     private bool AirMultiply;
     
@@ -46,6 +49,7 @@ public class CharecterController : NetworkBehaviour
     {
         if(!IsOwner) return;
         controller = transform.GetComponent<CharacterController>();
+        playerAbillites = transform.GetComponent<PlayerAbillites>();
     }
 
     public override void OnNetworkSpawn()
@@ -122,8 +126,18 @@ public class CharecterController : NetworkBehaviour
     {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
+
+        if (!playerAbillites.currentlyDashing && !playerAbillites.autoDashing)
+        {
+            move = transform.right * horizontal + transform.forward * vertical;
+            Moving = move.sqrMagnitude > 0.01f;
+        }
+        else
+        {
+            Vector3 premove = transform.right * horizontal + transform.forward * vertical;
+            Moving = premove.sqrMagnitude > 0.01f;
+        }
         
-        move = transform.right * horizontal + transform.forward * vertical;
         controller.Move(move * DefaultSpeed * SpeedMultiplier * Time.deltaTime);
 
         if (PlayerStates == PlayerState.Moving)

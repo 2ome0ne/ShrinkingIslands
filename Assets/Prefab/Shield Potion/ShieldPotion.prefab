@@ -169,7 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ShieldPotion
   ShowTopMostFoldoutHeaderGroup: 1
   EatTime: 2.5
-  ShieldTime: 3
+  ShieldTime: 10
   currentEatTime: 0
   Eating: 0
   EatingSound: {fileID: 7443575927682247351}
@@ -193,8 +193,8 @@ AudioSource:
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 1
-  MinDistance: 4
+  DopplerLevel: 0.92
+  MinDistance: 5
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -245,7 +245,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 0.18333334
       inSlope: 0
       outSlope: 0
       tangentMode: 0

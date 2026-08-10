@@ -171,6 +171,9 @@ MonoBehaviour:
   islandLayerMask:
     serializedVersion: 2
     m_Bits: 8
+  bothislandAndPropGroundLayerMask:
+    serializedVersion: 2
+    m_Bits: 520
   maxSlopeAngle: 10
   minPropSpacing: 2
   placedPositions: []

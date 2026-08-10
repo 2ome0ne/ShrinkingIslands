@@ -95,7 +95,7 @@ public class PlayerKnockbackSystem : NetworkBehaviour
     
     public void KnockBackNoCamShake(Vector3 attackpositon , float KbForce , GameObject player)
     {
-        if(HasShield) return;
+        //if(HasShield) return;
         if (playerAbillites.Parrying)
         {
             //playerAbillites._staminaSystem.EatStamina(KbForce / 100f);

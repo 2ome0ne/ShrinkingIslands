@@ -33,11 +33,14 @@ public class StaminaSystem : NetworkBehaviour
 
     private bool PlayingParticles;
     private bool Stopped;
+    private bool PressingSprint;
     void Update()
     {
         if (!IsOwner) return;
         if (Input.GetKeyDown(KeyCode.LeftShift) && CurrentSprintTime <= 0)
         {
+            PressingSprint = true;
+            if(!_controller.Moving) return;
             if(CurrentStamina > 0)
                 Sprinting = true;
             Stopped = false;
@@ -45,6 +48,7 @@ public class StaminaSystem : NetworkBehaviour
         }
         if(Input.GetKeyUp(KeyCode.LeftShift)  && CurrentSprintTime <= 0)
         {
+            PressingSprint = false;
             if (Sprinting && !Stopped)
             {
                 Stopped = true;
@@ -61,6 +65,24 @@ public class StaminaSystem : NetworkBehaviour
         if (CurrentStamina > MaxStamina)
         {
             CurrentStamina = MaxStamina;
+        }
+
+        if (PressingSprint)
+        {
+            if (_controller.Moving && !Sprinting)
+            {
+                if(CurrentStamina > 0)
+                    Sprinting = true;
+                Stopped = false;
+                AddSprint();
+            }
+            else if (Sprinting && !Stopped && !_controller.Moving)
+            {
+                Stopped = true;
+                Sprinting = false;
+                RemoveSprint();
+                currentCanRegen = maxCanRegen;
+            }
         }
 
         if (Sprinting == true)

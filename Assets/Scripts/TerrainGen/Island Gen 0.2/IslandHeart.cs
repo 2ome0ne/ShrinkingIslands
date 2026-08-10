@@ -29,9 +29,10 @@ public class IslandHeart : NetworkBehaviour
     [SerializeField] private int CurrentTallislandTileCount;
 
     public float IslandSpawnY;
-    
-    
+
+
     [Header("Heart Refrences")] 
+    [SerializeField] private RandomlySpawnItems randomlySpawnItems;
     [SerializeField] private ModifierManager modifierManager;
     [SerializeField] private GameObject IslandPrefab;
     [SerializeField] private SpawnManager _spawnManager;
@@ -224,15 +225,32 @@ public class IslandHeart : NetworkBehaviour
 
     public Vector3 GetRandomPointInCircle()
     {
-        float angle = Random.Range(0f, Mathf.PI * 2f);
-
-        // Pow > 1 biases distance toward 0 (center)
-        float t = Random.value;
-        float distance = Mathf.Pow(t, centerBiasPower) * IslandRadius;
-
-        float x = Mathf.Cos(angle) * distance;
-        float z = Mathf.Sin(angle) * distance;
-
+        int retryTimes = 0;
+        bool hasHitAItemIsland = true;
+        float x = 0;
+        float z = 0;
+        while (retryTimes < 20 && hasHitAItemIsland)
+        {
+            
+            hasHitAItemIsland = false;
+            float angle = Random.Range(0f, Mathf.PI * 2f);
+            // Pow > 1 biases distance toward 0 (center)
+            float t = Random.value;
+            float distance = Mathf.Pow(t, centerBiasPower) * IslandRadius;
+            x = Mathf.Cos(angle) * distance;
+            z = Mathf.Sin(angle) * distance;
+            foreach (var island in randomlySpawnItems.currentActiveIslandPositions)
+            {
+                if ((new Vector2(x, z) - island).sqrMagnitude <
+                    (randomlySpawnItems.checkGroundNearRadius + randomlySpawnItems.itemIslandRadius) * (randomlySpawnItems.checkGroundNearRadius + randomlySpawnItems.itemIslandRadius))
+                {
+                    hasHitAItemIsland = true;
+                    break;
+                }
+            }
+            retryTimes++;
+        }
+        
         return new Vector3(x, IslandSpawnY, z);
     }
     
